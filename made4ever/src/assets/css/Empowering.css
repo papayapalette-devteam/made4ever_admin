@@ -1,0 +1,37 @@
+.empoering-section .doctor-slider ul.react-multi-carousel-dot-list {
+  bottom: -42px;
+}
+
+.empoering-section .doctor-slider .react-multi-carousel-dot button {
+  background-color: rgb(209, 209, 209);
+  border-color: rgb(209, 209, 209);
+}
+
+.empoering-section .doctor-slider .react-multi-carousel-dot--active button {
+  background-color: #f86f03;
+  border-color: #f86f03;
+}
+
+/* *********Empowering-css******** */
+.button-container {
+  background-color: #5867dd;
+  /* Blue background */
+  padding: 12px 18px;
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 10px;
+  /* width: 90%; */
+}
+
+.empoering-section .button-container {
+  background-color: #5867dd;
+  /* Blue background */
+  padding: 12px 18px;
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.read-more-btn {
+  color: #f86f03;
+}

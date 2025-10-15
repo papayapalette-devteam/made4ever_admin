@@ -1,0 +1,145 @@
+.add-subscription {
+  padding: 20px 0;
+  background: #f9fafb;
+  min-height: 100vh;
+  margin-left: 18.5vw; /* default for large screen with sidebar */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Header */
+.profile-header {
+  margin-bottom: 20px;
+}
+.profile-header h3 {
+color: #000;
+font-family: Lora;
+font-size: 1.5rem;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+}
+.profile-header p {
+color: rgba(0, 0, 0, 0.70);
+font-family: Poppins;
+font-size: 0.95rem;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.form-label {
+  display: block;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+
+/* MUI input override */
+.MuiInputBase-root.MuiOutlinedInput-root {
+  height: 44px !important;
+  min-height: 44px !important;
+  border: 1px solid rgba(0, 0, 0, 0.7) !important;
+} 
+
+/* DataGrid override */
+.custom-data-grid {
+  height: auto !important;
+  border-radius: 8px !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+  border: none !important;
+  color: rgba(0, 0, 0, 0.70);
+  font-family: Poppins, sans-serif !important;
+  font-size: 0.95rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+}
+
+/* Apply font to DataGrid cells */
+.custom-data-grid .MuiDataGrid-cell {
+  font-family: Poppins !important;
+  font-size: 0.95rem !important;
+  color: rgba(0, 0, 0, 0.70) !important;
+}
+
+/* Apply font to column headers */
+.custom-data-grid .MuiDataGrid-columnHeaderTitle {
+  font-family: Lora, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+
+
+/* ===== Responsive Breakpoints ===== */
+
+/* Extra large desktops */
+@media (min-width: 1500px) {
+  .custom-data-grid {
+    height: auto !important;
+    max-width: 100% !important;
+    margin-left: 0px;
+    padding-bottom: 20px;
+  }
+}
+
+/* Small desktops / laptops */
+@media (max-width: 1366px) {
+  .add-subscription {
+    margin-left: 20vw; /* sidebar narrower */
+    padding: 15px;
+  }
+
+  .custom-data-grid {
+    width: 100% !important;
+    overflow-x: auto !important; /* prevent cut-off */
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .add-subscription {
+    margin-left: 10vw; /* shrink sidebar space */
+    padding: 15px;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  
+  }
+
+  .profile-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .profile-header p {
+    font-size: 0.9rem;
+  }
+
+  .add-subscription {
+    margin-left: 0; /* sidebar collapses */
+    padding: 10px;
+  }
+
+  .custom-data-grid {
+    overflow-x: auto !important;
+  }
+}

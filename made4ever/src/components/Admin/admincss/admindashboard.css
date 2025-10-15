@@ -1,0 +1,254 @@
+/* ------ Main Dashboard Content Styles ------ */
+
+.dashboard-page {
+  /* Padding-left matches your sidebar width (220px); adjust if different */
+  margin-left: 250px;
+  margin-top: 10px; /* header height, adjust as needed */
+  padding: 32px;
+  min-height: 100vh;
+  background: #f7f8fa;
+  color: #232552;
+  position: relative;
+}
+
+.doctors-table th,
+.doctors-table td {
+  padding-left: 50px !important; /* bigger horizontal gap */
+}
+
+.action-button
+{
+  display: flex;
+  gap: 20px;
+}
+.delete-button
+{
+  border: none;
+  background-color: transparent;
+}
+
+/* For smaller screens, collapse the sidebar's space */
+@media (max-width: 900px) {
+  .dashboard-page {
+    margin-left: 60px;
+    padding: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .dashboard-page {
+    margin-left: 0;
+    margin-top: 65px;
+    padding: 4px;
+  }
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+  letter-spacing: .2px;
+}
+
+.overview-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* spacing between cards */
+  margin-bottom: 36px;
+}
+
+/* Make cards flexible, not fixed */
+.overview-card {
+  display: flex;
+  align-items: center;
+  flex: 1 1 calc(25% - 20px); /* 4 cards per row by default */
+  box-sizing: border-box;
+  border-radius: 12px;
+  color: #fff;
+  padding: 12px 18px;
+  box-shadow: 0 2px 12px 0 #ecebfa3b;
+  gap: 20px;
+  position: relative;
+  height: 120px;
+  min-width: 200px; /* to keep them readable on smaller screens */
+}
+
+/* Responsive breakpoints for fewer cards per row */
+@media (max-width: 1200px) {
+  .overview-card {
+    flex: 1 1 calc(33.33% - 20px); /* 3 per row */
+  }
+}
+@media (max-width: 900px) {
+  .overview-card {
+    flex: 1 1 calc(50% - 20px); /* 2 per row */
+  }
+}
+@media (max-width: 600px) {
+  .overview-card {
+    flex: 1 1 100%; /* 1 per row */
+  }
+}
+
+/* Card icon circle */
+.overview-icon {
+  font-size: 34px;
+  /* background: rgba(255,255,255,0.15); */
+  border-radius: 50%;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.overview-icon img
+{
+  width: 64px;
+height: 64px;
+aspect-ratio: 1/1;
+margin-top: 30px;
+}
+.overview-details {
+ flex: 1;
+}
+.overview-title {
+  position: absolute;
+  margin-top: -30px;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 9px;
+  color: white;
+  font-weight: 500;
+  letter-spacing: .1px;
+}
+.overview-value {
+  font-size: 21px;
+  font-weight: bold;
+  letter-spacing: .5px;
+}
+
+/* @media (max-width: 1050px) {
+  .overview-cards {
+    gap: 10px;
+  }
+  .overview-card {
+    min-width: 140px;
+    padding: 13px 10px;
+    gap: 12px;
+    font-size: 14px;
+    max-width: 190px;
+    border-radius: 8px;
+  }
+} */
+@media (max-width: 750px) {
+  .overview-cards {
+    flex-direction: column;
+  }
+  .overview-card {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.doctors-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 18px 0 13px 0;
+  color: #232552;
+}
+
+/* ---- Table Styles ---- */
+.table-responsive {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 13px;
+  box-shadow: 0 2px 12px #ecebfa41;
+  padding: 0;
+}
+
+.doctors-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: #fff;
+  letter-spacing: .1px;
+}
+
+.doctors-table th, 
+.doctors-table td {
+  padding: 16px 11px;
+  text-align: left;
+}
+
+.doctors-table th {
+  background: #f4f6fa;
+  color: #9495b4;
+  font-size: 15px;
+  font-weight: 600;
+  border-bottom: 1.5px solid #dedff4;
+}
+
+.doctors-table td {
+  font-size: 15px;
+  color: #232252;
+  border-bottom: 1px solid #e2e2ef34;
+  background: #fff;
+}
+
+.doctors-table tr:last-child td {
+  border-bottom: none;
+}
+
+.doctor-link {
+  color: #374da4;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.14s;
+}
+
+.doctor-link:hover {
+  color: #faa13b;
+}
+
+.view-profile-btn {
+  background: #faa13b;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.16s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.view-profile-btn:hover {
+  background: #e6760b;
+}
+
+/* ---- Table Responsiveness ---- */
+@media (max-width: 800px) {
+  .doctors-table {
+    min-width: 500px;
+    font-size: 13px;
+  }
+}
+@media (max-width: 550px) {
+  .doctors-table th, .doctors-table td {
+    font-size: 12px;
+    padding: 8px 3px;
+  }
+}
+
+/* horizontal scrolling for small screens */
+@media (max-width: 700px) {
+  .table-responsive {
+    border-radius: 7px;
+    padding: 0;
+  }
+}
+
+
