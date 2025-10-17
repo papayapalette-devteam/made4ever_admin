@@ -16,24 +16,24 @@ import Adminheader from '../adminheader';
 
 
 
-function DosageMaster() {
+function Occupation() {
 
   const[loading,setloading]=useState(false)
-     const [dosage_master, setdosage_master] = useState({
-            dosage_type: "",
-        
-        });
+     const [Occupation, setOccupation] = useState({
+        occupation: "",
+
+  });
 
 
 
-      const[all_dosage_type,setall_dosage_type]=useState([])
-      const getall_dosage_type=async()=>
+      const[all_lifestyle_intervention_master,setall_lifestyle_intervention_master]=useState([])
+      const getall_lifestyle_intervention_master=async()=>
       {
         try {
-          const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"dosage_type"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"lifestyle_intervention_type"})
           console.log(resp);
           
-          setall_dosage_type(resp.data.data)
+          setall_lifestyle_intervention_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -43,12 +43,9 @@ function DosageMaster() {
     
       useEffect(()=>
       {
-        getall_dosage_type()
+        getall_lifestyle_intervention_master()
     
       },[])
-
-     
-      
 
       const [menuAnchor, setMenuAnchor] = useState(null);
       const [menuRowId, setMenuRowId] = useState(null);
@@ -63,23 +60,23 @@ function DosageMaster() {
         setMenuRowId(null);
       };
 
-  const[lookup_id,setlookup_id]=useState(null)
-  const onEdit=(row)=>
-  {
-      setlookup_id(row._id)
-      setdosage_master({dosage_type:row.lookup_value})
-  }
+    const[lookup_id,setlookup_id]=useState(null)
+    const onEdit=(row)=>
+    {
+       setlookup_id(row._id)
+       setOccupation({
+       lifestyle_intervention:row.lookup_value
+      })
+    }
 
   const onDeletehospital=()=>
   {
     alert("delete")
   }
 
-  
-
      const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Dosage Type', flex: 0.5 }, 
+        { field: 'lookup_value', headerName: 'Occupation', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -123,7 +120,7 @@ function DosageMaster() {
     
       ];
     
-      const rows = all_dosage_type?.map((doc, index) => ({
+      const rows = all_lifestyle_intervention_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -134,7 +131,7 @@ function DosageMaster() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setdosage_master((prev) => {
+  setOccupation((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -163,24 +160,23 @@ function DosageMaster() {
 };
 
 
-
      
-        const add_dosage_type_master = async () => {
+        const add_lifestyle_intervention_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"dosage_type",
-              lookup_value:dosage_master.dosage_type,
+              lookup_type:"occupation",
+              lookup_value:Occupation.occupation,
             }
           );
-    
+      
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Symptom Class Master Added",
-                      text:"Symptom Class Master Addedd Successfully...",
+                      title:"Lifestyle Intervention Master Added",
+                      text:"Lifestyle Intervention Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -192,16 +188,16 @@ function DosageMaster() {
             console.log("✅ Lookup list:", resp.data.data);
           } else {
             console.warn("⚠️ Error:", resp.data.response.response_message);
-            Swal.fire({
+              Swal.fire({
                       icon:"error",
                       title:"Error Occured",
                       text:resp.data.response.response_message,
                       showConfirmButton:true,
-                        customClass: {
+                       customClass: {
                       confirmButton: 'my-swal-button',
                     }
                 }
-                            )
+                )
           }
         } catch (error) {
           console.error("❌ API Error:", error);
@@ -225,33 +221,33 @@ function DosageMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Dosage Type Master</h3>
-                  <p>Add or update the required details for the dosage type type master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Occupation Master</h3>
+                  <p>Add or update the required details for the occupation master to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                  <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-
+                <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
-    
-           <FormControl fullWidth size="small">
-            <label className="form-label">Dosage Type</label>
+          
+
+       <FormControl fullWidth size="small">
+             <label className="form-label">Occupation</label>
             <TextField 
-              name="dosage_type"
-              defaultValue={dosage_master.dosage_type}
+              name="occupation"
+              defaultValue={Occupation.occupation}
               onChange={handlechange}
-              placeholder='dosage type'
+              placeholder='Occupation'
             >
-           
+
             </TextField>
           </FormControl> 
 
          </div>
 
           <Button
-          className='submit-button'
-            onClick={add_dosage_type_master}
+           className='submit-button'
+            onClick={add_lifestyle_intervention_master}
           >
             Submit
           </Button>
@@ -259,7 +255,7 @@ function DosageMaster() {
         
         
       {/* Table */}
-                <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
+              <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
@@ -299,4 +295,4 @@ function DosageMaster() {
   )
 }
 
-export default DosageMaster
+export default Occupation

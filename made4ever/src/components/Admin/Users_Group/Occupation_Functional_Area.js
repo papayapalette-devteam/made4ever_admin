@@ -16,25 +16,24 @@ import Adminheader from '../adminheader';
 
 
 
-function HabitCategory() {
-  
+function OccupationFunctionalArea() {
+
   const[loading,setloading]=useState(false)
+     const [Occupation_Functional_Area, setOccupation_Functional_Area] = useState({
+        occupation_functional_area: "",
 
-     const [habit_category_master, sethabit_category_master] = useState({
-            habit_category: "",
-        
-        });
-
+  });
 
 
-      const[all_habit_category,setall_habit_category]=useState([])
-      const getall_habit_category=async()=>
+
+      const[all_lifestyle_intervention_master,setall_lifestyle_intervention_master]=useState([])
+      const getall_lifestyle_intervention_master=async()=>
       {
         try {
-          const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"habit_category_type"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"lifestyle_intervention_type"})
           console.log(resp);
           
-          setall_habit_category(resp.data.data)
+          setall_lifestyle_intervention_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -44,12 +43,9 @@ function HabitCategory() {
     
       useEffect(()=>
       {
-        getall_habit_category()
+        getall_lifestyle_intervention_master()
     
       },[])
-
-     
-      
 
       const [menuAnchor, setMenuAnchor] = useState(null);
       const [menuRowId, setMenuRowId] = useState(null);
@@ -64,23 +60,23 @@ function HabitCategory() {
         setMenuRowId(null);
       };
 
-      const[lookup_id,setlookup_id]=useState(null)
-  const onEdit=(row)=>
-  {
-    setlookup_id(row._id)
-    sethabit_category_master({habit_category:row.lookup_value})
-  }
+    const[lookup_id,setlookup_id]=useState(null)
+    const onEdit=(row)=>
+    {
+       setlookup_id(row._id)
+       Occupation_Functional_Area({
+       lifestyle_intervention:row.lookup_value
+      })
+    }
 
   const onDeletehospital=()=>
   {
     alert("delete")
   }
 
-  
-
-     const column = [
+     const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Habit Category', flex: 0.5 }, 
+        { field: 'lookup_value', headerName: 'Occupation Functional Area', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -124,7 +120,7 @@ function HabitCategory() {
     
       ];
     
-      const rows = all_habit_category?.map((doc, index) => ({
+      const rows = all_lifestyle_intervention_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -135,7 +131,7 @@ function HabitCategory() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  sethabit_category_master((prev) => {
+  setOccupation_Functional_Area((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -164,24 +160,23 @@ function HabitCategory() {
 };
 
 
-
      
-        const add_habit_category_master = async () => {
+        const add_lifestyle_intervention_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"habit_category_type",
-              lookup_value:habit_category_master.habit_category,
+              lookup_type:"occupation_functional_area",
+              lookup_value:Occupation_Functional_Area.occupation_functional_area,
             }
           );
-    
+      
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Habit Category Added",
-                      text:"Habit Category Addedd Successfully...",
+                      title:"Lifestyle Intervention Master Added",
+                      text:"Lifestyle Intervention Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -193,16 +188,16 @@ function HabitCategory() {
             console.log("✅ Lookup list:", resp.data.data);
           } else {
             console.warn("⚠️ Error:", resp.data.response.response_message);
-            Swal.fire({
+              Swal.fire({
                       icon:"error",
                       title:"Error Occured",
                       text:resp.data.response.response_message,
                       showConfirmButton:true,
-                        customClass: {
+                       customClass: {
                       confirmButton: 'my-swal-button',
                     }
                 }
-                            )
+                )
           }
         } catch (error) {
           console.error("❌ API Error:", error);
@@ -218,7 +213,7 @@ function HabitCategory() {
 
   return (
     <div>
-    <Adminheader />
+   <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
@@ -226,32 +221,33 @@ function HabitCategory() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Habit Category Master</h3>
-                  <p>Add or update the required details for the habit category master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Occupation Functional Area</h3>
+                  <p>Add or update the required details for the occupation functional area to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                  <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
-    
-           <FormControl fullWidth size="small">
-            <label className="form-label">Habit Category </label>
+          
+
+       <FormControl fullWidth size="small">
+             <label className="form-label">Occupation Functional Area</label>
             <TextField 
-              name="habit_category"
-              defaultValue={habit_category_master.habit_category}
+              name="occupation_functional_area"
+              defaultValue={Occupation_Functional_Area.occupation_functional_area}
               onChange={handlechange}
-              placeholder='habit category'
+              placeholder='Occupation Functional Area'
             >
-           
+
             </TextField>
           </FormControl> 
 
          </div>
 
           <Button
-          className='submit-button'
-            onClick={add_habit_category_master}
+           className='submit-button'
+            onClick={add_lifestyle_intervention_master}
           >
             Submit
           </Button>
@@ -259,12 +255,12 @@ function HabitCategory() {
         
         
       {/* Table */}
-               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}>
+              <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
                 rows={rows}
-                columns={column}
+                columns={columns}
                 pageSize={10}
                 pageSizeOptions={[]} // removes the rows per page selector
                 initialState={{
@@ -279,23 +275,24 @@ function HabitCategory() {
       </div>
       </div>
 
-                 {loading && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(255, 255, 255, 0.6)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <UniqueLoader />
-        </div>
-      )}
+           {loading && (
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(255, 255, 255, 0.6)',
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <UniqueLoader />
+  </div>
+)}
+
     </div>
   )
 }
 
-export default HabitCategory
+export default OccupationFunctionalArea

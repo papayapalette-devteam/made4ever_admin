@@ -1,8 +1,8 @@
 import React, { useState ,useRef, useEffect} from 'react';
 import {
   Box, Grid, Button, Typography, Card, Avatar,
-  TextField, FormControl, InputLabel, Select, MenuItem, Paper,
-  FormControlLabel, Radio, Fade,Chip,Menu,InputAdornment 
+  TextField, FormControl, InputLabel, Select, MenuItem, RadioGroup,
+  FormControlLabel, Radio, Fade,Chip,Menu,Paper 
 } from '@mui/material';
 import {  IconButton,  Tooltip } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -16,27 +16,23 @@ import Adminheader from '../adminheader';
 
 
 
-function HabitMaster() {
+function EducationSpecialization() {
 
   const[loading,setloading]=useState(false)
-
-     const [habit_master, sethabit_master] = useState({
-    habit_category: null,
-    habit_name: "",
-    possible_complications: "",
-
+     const [Education_Specialization, setEducation_Specialization] = useState({
+      education_specialization: "",
   });
 
 
 
-      const[all_habit_master,setall_habit_master]=useState([])
-      const getall_habit_master=async()=>
+      const[all_allergy_master,setall_allergy_master]=useState([])
+      const getall_allergy_master=async()=>
       {
         try {
-            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"habit_master"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"allergy_master"})
           console.log(resp);
           
-          setall_habit_master(resp.data.data)
+          setall_allergy_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -46,7 +42,7 @@ function HabitMaster() {
     
       useEffect(()=>
       {
-        getall_habit_master()
+        getall_allergy_master()
     
       },[])
 
@@ -63,14 +59,14 @@ function HabitMaster() {
         setMenuRowId(null);
       };
 
-  const[lookup_id,setlookup_id]=useState(null)
+    const[lookup_id,setlookup_id]=useState(null)
      const onEdit=(row)=>
      {
         setlookup_id(row._id)
-        sethabit_master({
-         habit_category:row.parent_lookup_id,
-         habit_name:row.lookup_value,
-         possible_complications:row.other.possible_complications
+        setEducation_Specialization({
+         allergy_category:row.parent_lookup_id,
+         allergy_name:row.lookup_value,
+         allergic_symptoms:row.other.allergic_symptoms
        })
      }
 
@@ -79,15 +75,9 @@ function HabitMaster() {
     alert("delete")
   }
 
-     const columns = [
+     const column = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'parent_lookup_name', headerName: 'Habit Category', flex: 0.5 }, 
-        { field: 'lookup_value', headerName: 'Habit Name', flex: 0.5 },
-        { field: 'other', headerName: 'Possible Complications',flex:1,  renderCell: (params) => {
-            return params.row?.other?.possible_complications || "";
-        }},
-     
-       
+        { field: 'lookup_value', headerName: 'Education Specialization', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -131,7 +121,7 @@ function HabitMaster() {
     
       ];
     
-      const rows = all_habit_master?.map((doc, index) => ({
+      const rows = all_allergy_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -139,14 +129,14 @@ function HabitMaster() {
 
 
 
-    //========================================= get group name id ================================================
+    //========================================= get salt type id ================================================
 
-  const[habit_category,sethabit_category]=useState([])
-      const get_habit_category=async()=>
+  const[allergy_category,setallergy_category]=useState([])
+      const get_allergy_category=async()=>
       {
         try {
-          const resp=await api.post('api/v1/admin/LookupList',{lookupcodes:"habit_category_type"})
-          sethabit_category(resp.data.data)
+          const resp=await api.post('api/v1/admin/LookupList',{lookupcodes:"allergy_category_type"})
+          setallergy_category(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -156,7 +146,7 @@ function HabitMaster() {
     
       useEffect(()=>
       {
-        get_habit_category()
+        get_allergy_category()
     
       },[])
 
@@ -169,7 +159,7 @@ function HabitMaster() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  sethabit_master((prev) => {
+  setEducation_Specialization((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -199,24 +189,22 @@ function HabitMaster() {
 
 
      
-        const add_habit_master = async () => {
+        const add_allergy_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"habit_master",
-              lookup_value:habit_master.habit_name,
-              parent_lookup_id:habit_master.habit_category,
-              other:{possible_complications:habit_master.possible_complications}
+              lookup_type:"education_specialization",
+              lookup_value:Education_Specialization.education_specialization,
             }
           );
       
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Habit Master Added",
-                      text:"Habit Master Addedd Successfully...",
+                      title:"Allergy Master Added",
+                      text:"Allergy Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -253,7 +241,7 @@ function HabitMaster() {
 
   return (
     <div>
-  <Adminheader />
+ <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
@@ -261,79 +249,38 @@ function HabitMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Habit Master</h3>
-                  <p>Add or update the required details for the habit master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Education Specialization Master</h3>
+                  <p>Add or update the required details for the education specialization master to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                  <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
           
 
-               <FormControl fullWidth size="small">
-             <label className="form-label">Habit Category</label>
-            <Select 
-              name="habit_category"
-              value={habit_master.habit_category}
-              onChange={handlechange}
-             MenuProps={{
-                    disablePortal: true,
-                    disableScrollLock: true,
-                    }}
-                displayEmpty
-                renderValue={(selected) => {
-                  if (!selected) {
-                    return <span style={{ color: "#9ca3af" }}>Habit Category</span>; // grey placeholder
-                  }
-                  return habit_category.find((item) => item._id === selected)?.lookup_value;
-                }}
-            >
-
-               <MenuItem disabled value="">
-                  <em>Habit Category</em>
-                </MenuItem>
-             {
-                habit_category?.map((item)=>
-                (
-                    <MenuItem key={item._id} value={item._id}>{item.lookup_value}</MenuItem>
-                ))
-            }
-            </Select>
-          </FormControl> 
-
-
+  
        <FormControl fullWidth size="small">
-             <label className="form-label">Habit Name</label>
+             <label className="form-label">Education Specialization</label>
             <TextField 
-              name="habit_name"
-              defaultValue={habit_master.habit_name}
+              name="education_specialization"
+              defaultValue={Education_Specialization.education_specialization}
               onChange={handlechange}
-              placeholder='Occupation Name'
+              placeholder='Education Specialization'
             >
 
             </TextField>
           </FormControl> 
 
+        
+          
 
-           <FormControl fullWidth size="small">
-            <label className="form-label">Possible Complications </label>
-            <TextField 
-              name="possible_complications"
-              value={habit_master.possible_complications}
-              onChange={handlechange}
-              placeholder='Possible Complications'
-            >
-           
-            </TextField>
-          </FormControl> 
-
-         
+          
          </div>
 
           <Button
-           className='submit-button'
-            onClick={add_habit_master}
+         className='submit-button'
+            onClick={add_allergy_master}
           >
             Submit
           </Button>
@@ -341,12 +288,12 @@ function HabitMaster() {
         
         
       {/* Table */}
-               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}>
+               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
                 rows={rows}
-                columns={columns}
+                columns={column}
                 pageSize={10}
                 pageSizeOptions={[]} // removes the rows per page selector
                 initialState={{
@@ -381,4 +328,4 @@ function HabitMaster() {
   )
 }
 
-export default HabitMaster
+export default EducationSpecialization

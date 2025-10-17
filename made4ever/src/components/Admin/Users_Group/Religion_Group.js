@@ -16,28 +16,21 @@ import Adminheader from '../adminheader';
 
 
 
-function DiseaseMaster() {
+function ReligionGroup() {
 
   const[loading,setloading]=useState(false)
-     const [disease_master, setdisease_master] = useState({
-    medical_speciality_id: null,
-    disease_name: "",
-    icd_10_code: "",
-    icd_11_code:"",
-    description:""
-
-  });
+     const [Religion_Group, setReligion_Group] = useState({
+        religion_group: "",
+      });
 
 
 
-      const[all_disease_master,setall_disease_master]=useState([])
-      const getall_disease_master=async()=>
+      const[all_diagnosis_type_master,setall_diagnosis_type_master]=useState([])
+      const getall_diagnosis_type_master=async()=>
       {
         try {
-            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"disease_master"})
-          console.log(resp);
-          
-          setall_disease_master(resp.data.data)
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"diagnosis_type"})
+            setall_diagnosis_type_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -47,7 +40,7 @@ function DiseaseMaster() {
     
       useEffect(()=>
       {
-        getall_disease_master()
+        getall_diagnosis_type_master()
     
       },[])
 
@@ -68,12 +61,8 @@ function DiseaseMaster() {
     const onEdit=(row)=>
     {
        setlookup_id(row._id)
-       setdisease_master({
-        medical_speciality_id:row.parent_lookup_id,
-        disease_name:row.lookup_value,
-        icd_10_code:row.other.icd_10_code,
-        icd_11_code:row.other.icd_11_code,
-        description:row.other.description
+       setReligion_Group({
+        diagnosis_type:row.lookup_value
       })
     }
 
@@ -84,13 +73,7 @@ function DiseaseMaster() {
 
      const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'parent_lookup_name', headerName: 'Medical Speciality', flex: 0.5 }, 
-        { field: 'lookup_value', headerName: 'Disease Name', flex: 0.5 },
-        { field: 'other', headerName: 'Description',flex:1,  renderCell: (params) => {
-            return params.row?.other?.description || "";
-        }},
-     
-       
+        { field: 'lookup_value', headerName: 'Religion Group', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -134,7 +117,7 @@ function DiseaseMaster() {
     
       ];
     
-      const rows = all_disease_master?.map((doc, index) => ({
+      const rows = all_diagnosis_type_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -142,37 +125,10 @@ function DiseaseMaster() {
 
 
 
-    //========================================= get medical speciality id ================================================
-
-  const[medical_speciality,setmedical_speciality]=useState([])
-      const getmedical_speciality=async()=>
-      {
-        try {
-          const resp=await api.post('api/v1/admin/LookupList',{lookupcodes:"medical_speciality"})
-          setmedical_speciality(resp.data.data)
-          
-        } catch (error) {
-          console.log(error);
-          
-        }
-      }
-    
-      useEffect(()=>
-      {
-        getmedical_speciality()
-    
-      },[])
-
-
-
-
-   
-
-
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setdisease_master((prev) => {
+  setReligion_Group((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -202,28 +158,22 @@ function DiseaseMaster() {
 
 
      
-        const add_disease_master = async () => {
+        const add_diagnosis_type_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"disease_master",
-              lookup_value:disease_master.disease_name,
-              parent_lookup_id:disease_master.medical_speciality_id,
-              other:{
-                icd_10_code:disease_master.icd_10_code,
-                icd_11_code:disease_master.icd_11_code,
-                description:disease_master.description
-              }
+              lookup_type:"religion_group",
+              lookup_value:Religion_Group.religion_group,
             }
           );
       
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Disease Master Added",
-                      text:"Disease Master Addedd Successfully...",
+                      title:"Diagnosis Type Master Added",
+                      text:"Diagnosis Type Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -268,104 +218,33 @@ function DiseaseMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Disease Master</h3>
-                  <p>Add or update the required details for the disease master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Religion Group Master</h3>
+                  <p>Add or update the required details for the religion group master to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                    <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                      <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
           
 
-               <FormControl fullWidth size="small">
-             <label className="form-label">Medical Speciality ID</label>
-            <Select 
-              name="medical_speciality_id"
-              value={disease_master.medical_speciality_id}
-              onChange={handlechange}
-             MenuProps={{
-                    disablePortal: true,
-                    disableScrollLock: true,
-                    }}
-                displayEmpty
-                renderValue={(selected) => {
-                  if (!selected) {
-                    return <span style={{ color: "#9ca3af" }}>Medical Speciality ID</span>; // grey placeholder
-                  }
-                  return medical_speciality.find((item) => item._id === selected)?.lookup_value;
-                }}
-            >
-
-               <MenuItem disabled value="">
-                  <em>Medical Speciality ID</em>
-                </MenuItem>
-             {
-                medical_speciality?.map((item)=>
-                (
-                    <MenuItem key={item._id} value={item._id}>{item.lookup_value}</MenuItem>
-                ))
-            }
-            </Select>
-          </FormControl> 
-
-
        <FormControl fullWidth size="small">
-             <label className="form-label">Disease Name</label>
+             <label className="form-label">Religion Group </label>
             <TextField 
-              name="disease_name"
-              defaultValue={disease_master.disease_name}
+              name="religion_group"
+              defaultValue={Religion_Group.religion_group}
               onChange={handlechange}
-              placeholder='Disease Name'
+              placeholder='Religion Group'
             >
 
             </TextField>
           </FormControl> 
-
-        
-
-
-           <FormControl fullWidth size="small">
-            <label className="form-label">ICD 10 Code </label>
-            <TextField 
-              name="icd_10_code"
-              defaultValue={disease_master.icd_10_code}
-              onChange={handlechange}
-              placeholder='ICD 10 Code'
-            >
-           
-            </TextField>
-          </FormControl> 
-
-            <FormControl fullWidth size="small">
-            <label className="form-label">ICD 11 Code </label>
-            <TextField 
-              name="icd_11_code"
-              defaultValue={disease_master.icd_11_code}
-              onChange={handlechange}
-              placeholder='ICD 11 Code'
-            >
-           
-            </TextField>
-          </FormControl>
-
-           <FormControl fullWidth size="small">
-            <label className="form-label">Description</label>
-            <TextField 
-              name="description"
-              defaultValue={disease_master.description}
-              onChange={handlechange}
-              placeholder='Description'
-            >
-           
-            </TextField>
-          </FormControl>
 
          </div>
 
           <Button
-           className='submit-button'
-            onClick={add_disease_master}
+          className='submit-button'
+            onClick={add_diagnosis_type_master}
           >
             Submit
           </Button>
@@ -373,7 +252,7 @@ function DiseaseMaster() {
         
         
       {/* Table */}
-              <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
@@ -413,4 +292,4 @@ function DiseaseMaster() {
   )
 }
 
-export default DiseaseMaster
+export default ReligionGroup

@@ -16,11 +16,11 @@ import Adminheader from '../adminheader';
 
 
 
-function LifestyleInterventionMaster() {
+function VerifyMspEmail() {
 
   const[loading,setloading]=useState(false)
-     const [lifestyle_intervention_master, setlifestyle_intervention_master] = useState({
-        lifestyle_intervention: "",
+     const [Verify_Msp_Email, setVerify_Msp_Email] = useState({
+        verify_msp_email: "",
 
   });
 
@@ -64,7 +64,7 @@ function LifestyleInterventionMaster() {
     const onEdit=(row)=>
     {
        setlookup_id(row._id)
-       setlifestyle_intervention_master({
+       setVerify_Msp_Email({
        lifestyle_intervention:row.lookup_value
       })
     }
@@ -76,12 +76,7 @@ function LifestyleInterventionMaster() {
 
      const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Lifestyle Intervention', flex: 0.5 },
-        // { field: 'other', headerName: 'Description',flex:1,  renderCell: (params) => {
-        //     return params.row?.other?.description || "";
-        // }},
-     
-       
+        { field: 'lookup_value', headerName: 'Verify Msp Email', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -136,7 +131,7 @@ function LifestyleInterventionMaster() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setlifestyle_intervention_master((prev) => {
+  setVerify_Msp_Email((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -172,8 +167,8 @@ function LifestyleInterventionMaster() {
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"lifestyle_intervention_type",
-              lookup_value:lifestyle_intervention_master.lifestyle_intervention,
+              lookup_type:"occupation_role",
+              lookup_value:Verify_Msp_Email.verify_msp_email,
             }
           );
       
@@ -226,8 +221,8 @@ function LifestyleInterventionMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Lifestyle Intervention Master</h3>
-                  <p>Add or update the required details for the lifestyle intervention master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Verify Msp Email </h3>
+                  <p>Add or update the required details for the verify msp email to keep records accurate and complete.</p>
                   </div>
         
         
@@ -235,18 +230,19 @@ function LifestyleInterventionMaster() {
                 <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
           
-
+<div className='col-span-2'>
        <FormControl fullWidth size="small">
-             <label className="form-label">Lifestyle Intervention</label>
+             <label className="form-label">Verify Msp Email</label>
             <TextField 
-              name="lifestyle_intervention"
-              defaultValue={lifestyle_intervention_master.lifestyle_intervention}
+              name="verify_user_email"
+              defaultValue={Verify_Msp_Email.verify_msp_email}
               onChange={handlechange}
-              placeholder='Lifestyle Intervention'
+              placeholder='Enter Msp Email Id To Verify By Admin'
             >
 
             </TextField>
           </FormControl> 
+          </div>
 
          </div>
 
@@ -300,4 +296,4 @@ function LifestyleInterventionMaster() {
   )
 }
 
-export default LifestyleInterventionMaster
+export default VerifyMspEmail

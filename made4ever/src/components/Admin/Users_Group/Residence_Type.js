@@ -1,8 +1,8 @@
 import React, { useState ,useRef, useEffect} from 'react';
 import {
   Box, Grid, Button, Typography, Card, Avatar,
-  TextField, FormControl, InputLabel, Select, MenuItem, Paper,
-  FormControlLabel, Radio, Fade,Chip,Menu,InputAdornment 
+  TextField, FormControl, InputLabel, Select, MenuItem, RadioGroup,
+  FormControlLabel, Radio, Fade,Chip,Menu,Paper 
 } from '@mui/material';
 import {  IconButton,  Tooltip } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -16,24 +16,25 @@ import Adminheader from '../adminheader';
 
 
 
-function DiagnosisTypeMaster() {
+function ResidenceType() {
 
   const[loading,setloading]=useState(false)
-     const [diagnosis_type_master, setdiagnosis_type_master] = useState({
-        diagnosis_type: "",
+     const [Residence_Type, setResidence_Type] = useState({
+    residence_type: "",
+    property_type: "",
 
   });
 
 
 
-      const[all_diagnosis_type_master,setall_diagnosis_type_master]=useState([])
-      const getall_diagnosis_type_master=async()=>
+      const[all_allergy_master,setall_allergy_master]=useState([])
+      const getall_allergy_master=async()=>
       {
         try {
-            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"diagnosis_type"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"allergy_master"})
           console.log(resp);
           
-          setall_diagnosis_type_master(resp.data.data)
+          setall_allergy_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -43,7 +44,7 @@ function DiagnosisTypeMaster() {
     
       useEffect(()=>
       {
-        getall_diagnosis_type_master()
+        getall_allergy_master()
     
       },[])
 
@@ -61,27 +62,25 @@ function DiagnosisTypeMaster() {
       };
 
     const[lookup_id,setlookup_id]=useState(null)
-    const onEdit=(row)=>
-    {
-       setlookup_id(row._id)
-       setdiagnosis_type_master({
-        diagnosis_type:row.lookup_value
-      })
-    }
+     const onEdit=(row)=>
+     {
+        setlookup_id(row._id)
+        setResidence_Type({
+         allergy_category:row.parent_lookup_id,
+         allergy_name:row.lookup_value,
+         allergic_symptoms:row.other.allergic_symptoms
+       })
+     }
 
   const onDeletehospital=()=>
   {
     alert("delete")
   }
 
-     const columns = [
+     const column = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Diagnosis Type', flex: 0.5 },
-        // { field: 'other', headerName: 'Description',flex:1,  renderCell: (params) => {
-        //     return params.row?.other?.description || "";
-        // }},
-     
-       
+        { field: 'parent_lookup_name', headerName: 'Residence', flex: 0.5 },
+        { field: 'lookup_value', headerName: 'Property', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -125,7 +124,7 @@ function DiagnosisTypeMaster() {
     
       ];
     
-      const rows = all_diagnosis_type_master?.map((doc, index) => ({
+      const rows = all_allergy_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -133,10 +132,37 @@ function DiagnosisTypeMaster() {
 
 
 
+    //========================================= get salt type id ================================================
+
+  const[allergy_category,setallergy_category]=useState([])
+      const get_allergy_category=async()=>
+      {
+        try {
+          const resp=await api.post('api/v1/admin/LookupList',{lookupcodes:"allergy_category_type"})
+          setallergy_category(resp.data.data)
+          
+        } catch (error) {
+          console.log(error);
+          
+        }
+      }
+    
+      useEffect(()=>
+      {
+        get_allergy_category()
+    
+      },[])
+
+
+
+
+   
+
+
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setdiagnosis_type_master((prev) => {
+  setResidence_Type((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -166,22 +192,23 @@ function DiagnosisTypeMaster() {
 
 
      
-        const add_diagnosis_type_master = async () => {
+        const add_allergy_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"diagnosis_type",
-              lookup_value:diagnosis_type_master.diagnosis_type,
+              lookup_type:"residence_type",
+              lookup_value:Residence_Type.residence_type,
+              parent_lookup_id:Residence_Type.property_type,
             }
           );
       
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Diagnosis Type Master Added",
-                      text:"Diagnosis Type Master Addedd Successfully...",
+                      title:"Allergy Master Added",
+                      text:"Allergy Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -218,7 +245,7 @@ function DiagnosisTypeMaster() {
 
   return (
     <div>
-   <Adminheader />
+ <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
@@ -226,33 +253,68 @@ function DiagnosisTypeMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Diagnosis Type Master</h3>
-                  <p>Add or update the required details for the diagnosis type master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Residence Type Master</h3>
+                  <p>Add or update the required details for the residence type master to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                      <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                  <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
           
 
+  
        <FormControl fullWidth size="small">
-             <label className="form-label">Diagnosis Type</label>
+             <label className="form-label">Residence Type</label>
             <TextField 
-              name="diagnosis_type"
-              defaultValue={diagnosis_type_master.diagnosis_type}
+              name="residence_type"
+              defaultValue={Residence_Type.residence_type}
               onChange={handlechange}
-              placeholder='Disease Type'
+              placeholder='Residence Type'
             >
 
             </TextField>
           </FormControl> 
 
+        
+          <FormControl fullWidth size="small">
+             <label className="form-label">Property Type</label>
+            <Select 
+              name="property_type"
+              value={Residence_Type.property_type}
+              onChange={handlechange}
+             MenuProps={{
+                    disablePortal: true,
+                    disableScrollLock: true,
+                    }}
+                displayEmpty
+                renderValue={(selected) => {
+                  if (!selected) {
+                    return <span style={{ color: "#9ca3af" }}>Property Type</span>; // grey placeholder
+                  }
+                  return allergy_category.find((item) => item._id === selected)?.lookup_value;
+                }}
+            >
+
+               <MenuItem disabled value="">
+                  <em>Property Type</em>
+                </MenuItem>
+             {
+                allergy_category?.map((item)=>
+                (
+                    <MenuItem key={item._id} value={item._id}>{item.lookup_value}</MenuItem>
+                ))
+            }
+            </Select>
+          </FormControl> 
+          
+
+          
          </div>
 
           <Button
-          className='submit-button'
-            onClick={add_diagnosis_type_master}
+         className='submit-button'
+            onClick={add_allergy_master}
           >
             Submit
           </Button>
@@ -265,7 +327,7 @@ function DiagnosisTypeMaster() {
               <DataGrid
                className="custom-data-grid"
                 rows={rows}
-                columns={columns}
+                columns={column}
                 pageSize={10}
                 pageSizeOptions={[]} // removes the rows per page selector
                 initialState={{
@@ -300,4 +362,4 @@ function DiagnosisTypeMaster() {
   )
 }
 
-export default DiagnosisTypeMaster
+export default ResidenceType

@@ -16,24 +16,23 @@ import Adminheader from '../adminheader';
 
 
 
-function LogsticalConsiderationMaster() {
+function MotherTongue() {
 
   const[loading,setloading]=useState(false)
-     const [logistical_consideration_master, setlogistical_consideration_master] = useState({
-        logistical_consideration: "",
-
-  });
-
+     const [Mother_Tongue, setMother_Tongue] = useState({
+        mother_tongue: "",
+      });
 
 
-      const[all_logistical_consideration_master,setall_logistical_consideration_master]=useState([])
-      const getall_logistical_consideration_master=async()=>
+
+      const[all_diagnosis_type_master,setall_diagnosis_type_master]=useState([])
+      const getall_diagnosis_type_master=async()=>
       {
         try {
-            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"logistical_consideration_type"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"diagnosis_type"})
           console.log(resp);
           
-          setall_logistical_consideration_master(resp.data.data)
+          setall_diagnosis_type_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -43,7 +42,7 @@ function LogsticalConsiderationMaster() {
     
       useEffect(()=>
       {
-        getall_logistical_consideration_master()
+        getall_diagnosis_type_master()
     
       },[])
 
@@ -64,8 +63,8 @@ function LogsticalConsiderationMaster() {
     const onEdit=(row)=>
     {
        setlookup_id(row._id)
-       setlogistical_consideration_master({
-        logistical_consideration:row.lookup_value,
+       setMother_Tongue({
+        diagnosis_type:row.lookup_value
       })
     }
 
@@ -76,10 +75,8 @@ function LogsticalConsiderationMaster() {
 
      const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Logistical Consideration', flex: 0.5 },
-        // { field: 'other', headerName: 'Description',flex:1,  renderCell: (params) => {
-        //     return params.row?.other?.description || "";
-        // }},
+        { field: 'lookup_value', headerName: 'Mother Tongue', flex: 0.5 },
+    
      
        
        {
@@ -125,7 +122,7 @@ function LogsticalConsiderationMaster() {
     
       ];
     
-      const rows = all_logistical_consideration_master?.map((doc, index) => ({
+      const rows = all_diagnosis_type_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -136,7 +133,7 @@ function LogsticalConsiderationMaster() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setlogistical_consideration_master((prev) => {
+  setMother_Tongue((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -166,22 +163,22 @@ function LogsticalConsiderationMaster() {
 
 
      
-        const add_logistical_consideration_master = async () => {
+        const add_diagnosis_type_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"logistical_consideration_type",
-              lookup_value:logistical_consideration_master.logistical_consideration,
+              lookup_type:"mother_tongue",
+              lookup_value:Mother_Tongue.mother_tongue,
             }
           );
       
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Logistical Consideration Master Added",
-                      text:"Logistical Consideration Master Addedd Successfully...",
+                      title:"Diagnosis Type Master Added",
+                      text:"Diagnosis Type Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -218,7 +215,7 @@ function LogsticalConsiderationMaster() {
 
   return (
     <div>
-<Adminheader />
+   <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
@@ -226,23 +223,23 @@ function LogsticalConsiderationMaster() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Logistical Consideration_master Master</h3>
-                  <p>Add or update the required details for the logistical consideration master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Mother Tongue Master</h3>
+                  <p>Add or update the required details for the mother tongue master to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                   <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                      <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
           
 
        <FormControl fullWidth size="small">
-             <label className="form-label">Logistical Consideration</label>
+             <label className="form-label">Mother Tongue </label>
             <TextField 
-              name="logistical_consideration"
-              defaultValue={logistical_consideration_master.logistical_consideration}
+              name="mother_tongue"
+              defaultValue={Mother_Tongue.mother_tongue}
               onChange={handlechange}
-              placeholder='Logistical Consideration'
+              placeholder='Mother Tongue'
             >
 
             </TextField>
@@ -251,8 +248,8 @@ function LogsticalConsiderationMaster() {
          </div>
 
           <Button
-           className='submit-button'
-            onClick={add_logistical_consideration_master}
+          className='submit-button'
+            onClick={add_diagnosis_type_master}
           >
             Submit
           </Button>
@@ -260,7 +257,7 @@ function LogsticalConsiderationMaster() {
         
         
       {/* Table */}
-               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}>  
+               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
@@ -300,4 +297,4 @@ function LogsticalConsiderationMaster() {
   )
 }
 
-export default LogsticalConsiderationMaster
+export default MotherTongue

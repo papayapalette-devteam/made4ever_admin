@@ -16,25 +16,24 @@ import Adminheader from '../adminheader';
 
 
 
-function InvestigationCategory() {
-  
+function OccupationRole() {
+
   const[loading,setloading]=useState(false)
+     const [Occupation_Role, setOccupation_Role] = useState({
+        occupation_role: "",
 
-     const [investigation_category, setinvestigation_category] = useState({
-            investigation_category: "",
-        
-        });
-
+  });
 
 
-      const[all_investigation_category,setall_investigation_category]=useState([])
-      const getall_investigation_category=async()=>
+
+      const[all_lifestyle_intervention_master,setall_lifestyle_intervention_master]=useState([])
+      const getall_lifestyle_intervention_master=async()=>
       {
         try {
-          const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"investigation_category_type"})
+            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"lifestyle_intervention_type"})
           console.log(resp);
           
-          setall_investigation_category(resp.data.data)
+          setall_lifestyle_intervention_master(resp.data.data)
           
         } catch (error) {
           console.log(error);
@@ -44,12 +43,9 @@ function InvestigationCategory() {
     
       useEffect(()=>
       {
-        getall_investigation_category()
+        getall_lifestyle_intervention_master()
     
       },[])
-
-     
-      
 
       const [menuAnchor, setMenuAnchor] = useState(null);
       const [menuRowId, setMenuRowId] = useState(null);
@@ -64,23 +60,23 @@ function InvestigationCategory() {
         setMenuRowId(null);
       };
 
-      const[lookup_id,setlookup_id]=useState(null)
-  const onEdit=(row)=>
-  {
-    setlookup_id(row._id)
-    setinvestigation_category({investigation_category:row.lookup_value})
-  }
+    const[lookup_id,setlookup_id]=useState(null)
+    const onEdit=(row)=>
+    {
+       setlookup_id(row._id)
+       setOccupation_Role({
+       lifestyle_intervention:row.lookup_value
+      })
+    }
 
   const onDeletehospital=()=>
   {
     alert("delete")
   }
 
-  
-
-     const column = [
+     const columns = [
         { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Investigation Category', flex: 0.5 }, 
+        { field: 'lookup_value', headerName: 'Occupation Role', flex: 0.5 },
        {
       field: 'actions',
       headerName: 'Actions',
@@ -124,7 +120,7 @@ function InvestigationCategory() {
     
       ];
     
-      const rows = all_investigation_category?.map((doc, index) => ({
+      const rows = all_lifestyle_intervention_master?.map((doc, index) => ({
         id: doc._id || index,
         ...doc,
       }));
@@ -135,7 +131,7 @@ function InvestigationCategory() {
     const handlechange = (e) => {
   const { name, value, checked, type } = e.target;
 
-  setinvestigation_category((prev) => {
+  setOccupation_Role((prev) => {
     if (Array.isArray(value)) {
       return { ...prev, [name]: value };
     }
@@ -164,24 +160,23 @@ function InvestigationCategory() {
 };
 
 
-
      
-        const add_investigation_category = async () => {
+        const add_lifestyle_intervention_master = async () => {
         try {
           setloading(true)
           const resp = await api.post("api/v1/admin/SaveLookup",
             {
               lookup_id:lookup_id,
-              lookup_type:"investigation_category_type",
-              lookup_value:investigation_category.investigation_category,
+              lookup_type:"occupation_role",
+              lookup_value:Occupation_Role.occupation_role,
             }
           );
-    
+      
           if (resp.data.response.response_code === "200") {
               Swal.fire({
                       icon:"success",
-                      title:"Investigation Category Added",
-                      text:"Investigation Category Addedd Successfully...",
+                      title:"Lifestyle Intervention Master Added",
+                      text:"Lifestyle Intervention Master Addedd Successfully...",
                       showConfirmButton:true,
                        customClass: {
                       confirmButton: 'my-swal-button',
@@ -193,16 +188,16 @@ function InvestigationCategory() {
             console.log("✅ Lookup list:", resp.data.data);
           } else {
             console.warn("⚠️ Error:", resp.data.response.response_message);
-            Swal.fire({
+              Swal.fire({
                       icon:"error",
                       title:"Error Occured",
                       text:resp.data.response.response_message,
                       showConfirmButton:true,
-                        customClass: {
+                       customClass: {
                       confirmButton: 'my-swal-button',
                     }
                 }
-                            )
+                )
           }
         } catch (error) {
           console.error("❌ API Error:", error);
@@ -218,7 +213,7 @@ function InvestigationCategory() {
 
   return (
     <div>
-      <Adminheader />
+   <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
@@ -226,32 +221,33 @@ function InvestigationCategory() {
           <div className="main-content">
 
         <div className='profile-header'>
-                  <h3>Enter Details for Investigation Category Master</h3>
-                  <p>Add or update the required details for the investigation category master to keep records accurate and complete.</p>
+                  <h3>Enter Details for Occupation Role </h3>
+                  <p>Add or update the required details for the occupation role to keep records accurate and complete.</p>
                   </div>
         
         
            {/* Form */}
-                   <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+                <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <div className="form-grid">
-    
-           <FormControl fullWidth size="small">
-            <label className="form-label">Investigation Category</label>
+          
+
+       <FormControl fullWidth size="small">
+             <label className="form-label">Occupation Functional Area</label>
             <TextField 
-              name="investigation_category"
-              defaultValue={investigation_category.investigation_category}
+              name="occupation_role"
+              defaultValue={Occupation_Role.occupation_role}
               onChange={handlechange}
-              placeholder='investigation category'
+              placeholder='Occupation Role'
             >
-           
+
             </TextField>
           </FormControl> 
 
          </div>
 
           <Button
-          className='submit-button'
-            onClick={add_investigation_category}
+           className='submit-button'
+            onClick={add_lifestyle_intervention_master}
           >
             Submit
           </Button>
@@ -259,12 +255,12 @@ function InvestigationCategory() {
         
         
       {/* Table */}
-               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
+              <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
                                               
               <DataGrid
                className="custom-data-grid"
                 rows={rows}
-                columns={column}
+                columns={columns}
                 pageSize={10}
                 pageSizeOptions={[]} // removes the rows per page selector
                 initialState={{
@@ -279,23 +275,24 @@ function InvestigationCategory() {
       </div>
       </div>
 
-                 {loading && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(255, 255, 255, 0.6)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <UniqueLoader />
-        </div>
-      )}
+           {loading && (
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(255, 255, 255, 0.6)',
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <UniqueLoader />
+  </div>
+)}
+
     </div>
   )
 }
 
-export default InvestigationCategory
+export default OccupationRole
