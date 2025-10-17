@@ -163,7 +163,7 @@
 @media (max-width: 768px) {
   /* One-column form */
   .form-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .profile-header h3 {

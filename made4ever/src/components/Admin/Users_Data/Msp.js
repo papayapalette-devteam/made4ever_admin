@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { DataGrid } from '@mui/x-data-grid';
 import Adminsidebar from '../adminsidebar';
 import Adminheader from '../adminheader';
+import '../admincss/common_config.css'
 
 
 
@@ -360,6 +361,10 @@ const handlechange = (e) => {
                   <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
               <div className="form-grid">
           
+
+           
+          
+                 
       
           <FormControl fullWidth size="small">
             <label className='form-label'>Name</label>
@@ -368,10 +373,10 @@ const handlechange = (e) => {
             placeholder="Name"
             defaultValue={Msp.name}
             onChange={handlechange}
-            fullWidth
-            size="small"
           />
           </FormControl>
+
+          
         
          <FormControl fullWidth size="small">
             <label className='form-label'>Email</label>
@@ -380,8 +385,6 @@ const handlechange = (e) => {
             placeholder="Email"
             defaultValue={Msp.email}
             onChange={handlechange}
-            fullWidth
-            size="small"
           />
           </FormControl>
 
@@ -392,7 +395,6 @@ const handlechange = (e) => {
             placeholder="Password"
             defaultValue={Msp.password}
             onChange={handlechange}
-            fullWidth
             size="small"
           />
           </FormControl>
@@ -404,7 +406,6 @@ const handlechange = (e) => {
             placeholder="Confirm Password"
             defaultValue={Msp.confirm_password}
             onChange={handlechange}
-            fullWidth
             size="small"
           />
           </FormControl>
@@ -416,7 +417,6 @@ const handlechange = (e) => {
             placeholder="Mobile Number"
             defaultValue={Msp.mobile_number}
             onChange={handlechange}
-            fullWidth
             size="small"
           />
           </FormControl>
@@ -430,11 +430,14 @@ const handlechange = (e) => {
                   displayEmpty
                 renderValue={(selected) => {
                   if (!selected) {
-                    return <span style={{ color: "#9ca3af" }}>Entity</span>; // grey placeholder
+                    return <span style={{ color: "#9ca3af" }}>Registered Business Name</span>; // grey placeholder
                   }
                   return alllogin_list.find((item) => item._id === selected)?.UserName;
                 }}
             >
+                <em>
+                    Registered Business Name
+                </em>
              {
                 alllogin_list.map((item)=>
                 (
@@ -452,34 +455,24 @@ const handlechange = (e) => {
             placeholder="Mobile Number"
             defaultValue={Msp.id}
             onChange={handlechange}
-            fullWidth
             size="small"
           />
           </FormControl>
 
-          <div className='col-span-2'>
-
-            <FormControl fullWidth size="small">
-            <label className='form-label'>Address</label>
-            <textarea
-            style={{border:"1px solid gray", height:"100px",padding:"10px",borderRadius:"5px"}}
+        <FormControl fullWidth size="small">
+            <label className="form-label">Address</label>
+            <TextField 
             name="address"
-            placeholder="Enter Your Address"
             defaultValue={Msp.address}
             onChange={handlechange}
-            fullWidth
-            size="small"
-          />
-          </FormControl>
+            placeholder='Address'
+            >
 
-          </div>
+            </TextField>
+        </FormControl> 
 
          
           
-         
-         
-
-        
           </div>
 
           <Button
