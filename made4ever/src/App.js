@@ -20,6 +20,19 @@ import OccupationRole from "./components/Admin/Users_Group/Occupation_Role";
 import VerifyUserEmail from "./components/Admin/Users_Group/Verify_User_Email";
 import VerifyMspEmail from "./components/Admin/Users_Group/Verify_Msp_Email";
 import Msp from "./components/Admin/Users_Data/Msp";
+import MspVideo from "./components/Admin/Users_Data/Other_Forms/Msp_Video";
+import MspGallary from "./components/Admin/Users_Data/Other_Forms/Msp_Gallary";
+import MspEventImage from "./components/Admin/Users_Data/Other_Forms/Msp_Event_Image";
+import MspHeaderText from "./components/Admin/Users_Data/Other_Forms/Msp_Header_Text";
+import WonderfulWeddingPlanners from "./components/Admin/Wedding_Friends/Wonderful_Wedding_Planners";
+import VideoPhotography from "./components/Admin/Wedding_Friends/Video_Photography";
+import LovelyWeddingLocation from "./components/Admin/Wedding_Friends/Lovely_Wedding_Location";
+import FabulousFlorals from "./components/Admin/Wedding_Friends/Fabulous_Florals";
+import CreativeCatering from "./components/Admin/Wedding_Friends/Creative_Catering";
+import Musicians from "./components/Admin/Wedding_Friends/Musicians";
+import DressMaterials from "./components/Admin/Wedding_Friends/Dress_Materials";
+import EventProduction from "./components/Admin/Wedding_Friends/Event_Production";
+import Jwellers from "./components/Admin/Wedding_Friends/Jwellers";
 
 
 
@@ -53,12 +66,36 @@ function App() {
         <Route path="/verify-msp-email" element={<VerifyMspEmail/>}></Route>
         
         {/*===================== user group section route end ===========================*/}
-      
+
+      {/* ======================Wedding Friends section routes start ====================*/}
+
+      <Route path="/wonderfull-wedding-planners" element={<WonderfulWeddingPlanners/>}></Route>
+      <Route path="/video-photography" element={<VideoPhotography/>}></Route>
+      <Route path="/weddeing-location" element={<LovelyWeddingLocation/>}></Route>
+      <Route path="/fabulous-florals" element={<FabulousFlorals/>}></Route>
+      <Route path="/creative-catering" element={<CreativeCatering/>}></Route>
+      <Route path="/musicians" element={<Musicians/>}></Route>
+      <Route path="/dress-material" element={<DressMaterials/>}></Route>
+      <Route path="/event-production" element={<EventProduction/>}></Route>
+      <Route path="/jwellers" element={<Jwellers/>}></Route>
+
+      {/* ======================Wedding Friends section routes end ====================*/}
+
+
       {/*===================== users data section route start ===========================*/}
 
        <Route path="/msp" element={<Msp/>}></Route>
 
-         {/*===================== users data section route end ===========================*/}
+      {/*===================== users data section route end ===========================*/}
+
+      {/*=============================== other routes start============================ */}
+
+        <Route path="/msp-video" element={<MspVideo/>}></Route>
+        <Route path="/msp-gallary" element={<MspGallary/>}></Route>
+        <Route path="/msp-event-image" element={<MspEventImage/>}></Route>
+        <Route path="/msp-header-text" element={<MspHeaderText/>}></Route>
+
+      {/*============================== other routes end==================================== */}
 
 
       </Routes>

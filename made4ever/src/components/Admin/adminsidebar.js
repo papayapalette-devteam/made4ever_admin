@@ -53,24 +53,24 @@ const menuItems = [
   ]
   },
 
-  { icon: mspvideo, label: "MSP Video", path: "/content-master" },
-  { icon: mspgallary, label: "MSP Gallary", path: "/event-master" },
-  { icon: mspeventimage, label: "MSP Event Image", path: "/event-master" },
-  { icon: headingtext, label: "MSP Header Text", path: "/event-master" },
+  { icon: mspvideo, label: "MSP Video", path: "/msp-video" },
+  { icon: mspgallary, label: "MSP Gallary", path: "/msp-gallary" },
+  { icon: mspeventimage, label: "MSP Event Image", path: "/msp-event-image" },
+  { icon: headingtext, label: "MSP Header Text", path: "/msp-header-text" },
 
   {
     icon: weddingfriends,
     label: "Wedding Friends",
     children: [
-  { icon: addhospitalicon, label: "Wonderfull Wedding Planners", path: "/patient-referral-type" },
-  { icon: addhospitalicon, label: "Video And Photography Phenoms", path: "/symptom-class-master" },
-  { icon: addhospitalicon, label: "Lovely Wedding Locations", path: "/symptom-master" },
-  { icon: addhospitalicon, label: "Fabulous Florals", path: "/aggravating-factor-master" },
-  { icon: addhospitalicon, label: "Creative Catering And Cakes", path: "/pharmaceutical-salt-type-master" },
-  { icon: addhospitalicon, label: "Marvelous Musicians/Djs And Entertainment Booking Agents", path: "/pharmaceutical-salt-master" },
-  { icon: addhospitalicon, label: "Wedding Dress Materials", path: "/dosage-type-master" },
-  { icon: addhospitalicon, label: "Events Production And Rentals", path: "/medicine-frequency-master" },
-  { icon: addhospitalicon, label: "Jwellers", path: "/therapy-master" },
+  { icon: addhospitalicon, label: "Wonderfull Wedding Planners", path: "/wonderfull-wedding-planners" },
+  { icon: addhospitalicon, label: "Video And Photography Phenoms", path: "/video-photography" },
+  { icon: addhospitalicon, label: "Lovely Wedding Locations", path: "/weddeing-location" },
+  { icon: addhospitalicon, label: "Fabulous Florals", path: "/fabulous-florals" },
+  { icon: addhospitalicon, label: "Creative Catering And Cakes", path: "/creative-catering" },
+  { icon: addhospitalicon, label: "Marvelous Musicians/Djs And Entertainment Booking Agents", path: "/musicians" },
+  { icon: addhospitalicon, label: "Wedding Dress Materials", path: "/dress-material" },
+  { icon: addhospitalicon, label: "Events Production And Rentals", path: "/event-production" },
+  { icon: addhospitalicon, label: "Jwellers", path: "/jwellers" },
     ],
   },
 
