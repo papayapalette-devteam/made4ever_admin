@@ -127,6 +127,13 @@ body.sidebar-collapsed {
   font-size: 16px !important;
 }
 
+.small-swal-popup {
+  width: 400px !important; /* adjust as needed */
+  font-size: 14px;         /* optional: make text smaller */
+  padding: 1rem;           /* optional: adjust padding */
+}
+
+
 
 
 

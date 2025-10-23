@@ -20,16 +20,9 @@ import Swal from "sweetalert2";
 
 const menuItems = [
   { icon: dashboardicon, label: "Dashboard", path: "/" },
-  {
-    icon: user,
-    label: "Users Data",
-    children: [
-      { icon: addhospitalicon, label: "Msp", path: "/msp" }, 
-      // { icon: addhospitalicon, label: "Users", path: "/symptom-class-master" },
+  { icon: mspvideo, label: "MSP Data", path: "/msp" },
  
-    ],
-  },
-   {
+  {
     icon: usersgroup,
     label: "Users Group",
     children: [
@@ -74,7 +67,7 @@ const menuItems = [
   //   ],
   // },
 
-  { icon: mspmatch, label: "MSP Match", path: "/event-master" },
+  { icon: mspmatch, label: "Matches", path: "/event-master" },
   { icon: paymentdetails, label: "Payment Details", path: "/event-master" },
   // { icon: mobileloginotp, label: "Mobile Login Otp", path: "/event-master" },
 

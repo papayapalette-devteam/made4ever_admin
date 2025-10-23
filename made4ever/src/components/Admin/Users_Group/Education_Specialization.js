@@ -1,114 +1,202 @@
-import React, { useState ,useRef, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  Box, Grid, Button, Typography, Card, Avatar,
-  TextField, FormControl, InputLabel, Select, MenuItem, RadioGroup,
-  FormControlLabel, Radio, Fade,Chip,Menu,Paper 
-} from '@mui/material';
-import {  IconButton,  Tooltip } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+  Button,
+  TextField,
+  FormControl,
+  MenuItem,
+  Menu,
+  Paper,
+} from "@mui/material";
+import { IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import api from '../../../api'
-import Swal from 'sweetalert2';
-import UniqueLoader from '../loader';
-import { DataGrid } from '@mui/x-data-grid';
-import Adminsidebar from '../adminsidebar';
-import Adminheader from '../adminheader';
-
-
+import api from "../../../api";
+import Swal from "sweetalert2";
+import UniqueLoader from "../loader";
+import { DataGrid } from "@mui/x-data-grid";
+import Adminsidebar from "../adminsidebar";
+import Adminheader from "../adminheader";
 
 function EducationSpecialization() {
-
-  const[loading,setloading]=useState(false)
-     const [Education_Specialization, setEducation_Specialization] = useState({
-      education_specialization: "",
+  const [loading, setloading] = useState(false);
+  const [Education_Specialization, setEducation_Specialization] = useState({
+    education_specialization: "",
   });
 
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0, // DataGrid pages start from 0
+    pageSize: 10,
+  });
 
+  const [All_Education_Specialization, setAll_Education_Specialization] =
+    useState([]);
+  const getall_education_specialization = async (
+    pageNumber = paginationModel.page,
+    limitNumber = paginationModel.pageSize
+  ) => {
+    try {
+      setloading(true);
+      const params = new URLSearchParams();
 
-      const[all_allergy_master,setall_allergy_master]=useState([])
-      const getall_allergy_master=async()=>
-      {
-        try {
-            const resp=await api.post('api/v1/admin/LookupList/',{lookupcodes:"allergy_master"})
-          console.log(resp);
-          
-          setall_allergy_master(resp.data.data)
-          
-        } catch (error) {
-          console.log(error);
-          
-        }
+      // Pagination
+      params.append("page", pageNumber + 1); // backend is 1-indexed
+      params.append("limit", limitNumber);
+
+      // Always include lookup_type
+      params.append("lookup_type", "education_specialization");
+
+      // Optionally, if you want to filter by parent_lookup_id
+      // params.append("parent_lookup_id", "SOME_PARENT_ID");
+
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+
+      setAll_Education_Specialization(resp.data.data);
+      setRowCount(resp.data.total);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  useEffect(() => {
+    getall_education_specialization();
+  }, []);
+
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [menuRowId, setMenuRowId] = useState(null);
+
+  const handleOpenMenu = (event, rowId) => {
+    setMenuAnchor(event.currentTarget);
+    setMenuRowId(rowId);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchor(null);
+    setMenuRowId(null);
+  };
+
+  const [lookup_id, setlookup_id] = useState(null);
+  const onEdit = (row) => {
+    setlookup_id(row._id);
+    setEducation_Specialization({
+      education_specialization: row.lookup_value,
+    });
+  };
+
+  const onDelete = async (row) => {
+    try {
+      const confirmResult = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to delete this Education Specialization?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+          cancelButton: "my-swal-cancel-button",
+        },
+      });
+
+      // 🔹 If user cancels, stop execution
+      if (!confirmResult.isConfirmed) return;
+
+      const resp = await api.delete(`api/admin/RemoveLookup?id=${row._id}`);
+
+      if (resp.status === 200) {
+        setTimeout(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Education Specialization Deleted",
+            text: "Education Specialization Deleted Successfully...",
+            showConfirmButton: true,
+            customClass: {
+              popup: "small-swal-popup",
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
+      } else {
+        console.warn("⚠️ Error:", resp.data.response.data.message);
+        setTimeout(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Error Occured",
+            text: resp.data.response.data.message,
+            showConfirmButton: true,
+            customClass: {
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
       }
-    
-      useEffect(()=>
-      {
-        getall_allergy_master()
-    
-      },[])
+    } catch (error) {
+      console.log(error);
+      setTimeout(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Error Occurred",
+          text: error.response?.data?.message || "Something went wrong",
+          showConfirmButton: true,
+          customClass: { confirmButton: "my-swal-button" },
+        }).then(() => {
+          window.location.reload(); // optional, you can remove this if not needed
+        });
+      }, 0);
+    }
+  };
 
-      const [menuAnchor, setMenuAnchor] = useState(null);
-      const [menuRowId, setMenuRowId] = useState(null);
-      
-      const handleOpenMenuhospital = (event, rowId) => {
-        setMenuAnchor(event.currentTarget);
-        setMenuRowId(rowId);
-      };
-      
-      const handleCloseMenuhospital = () => {
-        setMenuAnchor(null);
-        setMenuRowId(null);
-      };
-
-    const[lookup_id,setlookup_id]=useState(null)
-     const onEdit=(row)=>
-     {
-        setlookup_id(row._id)
-        setEducation_Specialization({
-         allergy_category:row.parent_lookup_id,
-         allergy_name:row.lookup_value,
-         allergic_symptoms:row.other.allergic_symptoms
-       })
-     }
-
-  const onDeletehospital=()=>
-  {
-    alert("delete")
-  }
-
-     const column = [
-        { field: 'sno', headerName: 'S.No.', flex: 0.2,renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1},
-        { field: 'lookup_value', headerName: 'Education Specialization', flex: 0.5 },
-       {
-      field: 'actions',
-      headerName: 'Actions',
+  const column = [
+    {
+      field: "sno",
+      headerName: "S.No.",
+      flex: 0.2,
+      renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
+    },
+    {
+      field: "lookup_value",
+      headerName: "Education Specialization",
+      flex: 0.5,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
       width: 80,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={(e) => handleOpenMenuhospital(e, params.row._id)}>
+          <IconButton onClick={(e) => handleOpenMenu(e, params.row._id)}>
             <MoreVertIcon />
           </IconButton>
-    
+
           {menuRowId === params.row._id && (
             <Menu
               anchorEl={menuAnchor}
               open={Boolean(menuAnchor)}
-              onClose={handleCloseMenuhospital}
+              onClose={handleCloseMenu}
               disableScrollLock
             >
               <MenuItem
                 onClick={() => {
                   onEdit(params.row);
-                  handleCloseMenuhospital();
+                  handleCloseMenu();
                 }}
               >
                 Edit
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDeletehospital(params.row._id);
-                  handleCloseMenuhospital();
+                  onDelete(params.row);
+                  handleCloseMenu();
                 }}
               >
                 Delete
@@ -117,215 +205,179 @@ function EducationSpecialization() {
           )}
         </>
       ),
-    }
-    
-      ];
-    
-      const rows = all_allergy_master?.map((doc, index) => ({
-        id: doc._id || index,
-        ...doc,
-      }));
+    },
+  ];
 
+  const rows = All_Education_Specialization?.map((doc, index) => ({
+    id: doc._id || index,
+    ...doc,
+  }));
 
+  const handlechange = (e) => {
+    const { name, value, checked, type } = e.target;
 
-
-    //========================================= get salt type id ================================================
-
-  const[allergy_category,setallergy_category]=useState([])
-      const get_allergy_category=async()=>
-      {
-        try {
-          const resp=await api.post('api/v1/admin/LookupList',{lookupcodes:"allergy_category_type"})
-          setallergy_category(resp.data.data)
-          
-        } catch (error) {
-          console.log(error);
-          
-        }
+    setEducation_Specialization((prev) => {
+      if (Array.isArray(value)) {
+        return { ...prev, [name]: value };
       }
-    
-      useEffect(()=>
-      {
-        get_allergy_category()
-    
-      },[])
 
+      if (Array.isArray(prev[name])) {
+        const updated = checked
+          ? [...prev[name], value] // Add
+          : prev[name].filter((item) => item !== value); // Remove
+        return { ...prev, [name]: updated };
+      }
 
+      if (type === "checkbox" && Array.isArray(prev[name])) {
+        const updated = checked
+          ? [...prev[name], value] // Add to array
+          : prev[name].filter((item) => item !== value); // Remove from array
+        return { ...prev, [name]: updated };
+      }
 
+      if (type === "checkbox") {
+        return { ...prev, [name]: checked };
+      }
 
-   
+      // Normal single-value field
+      return { ...prev, [name]: type === "checkbox" ? checked : value };
+    });
+  };
 
+  const add_education_specialization = async () => {
+    try {
+      setloading(true);
+      const resp = await api.post("api/admin/SaveLookup", {
+        lookup_id: lookup_id ? lookup_id : null,
+        lookup_type: "education_specialization",
+        lookup_value: Education_Specialization.education_specialization,
+        parent_lookup_id: null,
+      });
 
-    const handlechange = (e) => {
-  const { name, value, checked, type } = e.target;
-
-  setEducation_Specialization((prev) => {
-    if (Array.isArray(value)) {
-      return { ...prev, [name]: value };
+      if (resp.status === 200) {
+        setTimeout(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Education Specialization Added",
+            text: "Education Specialization Addedd Successfully...",
+            showConfirmButton: true,
+            customClass: {
+              popup: "small-swal-popup",
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
+      } else {
+        console.warn("⚠️ Error:", resp.data.response.data.message);
+        setTimeout(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Error Occured",
+            text: resp.data.response.data.message,
+            showConfirmButton: true,
+            customClass: {
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
+      }
+    } catch (error) {
+      console.error("❌ API Error:", error.response.data.message);
+      setTimeout(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Error Occurred",
+          text: error.response?.data?.message || "Something went wrong",
+          showConfirmButton: true,
+          customClass: { confirmButton: "my-swal-button" },
+        }).then(() => {
+          window.location.reload(); // optional, you can remove this if not needed
+        });
+      }, 0);
+    } finally {
+      setloading(false);
     }
-
-    if (Array.isArray(prev[name])) {
-      const updated = checked
-        ? [...prev[name], value] // Add
-        : prev[name].filter((item) => item !== value); // Remove
-      return { ...prev, [name]: updated };
-    }
-
-    if (type === "checkbox" && Array.isArray(prev[name])) {
-      const updated = checked
-        ? [...prev[name], value] // Add to array
-        : prev[name].filter((item) => item !== value); // Remove from array
-      return { ...prev, [name]: updated };
-    }
-
-    if (type === "checkbox") {
-      return { ...prev, [name]: checked };
-    }
-
-    // Normal single-value field
-    return { ...prev, [name]: type === "checkbox" ? checked : value };
-  });
-};
-
-
-     
-        const add_allergy_master = async () => {
-        try {
-          setloading(true)
-          const resp = await api.post("api/v1/admin/SaveLookup",
-            {
-              lookup_id:lookup_id,
-              lookup_type:"education_specialization",
-              lookup_value:Education_Specialization.education_specialization,
-            }
-          );
-      
-          if (resp.data.response.response_code === "200") {
-              Swal.fire({
-                      icon:"success",
-                      title:"Allergy Master Added",
-                      text:"Allergy Master Addedd Successfully...",
-                      showConfirmButton:true,
-                       customClass: {
-                      confirmButton: 'my-swal-button',
-                    },
-                    }).then(()=>
-                    {
-                      window.location.reload()
-                    })
-            console.log("✅ Lookup list:", resp.data.data);
-          } else {
-            console.warn("⚠️ Error:", resp.data.response.response_message);
-              Swal.fire({
-                      icon:"error",
-                      title:"Error Occured",
-                      text:resp.data.response.response_message,
-                      showConfirmButton:true,
-                       customClass: {
-                      confirmButton: 'my-swal-button',
-                    }
-                }
-                )
-          }
-        } catch (error) {
-          console.error("❌ API Error:", error);
-        }
-        finally
-        {
-          setloading(false)
-        }
-      };
-
- 
-      
+  };
 
   return (
     <div>
- <Adminheader />
+      <Adminheader />
 
       <div className="layout">
         <Adminsidebar />
         <div className="content-wrapper">
           <div className="main-content">
+            <div className="profile-header">
+              <h3>Enter Details for Education Specialization Master</h3>
+              <p>
+                Add or update the required details for the education
+                specialization master to keep records accurate and complete.
+              </p>
+            </div>
 
-        <div className='profile-header'>
-                  <h3>Enter Details for Education Specialization Master</h3>
-                  <p>Add or update the required details for the education specialization master to keep records accurate and complete.</p>
-                  </div>
-        
-        
-           {/* Form */}
-                  <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-      <div className="form-grid">
-          
+            {/* Form */}
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+              <div className="form-grid">
+                <FormControl fullWidth size="small">
+                  <label className="form-label">Education Specialization</label>
+                  <TextField
+                    name="education_specialization"
+                    defaultValue={
+                      Education_Specialization.education_specialization
+                    }
+                    onChange={handlechange}
+                    placeholder="Education Specialization"
+                  ></TextField>
+                </FormControl>
+              </div>
 
-  
-       <FormControl fullWidth size="small">
-             <label className="form-label">Education Specialization</label>
-            <TextField 
-              name="education_specialization"
-              defaultValue={Education_Specialization.education_specialization}
-              onChange={handlechange}
-              placeholder='Education Specialization'
-            >
+              <Button
+                className="submit-button"
+                onClick={add_education_specialization}
+              >
+                Submit
+              </Button>
+            </Paper>
 
-            </TextField>
-          </FormControl> 
-
-        
-          
-
-          
-         </div>
-
-          <Button
-         className='submit-button'
-            onClick={add_allergy_master}
-          >
-            Submit
-          </Button>
-        </Paper>
-        
-        
-      {/* Table */}
-               <Paper elevation={3} sx={{ p: 2, borderRadius: 2,marginTop:4 }}> 
-                                              
+            {/* Table */}
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid
-               className="custom-data-grid"
+                className="custom-data-grid"
                 rows={rows}
                 columns={column}
-                pageSize={10}
-                pageSizeOptions={[]} // removes the rows per page selector
-                initialState={{
-                  pagination: { paginationModel: { pageSize: 10, page: 0 } },
-                }}
+                rowCount={rowCount}
+                paginationMode="server"
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                pageSizeOptions={[10]}
                 disableSelectionOnClick
-              
               />
-              </Paper>
-     
+            </Paper>
           </div>
-      </div>
+        </div>
       </div>
 
-           {loading && (
-  <div
-    style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(255, 255, 255, 0.6)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <UniqueLoader />
-  </div>
-)}
-
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(255, 255, 255, 0.6)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <UniqueLoader />
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default EducationSpecialization
+export default EducationSpecialization;

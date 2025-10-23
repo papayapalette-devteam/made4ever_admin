@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // For Bootstrap JS features like carousel controls, ensure Bootstrap JS and its dependencies are included. With React, you might need react-bootstrap or manually add Bootstrap JS.
 
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     

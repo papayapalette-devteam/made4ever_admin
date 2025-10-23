@@ -193,5 +193,5 @@
 .MuiDataGrid-root .MuiDataGrid-cellContent {
     font-family: sans-serif !important;
     font-size: 1rem !important;
-    color: red !important; /* change to whatever color you want */
+    /* color: red !important; */
 }
