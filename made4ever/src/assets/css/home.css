@@ -1,0 +1,21 @@
+.lightBg{
+background-color: #eeeef1;
+    color: #626366;
+}
+.gray-btn-style {
+    background-color: #eeeef1;
+    color: #626366;
+}
+section.international-collaborations {
+    background-color:#edeefd;
+    margin-top: 10px;
+    padding-bottom: 110px
+}
+@media screen and (max-width:768px) {
+
+  section.international-collaborations {
+    margin-top: 80px;
+        padding-bottom: 50px
+
+  }
+}

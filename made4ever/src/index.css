@@ -1,0 +1,1052 @@
+body {
+  margin: 0;
+font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+body, html {
+  font-family: sans-serif;
+ 
+  overflow-x: hidden;
+  height: 100%;
+}
+
+
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =================================css for landing page==================================================== */
+
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wdth,wght@100;300;400;500;700&display=swap'); */
+:root {
+
+  /* --roboto: 'Roboto', sans-serif;     */
+  /* line-height: 1.5; */
+  --opensans: 'Open Sans', sans-serif;
+  --primay: #525fe2;
+  --secondary: #f86f03;
+  --white: #ffffff;
+  --black: #000000;
+  --text-color: #121212;
+  --border-radius: 4px;
+  --gray1: #a6a6a6;
+  --gray2: #4e4e4e;
+  --gray3: #272727;
+
+  --button-back-color:#52677D;
+  --button-back-hover: #43576a;
+
+  --div-background-active:#52677D;
+  --div-background-inactive:rgba(82, 103, 125, 0.15);
+
+  --button-back-white-color:#ffffff;
+
+
+  --sidebar-width: 220px;
+
+
+
+
+
+  --heading-font: 'Lora', serif;
+  --sub-heading-font: sans-serif;
+
+
+}
+
+
+body.sidebar-collapsed {
+  --sidebar-width: 60px; 
+  
+}
+
+
+.my-swal-button {
+  background-color: var(--button-back-color) !important;
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none
+}
+
+.my-swal-cancel-button
+{
+  background-color: red !important;
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none
+
+}
+
+.my-swal-text {
+  font-weight: 500;
+  font-size: 16px !important;
+}
+
+.small-swal-popup {
+  width: 400px !important; /* adjust as needed */
+  font-size: 14px;         /* optional: make text smaller */
+  padding: 1rem;           /* optional: adjust padding */
+}
+
+
+
+
+
+@font-face {
+  font-family: "Roboto", sans-serif;
+  font-style: NORMAL_OR_ITALIC;
+  font-weight: NUMERIC_WEIGHT_VALUE;
+  src: url(./assets/fonts/Roboto/Roboto-Italic-VariableFont_wdth\,wght.ttf) format('ttf');
+  src: url(./assets/fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf) format('ttf');
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.theme-color {
+  color: #525fe1
+}
+
+.decoration-none {
+  text-decoration: none;
+}
+
+.weight-600 {
+  font-weight: 600;
+}
+
+/* @media screen and (min-width:1400) {
+  .container{
+  min-width:1380px!important
+}
+} */
+
+
+
+h1,
+h2 {
+  color: #000000;
+}
+
+/* @media screen and (min-width:992px) { */
+
+.spacing-top,
+.spacing-bottom {
+  padding-top: 20px;
+
+}
+
+/* } */
+
+@media screen and (max-width:768px) {
+
+  .spacing-top,
+  .spacing-bottom {
+    padding-top: 50px;
+
+  }
+}
+
+@media screen and (max-width:991px) {
+
+  .spacing-top,
+  .spacing-bottom {
+    padding-top: 60px;
+
+  }
+}
+
+
+
+
+
+
+
+.doctor-slider p {
+  margin-bottom: 0;
+}
+
+.medical-tab-buttons #swiper-wrapper-5cf761c5d14f237f .swiper-slide {
+  /* min-width: 150px!important; */
+}
+
+/* header css */
+/* @media screen and (min-width:991px) { */
+
+/* } */
+
+
+
+
+
+.btn-group1 {
+  gap: 20px;
+}
+
+.error {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+.inner-err {
+  padding: 40px;
+  box-shadow: 3px 5px 15px rgb(194, 194, 194);
+  border-radius: 20px;
+}
+
+
+
+
+.nav-btn-style2:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.nav-btn-style:hover {
+  border-color: var(--secondary);
+  background-color: var(--secondary);
+  color: #fff;
+}
+
+
+/* **********owl-slider********** */
+:is(#hero-slider, #testmonital-card-owl) .owl-dots .owl-dot.active span,
+.owl-theme .owl-dots .owl-dot:hover span {
+  background: var(--secondary)
+}
+
+span {}
+
+
+button.owl-prev {
+  width: 40px;
+  height: 40px;
+  background-color: #F86F03 !important;
+  display: grid;
+  place-items: center;
+  margin-right: 10px;
+}
+
+
+button.owl-prev span {
+  /* font-size:30px; */
+  color: #ffffff;
+}
+
+button.owl-next {
+  width: 40px;
+  height: 40px;
+  background-color: #F86F03 !important;
+  display: grid;
+  place-items: center;
+  margin-left: 10px;
+
+}
+
+/* .button.owl-next > img{
+  width: 8px!important;
+} */
+button.owl-next span {
+  /* font-size:30px; */
+  color: #ffffff;
+}
+
+/* *********secton 2******** */
+.button-container {
+  background-color: #5867dd;
+  /* Blue background */
+  padding: 12px 18px;
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 10px;
+  /* width: 90%; */
+}
+
+.empoering-section .button-container {
+  background-color: #5867dd;
+  /* Blue background */
+  padding: 12px 18px;
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 10px;
+
+
+}
+
+/* .btn-custom-white{
+   color: var(--primay);
+  border:1px solid #ffffff;
+    border-radius: 8px;
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+} */
+
+.button-container .btn-custom {
+  color: var(--white);
+  border-radius: 8px;
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #ffffff;
+}
+
+.button-container .btn-custom:hover {
+  background-color: var(--white);
+  /* border: 1px solid ; */
+  color: var(--primay);
+}
+
+.button-container.btn-custom-white:hover {
+  border: 1px solid var(--white);
+  color: var(--white);
+  background-color: transparent;
+  ;
+}
+
+.button-container .active-custom-tab {
+  color: var(--primay);
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: white;
+}
+
+/* --------medical-borard-section---- */
+
+
+
+
+@media screen and (max-width:991px) {
+  .cutom-tab-style {
+    padding: 8px;
+
+  }
+}
+
+.cutom-tab-style2 {
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  /* background: #BDC4D4 !important; */
+
+}
+.lightBg
+{
+  border-radius: 10px;
+background: #BDC4D4 !important;
+
+}
+
+
+
+
+.medical-tab-buttons {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0;
+
+
+}
+
+
+
+
+
+
+
+#swiper-wrapper-589cb751887b681d .swiper-slide:last-child {
+  width: 270px !important;
+}
+
+
+/* .btn-primary {
+    background: #f97316;
+    color: white;
+}
+
+.btn-outline {
+    border: 1px solid #f97316;
+    color: #f97316;
+    background: transparent;
+} */
+
+.cardiology-card {
+  /* padding: 15px; */
+  background-color: #e6e8fc;
+  border-radius: 10px;
+
+}
+
+.cardiology-card .profile-link {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cardiology-card .doc-name {
+  color: #000000;
+  font-weight: 600;
+}
+
+section .common-btn-dark {
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  /* flex: 1; */
+  background-color: #f86f03;
+  color: var(--white);
+}
+
+section .common-btn-dark:hover {
+  color: #f86f03;
+  background-color: transparent;
+  border: 1px solid #f86f03;
+
+}
+
+section .common-btn-outline {
+  color: #f86f03;
+  border: 1px solid #f86f03;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  flex: 1;
+  /* background: var(--white); */
+}
+
+section .common-btn-outline:hover {
+  border: 1px solid #f86f03;
+  background-color: #f86f03;
+  color: var(--white);
+
+}
+
+.stats-card {
+  border-radius: 15px;
+  color: var(--white);
+  padding: 26px;
+
+}
+
+.stats-card3 {
+  background-color: #47b34e;
+  color: var(--white);
+}
+
+.stats-card2 {
+  background-color: #1d8a8f;
+  color: var(--white);
+
+}
+
+.stats-title {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.stats-value {
+  font-size: 46px;
+}
+
+.stats-img {
+  align-self: end;
+}
+
+.stats-card1 {
+  background-color: #fea500;
+  color: var(--white);
+  padding: 26px;
+
+}
+
+@media screen and (max-width: 991px) {
+
+  /* .stats-title{
+  font-size: 17px;
+  font-weight: 600;
+}
+.stats-value{
+  font-size: 30px;
+} */
+  .stats-card1,
+  .stats-card2,
+  .stats-card3 {
+    padding: 15px;
+  }
+
+  .stats-card {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .stats-title {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .stats-value {
+    font-size: 30px;
+  }
+}
+
+
+@media screen and (min-width:992px) {
+  .stats-card {
+    min-height: 218px;
+  }
+}
+
+.stats-card img {
+  max-width: 100px;
+}
+
+.award-certfication {
+  background-color: #dedfe6;
+  padding: 18px;
+  border-radius: 10px;
+}
+
+.award-card {
+  background-color: #dedfe6;
+  border: 0;
+}
+
+@media screen and (min-width:992px) {
+  .crt-view-link {
+    font-size: 24px;
+  }
+}
+
+.award-card img {
+  object-fit: cover;
+}
+
+.award-card .swiper-button-next,
+.swiper-button-prev {
+  /* Example: Adjust vertical position */
+  top: 100% !important;
+  /* transform: translateY(-50%) */
+
+
+
+}
+
+.award-card .swiper-button-next {
+
+  right: 40% !important;
+}
+
+.award-card .swiper-button-prev {
+  left: 40% !important;
+
+}
+
+/* -----about-css------ */
+
+
+:is(.content-1, .content-2) h2 {
+  color: #000000;
+}
+
+:is(.content-1, .content-2) p {
+  color: #0E0E0E;
+}
+
+.content-1 {
+  background-color: #eff1fe;
+  border-radius: 40px;
+  padding: 36px;
+}
+
+.content-2 {
+  background-color: #e6e8fc;
+  border-radius: 40px;
+  padding: 36px;
+}
+
+@media screen and (max-width:767px) {
+
+  .content-1,
+  .content-2 {
+
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+
+}
+
+.team-card {
+  text-align: center;
+}
+
+.team-person {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.deg {
+  color: #7b7b7f;
+}
+
+@media screen and (min-width:991px) {
+  :is(.content-1, .content-2) h2 {
+    /* font-size: 44px; */
+    font-weight: 500;
+  }
+
+  .our-team h2 {
+    /* font-size: 44px; */
+    font-weight: 500;
+  }
+
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+
+}
+
+@media screen and (max-width:768px) {
+  .team-grid {
+
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+  }
+}
+
+@media screen and (max-width:420px) {
+  .team-grid {
+
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+
+  }
+}
+
+
+/* .medical-tab-buttons .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+    top: 44px;
+
+}
+.medical-tab-buttons  span.swiper-pagination-bullet.swiper-pagination-bullet-active{
+background-color: var(--secondary);
+} */
+.cardiology-owl .owl-dots .active span {
+  background-color: var(--secondary) !important;
+}
+
+@media screen and (min-width: 1200px) {
+
+  .cardiology-owl .owl-stage,
+  .doctor-slider .owl-stage {
+    margin-left: -30px !important;
+  }
+
+}
+
+:is(.cardiology-owl .cardiology-owl, .doctor-slider) .owl-dots .active span {
+  background-color: var(--secondary) !important;
+
+}
+
+.cardiology-owl .owl-dots {
+  margin-top: 15px;
+}
+
+.doctor-cell-data {
+  font-size: 14px;
+  /* background-color: #525fe1; */
+
+}
+
+@media (min-width: 576px) {
+  .appoint-table-style.modal-dialog {
+    width: 85% !important;
+  }
+}
+
+.exampleModal1 {
+  display: grid;
+  place-items: center;
+  max-height: 70%;
+}
+
+.modal-dialog1 {
+  max-width: 80%;
+}
+
+/* -------checkbox----- */
+#checkbox2 input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Checked style with green background and white tick */
+#checkbox2 input[type="checkbox"]:checked {
+  background-color: #00c200;
+  /* Bright green */
+  border-color: #00a300;
+}
+
+#checkbox2 input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 18px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#checkbox2 input[type="checkbox"]:hover {
+  border-color: #888;
+}
+
+.contact-left-inner {
+  padding: 20px;
+}
+
+@media screen and (min-width:992px) {
+  .contact-left-inner {
+    padding: 36px;
+  }
+}
+
+
+
+form.contact-form-fields input,
+form.contact-form-fields textarea {
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 10px;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+form.contact-form-fields input::placeholder,
+form.contact-form-fields textarea::placeholder {
+  color: #ffffff;
+  font-weight: 100;
+  font-size: 16px;
+}
+
+.contact-btn {
+  display: flex;
+  justify-content: end;
+  margin-top: 36px;
+}
+
+.contact-btn button {
+  padding-inline: 30px
+}
+
+.contact-faq .accordion-button:not(.collapsed) {
+  background-color: #ebebeb;
+
+  /* border-radius: 10px; */
+
+}
+
+.contact-faq .accordion-button {
+  /* border-radius: 10px; */
+  background-color: #ffffff;
+  border: 1px solid #ebebeb;
+}
+
+.contact-faq .accordion-button:focus {
+  box-shadow: none;
+}
+
+@media screen and (max-width:767px) {
+
+  form.contact-form-fields input::placeholder,
+  form.contact-form-fields textarea::placeholder {
+    font-size: 12px;
+  }
+
+  form.contact-form-fields input,
+  form.contact-form-fields textarea {
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+
+.article-list-content p {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  /* number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* adds "..." at the end */
+}
+
+/*======================== about us css style================================== */
+
+.team-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.custom-modal .modal-content {
+  border-radius: 20px; /* Round corners */
+  overflow: hidden;
+}
+
+
+
+html {
+  overflow-y: scroll;
+}
+
+
+
+/*================================== global css for landing page ===================================*/
+
+
+.fw-semibold
+{
+  color:#000;
+  font-family: var(--heading-font);
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.light-color {
+  color:#52677D;
+  font-family:var(--sub-heading-font);
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.view-all
+{
+  display: flex;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius:10px;
+  background: var(--button-back-color);;
+  color:#FFF;
+  font-family:var(--heading-font);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal
+}
+
+.notify-me {
+  display: flex;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--button-back-color);
+  color: #FFF;
+  font-family: var(--heading-font);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+  border: none;
+}
+
+/* 🔹 Mobile screens: shrink button */
+@media (max-width: 480px) {
+  .notify-me {
+    width:auto !important;
+    height: 40px !important;
+    padding: 8px !important;
+    font-size: 12px;
+    gap: 6px;
+  }
+}
+
+
+/* button-style.css */
+.custom-button {
+  background: #fff;
+  color: #52677D;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: clamp(14px, 1.8vw, 18px);
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+
+/* ✅ Add margin-bottom on mobile view */
+@media (max-width: 767px) {
+  .view-all {
+    margin-bottom: 16px; /* or whatever you like */
+    width: 100%; /* optional: full width button on mobile */
+  }
+}
+
+.cutom-tab-style {
+  display: flex;
+  height: 50px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--button-back-color);;
+  border: 1px solid transparent; 
+  color: #FFF;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  width: 100%;
+}
+
+.activeTab {
+ display: flex;
+  height: 50px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--button-back-color);;
+  border: 1px solid transparent; /* kept from original */
+  color: #FFF;
+  font-family: sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+}
+
+.gray-btn-style {
+border-radius: 10px;
+background: #BDC4D4 !important;
+display: flex;
+height: 50px;
+padding: 0 !important;
+justify-content: center;
+align-items: center;
+gap: 10px;
+}
+.card-img-top
+{
+  border-radius: 12px !important;
+}
+
+
+
+
+
+
+
+

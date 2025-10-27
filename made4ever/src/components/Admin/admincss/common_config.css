@@ -1,0 +1,197 @@
+/* 🔹 Layout container */
+.layout {
+  display: flex;               /* Sidebar + Content side-by-side */
+  width: 100%;
+  min-height: 100vh;
+  /* background-color: #f9fafb; */
+  gap: 0;
+ 
+}
+
+/* 🔹 Sidebar */
+.sidebar {
+  width: var(--sidebar-width);               /* Fixed width on desktop */
+  background: rgba(189, 196, 212, 1);
+  height: 100vh;
+  position: fixed;             /* Always stick to left */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* transition: transform 0.3s ease-in-out; */
+}
+
+/* 🔹 Content wrapper (main content area) */
+.content-wrapper {
+  margin-left: var(--sidebar-width) !important; 
+  width: calc(100% - var(--sidebar-width));     
+  flex: 1 1 auto ;   
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
+  padding-right: 20px;
+  
+}
+
+/* 🔹 Actual page content container */
+.main-content {
+  padding: 10px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  width: auto;
+  
+}
+
+/* 🔹 Header inside content */
+.profile-header {
+  margin-bottom: 20px;
+
+}
+.profile-header h3 {
+  color: #000;
+  font-family: sans-serif !important;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.profile-header p {
+  color: rgba(0, 0, 0, 0.7);
+  font-family: sans-serif !important;
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+
+/* 🔹 Form grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.form-label {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+/* 🔹 Submit Button */
+.submit-button {
+  width: 200px !important;           
+  margin-top: 16px !important;     
+  font-family: 'Lora', serif !important;
+  font-weight: bold !important;
+  text-transform: none !important;  
+  background-color: var(--button-back-color) !important; 
+  color: #fff !important;
+}
+
+/* Optional: Hover effect */
+.submit-button:hover {
+  background-color: #115293 !important; /* darker primary on hover */
+}
+
+/* 🔹 MUI input override */
+.MuiInputBase-root.MuiOutlinedInput-root {
+  height: 44px !important;
+  min-height: 44px !important;
+  /* border: 1px solid rgba(0, 0, 0, 0.7) !important; */
+}
+
+/* 🔹 DataGrid override */
+.custom-data-grid {
+  height: auto !important;
+  border-radius: 8px !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+  border: none !important;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: sans-serif;
+  font-size: 0.95rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  
+}
+
+.custom-data-grid .MuiDataGrid-columnHeaders {
+  background-color: #52677D !important;
+  color: #fff; 
+  font-family: sans-serif !important;
+}
+
+/* Apply font to DataGrid cells */
+.custom-data-grid .MuiDataGrid-cell {
+  font-family: sans-serif !important;
+  font-size: 0.95rem !important;
+  color: rgba(0, 0, 0, 0.7) !important;
+  
+}
+
+/* Apply font to column headers */
+.custom-data-grid .MuiDataGrid-columnHeaderTitle {
+  font-family:  sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+
+}
+
+
+
+.custom-data-grid .MuiDataGrid-columnHeader {
+  background-color: #52677D !important;
+  border-radius: 5px;
+  color: white;
+}
+
+/* 🔹 Responsive Breakpoints */
+@media (max-width: 1024px) {
+  /* Two-column form */
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* One-column form */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .profile-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .profile-header p {
+    font-size: 0.9rem;
+  }
+
+  /* Sidebar collapses on small screens */
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%); /* hidden by default */
+  }
+
+  /* Content full width on small screen */
+  .content-wrapper {
+    margin-left: 20px !important; /* no sidebar on mobile */
+  }
+}
+
+
+
+/* Global DataGrid cell styles */
+.MuiDataGrid-root .MuiDataGrid-cell,
+.MuiDataGrid-root .MuiDataGrid-cellContent {
+    font-family: sans-serif !important;
+    font-size: 1rem !important;
+    /* color: red !important; */
+}
