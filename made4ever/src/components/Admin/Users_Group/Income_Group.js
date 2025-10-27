@@ -252,8 +252,8 @@ function IncomeGroup() {
         setTimeout(() => {
           Swal.fire({
             icon: "success",
-            title: "Education Group Added",
-            text: "Education Group Addedd Successfully...",
+            title: "Income Group Added",
+            text: "Income Group Addedd Successfully...",
             showConfirmButton: true,
             customClass: {
               popup: "small-swal-popup",
