@@ -43,7 +43,7 @@ function MspEventImage() {
 
       const resp = await api.get(`api/msp/Getmsp-event-image?${params.toString()}`);
 
-      setAll_Event_Image(resp.data.msp);
+      setAll_Event_Image(resp.data.mspEventImage);
       setRowCount(resp.data.total);
     } catch (error) {
       console.log(error);
@@ -56,6 +56,8 @@ function MspEventImage() {
     getall_event_image();
   }, []);
 
+
+  
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
 
@@ -87,11 +89,55 @@ function MspEventImage() {
       flex: 0.2,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-    { field: "parent_lookup_name", headerName: "Event Photos", flex: 1 },
+   {
+  field: "msp_event_image",
+  headerName: "Event Photos",
+  flex: 1,
+  renderCell: (params) => {
+    const images = params.value; // array of image URLs
+
+    if (!Array.isArray(images) || images.length === 0) {
+      return <span>No Images</span>;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        {images.map((img, index) => (
+          <a
+            key={index}
+            href={img}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={img}
+              alt={`Event ${index + 1}`}
+              style={{
+                width: 40,
+                height: 40,
+                objectFit: "cover",
+                cursor: "pointer",
+                borderRadius: "6px",
+              }}
+            />
+          </a>
+        ))}
+      </div>
+    );
+  },
+},
+
     {
       field: "actions",
       headerName: "Actions",
-      width: 80,
+      flex: 0.4,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -248,7 +294,7 @@ function MspEventImage() {
                     type="file"
                     multiple
                     name="msp_event_image"
-                    value={Msp_Event_Image.msp_event_image}
+                    // value={Msp_Event_Image.msp_event_image}
                     onChange={handleFileChange}
                   ></input>
                 </FormControl>
@@ -261,6 +307,7 @@ function MspEventImage() {
 
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+               <div style={{ width: "100%", overflowX: "auto" }}>
               <DataGrid
                 className="custom-data-grid"
                 rows={rows}
@@ -271,10 +318,11 @@ function MspEventImage() {
                 onPaginationModelChange={setPaginationModel}
                 pageSizeOptions={[10]}
                 disableSelectionOnClick
-                sx={{
-                  minWidth: 1200, // Set min width larger than container
-                }}
+                // sx={{
+                //   minWidth: 800, // Set min width larger than container
+                // }}
               />
+              </div>
             </Paper>
           </div>
         </div>
