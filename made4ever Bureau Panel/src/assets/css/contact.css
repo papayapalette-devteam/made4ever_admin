@@ -1,0 +1,74 @@
+@media screen and (max-width:991px) {
+    .contactus-page .headphon-icon>img {
+        opacity: .2;
+    }
+}
+
+.contact-left-inner {
+    padding: 20px;
+}
+
+@media screen and (min-width:992px) {
+    .contact-left-inner {
+        padding: 36px;
+    }
+}
+
+
+
+form.contact-form-fields input,
+form.contact-form-fields textarea {
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 10px;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+form.contact-form-fields input::placeholder,
+form.contact-form-fields textarea::placeholder {
+    color: #ffffff;
+    font-weight: 100;
+    font-size: 16px;
+}
+
+.contact-btn {
+    display: flex;
+    justify-content: end;
+    margin-top: 36px;
+}
+
+.contact-btn button {
+    padding-inline: 30px
+}
+
+.contact-faq .accordion-button:not(.collapsed) {
+    background-color: #ebebeb;
+
+    /* border-radius: 10px; */
+
+}
+
+.contact-faq .accordion-button {
+    /* border-radius: 10px; */
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+}
+
+.contact-faq .accordion-button:focus {
+    box-shadow: none;
+}
+
+@media screen and (max-width:767px) {
+
+    form.contact-form-fields input::placeholder,
+    form.contact-form-fields textarea::placeholder {
+        font-size: 12px;
+    }
+
+    form.contact-form-fields input,
+    form.contact-form-fields textarea {
+        padding: 6px;
+        font-size: 12px;
+    }
+}

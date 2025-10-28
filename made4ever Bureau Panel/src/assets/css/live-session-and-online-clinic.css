@@ -1,0 +1,44 @@
+.appoint-table-style thead.table-heading {
+    background-color: #525fe1;
+    padding: 40px;
+}
+
+/* .ap-cell{
+      background-color: #525fe1;
+    padding: 40px;
+} */
+.appoin-action-btns {
+    background-color: #f86f03;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 10px;
+
+}
+
+.appoin-action-btns:hover {
+    border: 1px solid #f86f03;
+    color: #f86f03;
+    background-color: transparent;
+}
+
+select.form-select.border-start-0 {
+    color: #7f7f7f;
+    border-radius: 10px;
+    padding-block: 10px;
+}
+
+span.input-group-text.border-end-0 {
+    padding-block: 10px;
+    border-radius: 10px 0 0 10px;
+}
+
+select.form-select:focus {
+    box-shadow: none;
+    border-color: #d7d7d7;
+}
+
+.live-session video {
+    max-height: 400px;
+    background: #3a3e4a;
+    border-radius: 19px;
+}

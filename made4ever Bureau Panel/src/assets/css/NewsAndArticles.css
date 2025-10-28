@@ -1,0 +1,96 @@
+.news-section {
+  /* background-color: #f5f6fa; */
+}
+
+.btn-primary {
+  background-color: #8b93ff !important;
+  border: none !important;
+}
+
+.btn-warning {
+  background-color: orange !important;
+  border: none !important;
+}
+
+.news-card{
+   display: flex;
+width: 356px;
+padding: 20px;
+flex-direction: column;
+align-items: flex-start;
+gap: 10px;
+border-radius: 20px;
+background: rgba(189, 196, 212, 0.30);
+}
+
+.news-section .news-card img {
+  object-fit: cover;
+  height: 257px;
+  border-radius: 10px;
+}
+
+.news-card h6 {
+  font-size: 1rem;
+}
+
+.content-style {
+  padding: 20px;
+  border-radius: 10px;
+  /* background-color: #dedfe6; */
+}
+
+.news-card-img-top {
+  border-radius: 10px;
+}
+
+.news-inner {
+  /* display: flex;
+  justify-content: space-between; */
+  /* margin-bottom: 40px; */
+}
+
+@media screen and (min-width:991px) {
+  .news-inner {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.tab-btn-style {
+  background-color: #e8e9f0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /* <div className="content-style"> 
+          <div className="row g-3">
+            {filteredCards.map((card) => (
+            <div className="col-lg-4 col-md-6 col-12 mb-md-0 mb-3" key={card.id}>
+              <div className="news-card border-0 shadow-sm h-100 rounded-4 p-3">
+                <img src={card.img} className="card-img-top " alt={card.title} />
+                <div className="pt-3 article-list-content ">
+                  <h4 className="fw-bold">{card.title}</h4> 
+                  <p className=" small mb-1 light-color d-inline">{card.desc} </p>
+                  <NavLink className="country-card ms-4 fw-semi-bold read-more-btn  text-decoration-none d-inline"
+                       to={`${card.id}`} state={card}>
+                      Read More 
+                  </NavLink> 
+                </div>
+              </div>
+            </div>
+            ))}
+          </div>
+        </div> */

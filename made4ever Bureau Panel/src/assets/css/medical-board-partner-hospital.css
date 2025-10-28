@@ -1,0 +1,86 @@
+@media screen and (min-width:992px) {
+  .tab-group-large {
+    /* height: 60px; */
+  }
+
+  .tab-group-large .active-custom-tab {
+    /* font-size: 20px; */
+
+  }
+
+  .tab-group-large .btn-custom {
+    padding: 3px 12px;
+    font-size: 20px;
+  }
+
+  .tab-group-large .tab-group-large {
+    padding-block: 11px;
+  }
+
+}
+
+.content-spacing {
+  margin-top: 30px;
+}
+
+.doctor-cell-data {
+  font-size: 14px;
+  background-color: #525fe1;
+  /* padding-block: 40px; */
+}
+
+.appoint-doc-tabs>button {
+
+  margin-right: 15px;
+}
+
+.appoint-doc-tabs {
+  overflow: hidden;
+}
+
+
+
+.medical-board-partner-hospitals ul.react-multi-carousel-dot-list {
+  bottom: -42px;
+}
+
+.medical-board-partner-hospitals .react-multi-carousel-dot button {
+  background-color: rgb(209, 209, 209);
+  border-color: rgb(209, 209, 209);
+}
+
+.medical-board-partner-hospitals .react-multi-carousel-dot--active button {
+  background-color: #f86f03;
+  border-color: #f86f03;
+}
+
+.slick-dots li.slick-active button:before {
+  /* background-color: #f86f03; */
+  color: #F86F03;
+  ;
+  font-size: 14px;
+}
+
+.slick-dots li button:before {
+  font-size: 14px;
+  color: rgb(204, 204, 204);
+  ;
+}
+
+.slick-dots {
+  bottom: -30px;
+}
+
+/* .slick-slide{
+    padding-inline: 10px;
+} */
+.cardiology-card img {
+  width: 100%;
+}
+
+@media screen and (max-width:1200px) and (min-width:1024px) {
+  .common-btns-group1 {
+    display: flex;
+    flex-direction: column;
+  }
+}
