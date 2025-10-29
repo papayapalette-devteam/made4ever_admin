@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-rou
 import Dashboard from "./components/Bureau/Dashboard";
 import ProfilesPage from "./components/Bureau/Profiles/profile";
 import NewProfileForm from "./components/Bureau/Profiles/add_new_profile";
+import MatchesPage from "./components/Bureau/Matches/matches";
+import BillingPage from "./components/Bureau/Billing/billing";
 
 
 
@@ -17,6 +19,8 @@ function App() {
          <Route path="/" element={<Dashboard/>}></Route>
          <Route path="/profiles" element={<ProfilesPage/>}></Route>
          <Route path="/add-new-profile" element={<NewProfileForm/>}></Route>
+         <Route path="/matches" element={<MatchesPage/>}></Route>
+         <Route path="/billing" element={<BillingPage/>}></Route>
     
       </Routes>
      

@@ -156,7 +156,7 @@ const Dashboard = () => {
           <Plus className="h-6 w-6 mb-2" />
           Add New Profile
         </button>
-        <button className="w-full h-24 flex flex-col justify-center items-center bg-red-50 text-red-600 rounded-xl border border-red-200 hover:bg-red-100 transition">
+        <button onClick={()=>navigate('/matches')} className="w-full h-24 flex flex-col justify-center items-center bg-red-50 text-red-600 rounded-xl border border-red-200 hover:bg-red-100 transition">
           <Heart className="h-6 w-6 mb-2" />
           Find Matches
         </button>
@@ -164,7 +164,7 @@ const Dashboard = () => {
           <Eye className="h-6 w-6 mb-2" />
           View Profiles
         </button>
-        <button className="w-full h-24 flex flex-col justify-center items-center bg-purple-50 text-purple-600 rounded-xl border border-purple-200 hover:bg-purple-100 transition">
+        <button onClick={()=>navigate('/billing')} className="w-full h-24 flex flex-col justify-center items-center bg-purple-50 text-purple-600 rounded-xl border border-purple-200 hover:bg-purple-100 transition">
           <CreditCard className="h-6 w-6 mb-2" />
           Buy Credits
         </button>

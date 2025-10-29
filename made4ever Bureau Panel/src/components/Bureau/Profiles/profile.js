@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
+import { useNavigate } from "react-router-dom";
 
 
 // Mock data (replace with your API data)
@@ -40,6 +41,10 @@ const mockProfiles = [
 ];
 
 export default function ProfilesPage() {
+
+  const navigate=useNavigate()
+
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [genderFilter, setGenderFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -58,7 +63,7 @@ export default function ProfilesPage() {
             <p className="text-gray-600">Manage your bureau's member profiles</p>
           </div>
          
-            <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md mt-4 sm:mt-0 flex items-center">
+            <button onClick={()=>navigate('/add-new-profile')} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md mt-4 sm:mt-0 flex items-center">
               <Plus className="mr-2 h-4 w-4" />
               Add New Profile
             </button>
