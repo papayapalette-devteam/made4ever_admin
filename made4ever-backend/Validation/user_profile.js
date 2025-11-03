@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-// Personal Details Schema
+// ✅ Personal Details Schema
 const personalDetailsSchema = Joi.object({
   Name: Joi.string().allow(""),
   DateOfBirth: Joi.string().allow(""),
@@ -14,6 +14,8 @@ const personalDetailsSchema = Joi.object({
   MotherTongue: Joi.string().allow(""),
   Gender: Joi.string().allow(""),
   Drinking: Joi.string().allow(""),
+  Smoking: Joi.string().allow(""),
+  Nri: Joi.string().allow(""),
   NonVeg: Joi.string().allow(""),
   Manglik: Joi.string().allow(""),
   Living: Joi.string().allow(""),
@@ -21,7 +23,7 @@ const personalDetailsSchema = Joi.object({
   MaritalStatus: Joi.string().allow("")
 });
 
-// Religious Details Schema
+// ✅ Religious Details Schema
 const religiousDetailsSchema = Joi.object({
   Community: Joi.string().allow(""),
   Caste: Joi.string().allow(""),
@@ -29,11 +31,88 @@ const religiousDetailsSchema = Joi.object({
   Gothram: Joi.string().allow("")
 });
 
-
-const userProfileSchema = Joi.object({
-  PersonalDetails: personalDetailsSchema,
-  ReligiousDetails: religiousDetailsSchema
+// ✅ Family Details Schema
+const familyDetailsSchema = Joi.object({
+  FatherName: Joi.string().allow(""),
+  MotherName: Joi.string().allow(""),
+  FatherOccupation: Joi.string().allow(""),
+  MotherOccupation: Joi.string().allow(""),
+  NoOfSiblings: Joi.number().allow(""),
+  FamilyType: Joi.string().allow(""),
+  FamilyDescription: Joi.string().allow("")
 });
 
+// ✅ Education Details Schema
+const educationDetailsSchema = Joi.object({
+  HighestEducation: Joi.string().allow(""),
+  EducationSpecialization: Joi.string().allow(""),
+  Occupation: Joi.string().allow(""),
+  AnnualFamilyIncome: Joi.string().allow(""),
+  EducationDetails: Joi.string().allow(""),
+  OccupationDetails: Joi.string().allow("")
+});
 
-module.exports=userProfileSchema
+// ✅ Contact Details Schema
+const contactDetailsSchema = Joi.object({
+  ParmanentAddress: Joi.string().allow(""),
+  Country: Joi.string().allow(""),
+  State: Joi.string().allow(""),
+  City: Joi.string().allow(""),
+  PostalCode: Joi.number().allow("")
+});
+
+// ✅ Partner Preferences Schema
+const partnerPrefrencesSchema = Joi.object({
+  AgeRange: Joi.object({
+    MinAge: Joi.number().allow(""),
+    MaxAge: Joi.number().allow("")
+  }),
+  HeightRange: Joi.object({
+    MinHeight: Joi.string().allow(""),
+    MaxHeight: Joi.string().allow("")
+  }),
+  MaritialStatus: Joi.string().allow(""),
+  NonVeg: Joi.string().allow(""),
+  Manglik: Joi.string().allow(""),
+  Nri: Joi.string().allow(""),
+  Community: Joi.string().allow(""),
+  Religion: Joi.string().allow(""),
+  Caste: Joi.string().allow(""),
+  MotherTongue: Joi.string().allow(""),
+  HeighstEducation: Joi.array().items(Joi.string().allow("")),
+  Occupation: Joi.array().items(Joi.string().allow("")),
+  Country: Joi.array().items(Joi.string().allow("")),
+  State: Joi.array().items(Joi.string().allow("")),
+  City: Joi.array().items(Joi.string().allow(""))
+});
+
+// ✅ Upload Schema
+const uploadSchema = Joi.object({
+  ProfilePhoto: Joi.array().items(Joi.string().allow("")),
+  IdentityType: Joi.string().allow(""),
+  IdentityNumber: Joi.number().allow(""),
+  IdentityImage: Joi.array().items(Joi.string().allow("")),
+  AudioVideo: Joi.array().items(Joi.string().allow("")),
+  Gallary: Joi.array().items(Joi.string().allow(""))
+});
+
+// ✅ Property Details Schema
+const propertyDetailsSchema = Joi.object({
+  PropertyType: Joi.string().allow(""),
+  ResidentialType: Joi.string().allow(""),
+  PropertyDescription: Joi.string().allow("")
+});
+
+// ✅ Full User Profile Schema
+const userProfileSchema = Joi.object({
+  PersonalDetails: personalDetailsSchema.required(),
+  ReligiousDetails: religiousDetailsSchema.required(),
+  FamilyDetails: familyDetailsSchema.required(),
+  EducationDetails: educationDetailsSchema.required(),
+  ContactDetails: contactDetailsSchema.required(),
+  PartnerPrefrences: partnerPrefrencesSchema.required(),
+  Upload: uploadSchema.required(),
+  PropertyDetails: propertyDetailsSchema.required()
+});
+
+module.exports = userProfileSchema;

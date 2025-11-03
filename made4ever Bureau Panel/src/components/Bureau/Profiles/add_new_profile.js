@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../Layout/Footer";
 import Header from "../Layout/Header";
 import api from '../../../api'
@@ -26,6 +26,8 @@ export default function NewProfileForm() {
     MotherTongue:"",
     Gender:"",
     Drinking:"",
+    Smoking:"",
+    Nri:"",
     NonVeg:"",
     Manglik:"",
     Living:"",
@@ -73,7 +75,7 @@ export default function NewProfileForm() {
       Religion:"",
       Caste:"",
       MotherTongue:"",
-      HeightEducation:[],
+      HeighstEducation:[],
       Occupation:[],
       Country:[],
       State:[],
@@ -93,6 +95,44 @@ export default function NewProfileForm() {
       PropertyDescription:"",
     },
   })
+
+
+   const calculateAge = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  // ✅ Automatically update age whenever DateOfBirth changes
+  useEffect(() => {
+    const dob = user_profile.PersonalDetails.DateOfBirth;
+    if (dob) {
+      const age = calculateAge(dob);
+      setuser_profile((prev) => ({
+        ...prev,
+        PersonalDetails: {
+          ...prev.PersonalDetails,
+          Age: age
+        }
+      }));
+    } else {
+      // Clear age if DOB is removed
+      setuser_profile((prev) => ({
+        ...prev,
+        PersonalDetails: {
+          ...prev.PersonalDetails,
+          Age: ""
+        }
+      }));
+    }
+  }, [user_profile.PersonalDetails.DateOfBirth]);
+
 
 // ===========================common onchange event=======================================
 
@@ -174,7 +214,7 @@ const handleFileChange = async (e, fieldName) => {
 //============================== multiple value onchange =================================
 
     const options = {
-    HeightEducation: ["Bachelor’s", "Master’s", "Doctorate", "Diploma", "Other"],
+    HeighstEducation: ["Bachelor’s", "Master’s", "Doctorate", "Diploma", "Other"],
     Occupation: ["Engineer", "Doctor", "Teacher", "Business", "Artist", "Other"],
     Country: ["India", "USA", "UK", "Canada", "Australia"],
     State: ["Maharashtra", "Gujarat", "Delhi", "Karnataka", "Tamil Nadu"],
@@ -280,7 +320,9 @@ const add_new_profile=async()=>
         text: resp.data.message || "User profile created successfully",
         showConfirmButton: true,
         confirmButtonText: "OK",
-        timer: 2000,
+        customClass: {
+          confirmButton: "swal-confirm-btn"
+        }, 
       }).then(() => {
         // Refresh the page after alert closes
         window.location.reload();
@@ -299,12 +341,15 @@ const add_new_profile=async()=>
         "Something went wrong! Please try again.",
       showConfirmButton: true,
       confirmButtonText: "OK",
+      customClass: {
+        confirmButton: "swal-confirm-btn"
+      }, 
     });
     
   }
 }
 
-console.log(user_profile);
+
 
 
   return (
@@ -448,6 +493,7 @@ console.log(user_profile);
       Age
     </label>
     <input
+      readOnly
       type="number"
       placeholder="Enter age"
       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -481,8 +527,9 @@ console.log(user_profile);
       name="Complexion"
       onChange={(e) => handleChange("PersonalDetails", "Complexion", e.target.value)}
     >
-      <option value={user_profile.PersonalDetails.Complexion}>{user_profile.PersonalDetails.Complexion}</option>
-      <option value="">Select complexion</option>
+       <option value={user_profile?.PersonalDetails?.Complexion || ""}>
+        {user_profile?.PersonalDetails?.Complexion || "Select Complexion"}
+      </option>
       <option>Fair</option>
       <option>Wheatish</option>
       <option>Dark</option>
@@ -534,8 +581,9 @@ console.log(user_profile);
       name="MotherTongue"
       onChange={(e) => handleChange("PersonalDetails", "MotherTongue", e.target.value)}
     >
-      <option value={user_profile.PersonalDetails.MotherTongue}>{user_profile.PersonalDetails.MotherTongue}</option>
-      <option value="">Select language</option>
+       <option value={user_profile?.PersonalDetails?.MotherTongue || ""}>
+        {user_profile?.PersonalDetails?.MotherTongue || "Select Mother Tongue"}
+      </option>
       <option>Hindi</option>
       <option>English</option>
       <option>Tamil</option>
@@ -579,7 +627,7 @@ console.log(user_profile);
     "Drinking",
     "Smoking",
     "NonVeg",
-    "NRI",
+    "Nri",
     "Manglik",
   ].map((label, i) => (
     <div key={i}>
@@ -926,7 +974,6 @@ console.log(user_profile);
         <option value={user_profile?.EducationDetails?.EducationSpecialization || ""}>
           {user_profile?.EducationDetails?.EducationSpecialization || "Select Specialization"}
         </option>
-        <option value="">Select Specialization</option>
         <option value="engineering">Engineering</option>
         <option value="medical">Medical</option>
         <option value="commerce">Commerce</option>
@@ -1233,7 +1280,7 @@ console.log(user_profile);
 
     {/* NRI */}
     <div>
-      <label className="block text-gray-700 font-medium mb-1">NRI</label>
+      <label className="block text-gray-700 font-medium mb-1">Nri</label>
       <div className="flex gap-3">
         <label><input type="radio" name="nri" value="Yes" 
             checked={user_profile.PartnerPrefrences.Nri === "Yes"}
@@ -1317,13 +1364,13 @@ console.log(user_profile);
 
       <FormControl fullWidth>
         <Select
-          name="HeightEducation"
+          name="HeighstEducation"
           multiple
           value={selectedEducation}
           onChange={(e) => {
           const newValues = typeof e.target.value === "string" ? e.target.value.split(",") : e.target.value;
           setselectedEducation(newValues);
-          handleMultiSelectChange(e, "HeightEducation");
+          handleMultiSelectChange(e, "HeighstEducation");
         }}
           displayEmpty
           renderValue={(selected) => {
@@ -1346,7 +1393,7 @@ console.log(user_profile);
           }}
          
         >
-          {options.HeightEducation.map((option) => (
+          {options.HeighstEducation.map((option) => (
             <MenuItem key={option} value={option}>
               <Checkbox
                 checked={selectedEducation.includes(option)}
@@ -1571,8 +1618,8 @@ console.log(user_profile);
       />
     </div>
     <div className="mt-3">
-      <div className="w-28 h-28 bg-gray-100  flex items-center justify-center text-gray-400 text-sm">
-        {loading==="ProfileImage" && <CircularProgress size={24} />}
+      <div className="w-28 h-28  flex items-center justify-center text-gray-400 text-sm">
+        {loading==="ProfilePhoto" && <CircularProgress size={24} />}
         {user_profile.Upload.ProfilePhoto && (
           <img
             src={user_profile.Upload.ProfilePhoto}
@@ -1588,8 +1635,13 @@ console.log(user_profile);
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div>
       <label className="block text-gray-700 font-medium mb-2">Identity Type</label>
-      <select className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full">
-        <option value="">Select</option>
+      <select className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+        name="IdentityType"
+        onChange={(e) => handleChange("Upload", "IdentityType", e.target.value)}
+      >
+        <option value={user_profile?.Upload?.IdentityType || ""}>
+          {user_profile?.Upload?.IdentityType|| "Select Identity Type"}
+        </option>
         <option value="Aadhar Card">Aadhar Card</option>
         <option value="PAN Card">PAN Card</option>
         <option value="Passport">Passport</option>
@@ -1604,6 +1656,9 @@ console.log(user_profile);
         type="text"
         placeholder="Enter ID Number"
         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+        name="IdentityNumber"
+        value={user_profile.Upload.IdentityNumber}
+        onChange={(e) => handleChange("Upload", "IdentityNumber", e.target.value)}
       />
     </div>
   </div>
@@ -1618,12 +1673,12 @@ console.log(user_profile);
         onChange={(e)=>handleFileChange(e,"IdentityImage")}
       />
     </div>
-    <div className="mt-3 flex gap-3 flex-wrap">
-        {loading && <CircularProgress size={24} />}
-        {user_profile.Upload.IdentityImage && (
+    <div className="w-28 h-28  flex items-center justify-center text-gray-400 text-sm">
+        {loading==="IdentityImage" && <CircularProgress size={24} />}
+        {user_profile?.Upload?.IdentityImage && (
           <img
             src={user_profile.Upload.IdentityImage}
-            alt="Profile Preview"
+            alt="Identity Preview"
             className="mx-auto mt-3 w-24 h-24  object-cover "
           />
         )}
@@ -1631,22 +1686,55 @@ console.log(user_profile);
   </div>
 
   {/* Audio / Video Upload */}
-  <div>
-    <label className="block text-gray-700 font-medium mb-2">Upload Audio / Video</label>
-    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-      <p className="text-gray-600 mb-3">Click to upload an audio or video file</p>
-      <input
-        type="file"
-        accept="audio/*,video/*"
-        className="w-full cursor-pointer"
-      />
-    </div>
-    <div className="mt-3 flex gap-3 flex-wrap">
-      <div className="w-32 h-20 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+<div>
+  <label className="block text-gray-700 font-medium mb-2">
+    Upload Audio / Video
+  </label>
+
+  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+    <p className="text-gray-600 mb-3">
+      Click to upload an audio or video file
+    </p>
+    <input
+      type="file"
+      accept="audio/*,video/*"
+      className="w-full cursor-pointer"
+      name="AudioVideo"
+      onChange={(e) => handleFileChange(e, "AudioVideo")}
+    />
+  </div>
+
+  <div className="w-28 h-28  flex items-center justify-center text-gray-400 text-sm">
+    {loading==="AudioVideo" && <CircularProgress size={24} />}
+    {Array.isArray(user_profile?.Upload?.AudioVideo) &&
+      user_profile.Upload.AudioVideo.map((file, index) => (
+        <div key={index} className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+          {file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm") ? (
+            <video
+              src={file}
+              controls
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <audio
+              src={file}
+              controls
+              className="w-full"
+            />
+          )}
+        </div>
+      ))}
+
+    {/* fallback if no file uploaded */}
+    {(!user_profile?.Upload?.AudioVideo ||
+      user_profile.Upload.AudioVideo.length === 0) && (
+      <div className="w-32 h-20  rounded-lg flex items-center justify-center text-gray-400 text-sm">
         Media Preview
       </div>
-    </div>
+    )}
   </div>
+</div>
+
 
   {/* Gallery Photos Upload */}
   <div>
@@ -1658,17 +1746,22 @@ console.log(user_profile);
         multiple
         accept="image/*"
         className="w-full cursor-pointer"
+        name="Gallary"
+        onChange={(e)=>handleFileChange(e,"Gallary")}
       />
     </div>
-    <div className="mt-3 flex gap-3 flex-wrap">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm"
-        >
-          Gallery {i}
-        </div>
-      ))}
+    <div className="w-28 h-28  flex items-center justify-center text-gray-400 text-sm">
+        {loading==="Gallary" && <CircularProgress size={24} />}
+       {Array.isArray(user_profile?.Upload?.Gallary) &&
+        user_profile.Upload.Gallary.map((item, index) => (
+          <img
+            key={index}
+            src={item}
+            alt="Profile Preview"
+            className="mx-auto mt-3 w-24 h-24 object-cover rounded-lg"
+          />
+        ))}
+
     </div>
   </div>
 </div>
