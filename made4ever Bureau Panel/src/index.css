@@ -1045,6 +1045,45 @@ gap: 10px;
 
 
 
+/* 🌍 Global MUI Select Style Override */
+
+.MuiSelect-select {
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Outlined Select wrapper */
+.MuiOutlinedInput-root {
+  height: 52.62px !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Default border color (gray) */
+.MuiOutlinedInput-notchedOutline {
+  border-color: #d1d5db !important; /* gray-300 */
+}
+
+/* Hover effect */
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border: 2.5px solid #ef4444;
+  border-color: #ef4444 !important; /* red-500 */
+}
+
+/* Focus effect */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #ef4444 !important; /* red-500 */
+  border-width: 2.5px !important;
+}
+
+/* Optional: Label turns red on focus */
+.MuiInputLabel-root.Mui-focused {
+  color: #ef4444 !important;
+}
+
 
 
 

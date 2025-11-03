@@ -20,7 +20,7 @@ import Adminheader from "../adminheader";
 function MspGallary() {
   const [loading, setloading] = useState(false);
   const [Msp_Gallary, setMsp_Gallary] = useState({
-    msp_gallary: "",
+    msp_gallary: [],
   });
 
   const [rowCount, setRowCount] = useState(0);

@@ -38,6 +38,8 @@ app.use('/api/msp',require('./routes/msp_routes'));
 
 app.use('/api/upload',require('./routes/uploadfiles'));
 
+app.use('/api/user',require('./routes/add_user'));
+
 
 const server=app.listen(process.env.PORT,()=>
 {

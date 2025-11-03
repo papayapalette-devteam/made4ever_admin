@@ -39,9 +39,11 @@
 
 body, html {
   
-  overflow-y: hidden;        /* Completely disables vertical scrolling */
-  height: 100%;              /* Ensures the style takes effect across the whole page */
+  overflow-y: hidden;       
+  height: 100%;             
 }
+
+
 
 
 
