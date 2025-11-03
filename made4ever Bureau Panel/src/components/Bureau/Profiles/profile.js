@@ -135,7 +135,7 @@ export default function ProfilesPage() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg shadow p-4">
-            <div className="text-2xl font-bold text-blue-600">{mockProfiles.length}</div>
+            <div className="text-2xl font-bold text-blue-600">{all_profile.length}</div>
             <p className="text-sm text-gray-600">Total Profiles</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
@@ -146,13 +146,13 @@ export default function ProfilesPage() {
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-2xl font-bold text-purple-600">
-              {mockProfiles.filter((p) => p.gender === "male").length}
+              {all_profile.filter((p) => p.PersonalDetails.Gender === "Male").length}
             </div>
             <p className="text-sm text-gray-600">Male Profiles</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-2xl font-bold text-pink-600">
-              {mockProfiles.filter((p) => p.gender === "female").length}
+              {all_profile.filter((p) => p.PersonalDetails.Gender === "Female").length}
             </div>
             <p className="text-sm text-gray-600">Female Profiles</p>
           </div>
