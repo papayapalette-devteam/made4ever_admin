@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
   Plus, Search, Filter, MoreHorizontal, Edit, Eye, Trash2, 
   Heart, MapPin, Briefcase, GraduationCap, Users 
@@ -6,6 +6,7 @@ import {
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import { useNavigate } from "react-router-dom";
+import api from '../../../api'
 
 
 // Mock data (replace with your API data)
@@ -49,6 +50,28 @@ export default function ProfilesPage() {
   const [genderFilter, setGenderFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
+
+  const[all_profile,setall_profile]=useState([])
+  const get_all_profile=async()=>
+  {
+    try {
+
+      const resp=await api.get(`api/user/get-all-profile`);
+      console.log(resp);
+      
+      setall_profile(resp.data)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>
+  {
+    get_all_profile()
+    
+  },[])
  
 
   return (
@@ -137,19 +160,19 @@ export default function ProfilesPage() {
 
         {/* Profiles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockProfiles.map((profile) => (
+          {all_profile.map((profile) => (
             <div key={profile.id} className="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <img
-                    src={profile.photos[0]}
-                    alt={profile.name}
+                    src={profile?.Upload?.ProfilePhoto?.[0]}
+                    alt={profile?.PersonalDetails?.Name?profile.PersonalDetails.Name:""}
                     className="h-12 w-12 rounded-full object-cover"
                   />
                   <div>
                     <h2 className="text-lg font-semibold">{profile.name}</h2>
                     <p className="text-sm text-gray-500">
-                      {profile.age} years • {profile.gender}
+                      {profile?.PersonalDetails?.Age?profile.PersonalDetails.Age:0} years • {profile.gender}
                     </p>
                   </div>
                 </div>
@@ -166,19 +189,27 @@ export default function ProfilesPage() {
 
               <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex items-center">
-                  <GraduationCap className="mr-2 h-4 w-4" /> {profile.education}
+                  <GraduationCap className="mr-2 h-4 w-4" />
+                   {profile?.EducationDetails?.HighestEducation? profile.EducationDetails.HighestEducation:""}
                 </div>
                 <div className="flex items-center">
-                  <Briefcase className="mr-2 h-4 w-4" /> {profile.occupation}
+                  <Briefcase className="mr-2 h-4 w-4" />
+                   {profile?.EducationDetails?.Occupation? profile.EducationDetails.Occupation:""}
                 </div>
                 <div className="flex items-center">
-                  <MapPin className="mr-2 h-4 w-4" /> {profile.city}, {profile.state}
+                  <MapPin className="mr-2 h-4 w-4" />
+                  {profile?.ContactDetails?.City? profile.ContactDetails.City:""},
+                  {profile?.ContactDetails?.State? profile.ContactDetails.State:""}
                 </div>
               </div>
 
               <div className="flex justify-between items-center mt-3 text-sm font-medium text-gray-900">
-                <span>Income: {profile.income}</span>
-                <span>Height: {profile.height}</span>
+                <span>Income: 
+                  {profile?.EducationDetails?.AnnualFamilyIncome? profile.EducationDetails.AnnualFamilyIncome:""} Lakh/Month
+                </span>
+                <span>Height: 
+                  {profile?.PersonalDetails?.Height? profile.PersonalDetails.Height:""}
+                </span>
               </div>
 
               <div className="flex gap-2 mt-4">
