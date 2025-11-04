@@ -40,6 +40,8 @@ app.use('/api/upload',require('./routes/uploadfiles'));
 
 app.use('/api/user',require('./routes/add_user'));
 
+app.use('/api/msp/signin',require('./routes/sign_in'));
+
 
 const server=app.listen(process.env.PORT,()=>
 {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Users,
   Heart,
@@ -15,6 +15,7 @@ import {
 import Header from "./Layout/Header";
 import Footer from "./Layout/Footer";
 import { useNavigate } from "react-router-dom";
+import api from '../../api'
 
 // ✅ Inline StatsCard component (modern design)
 const StatsCard = ({ title, value, description, icon, trend }) => {
@@ -56,6 +57,29 @@ const StatsCard = ({ title, value, description, icon, trend }) => {
 const Dashboard = () => {
 
   const navigate=useNavigate()
+
+  const user = JSON.parse(localStorage.getItem('user'));
+
+    const[total_profile,settotal_profile]=useState([])
+    const get_all_profile=async()=>
+    {
+      try {
+  
+        const resp=await api.get(`api/user/get-all-profile?bureau=${user.id}`);
+        settotal_profile(resp.data.total)
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+      useEffect(()=>
+      {
+        get_all_profile()
+        
+      },[])
+  
 
   const recentMatches = [
     {
@@ -113,7 +137,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       {/* Welcome */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back, Rajesh!</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.name}!</h1>
         <p className="text-gray-600">
           Here's what's happening with your bureau today.
         </p>
@@ -123,7 +147,7 @@ const Dashboard = () => {
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatsCard
           title="Total Profiles"
-          value="156"
+          value={total_profile}
           description="Active profiles"
           icon={<Users className="h-4 w-4 text-gray-500" />}
           trend={{ value: 12, isPositive: true }}

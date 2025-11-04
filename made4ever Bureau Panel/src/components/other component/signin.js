@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
-import "../styles/signin.css";
-import image from "../assets/images/Optimize Your Mental Health with 24-7 Shalom Psychiatry 1.png";
+import image from "../images/Made4Ever New Logo (600 x 300 px) (1).png";
 import { useNavigate } from "react-router-dom";
 import api from '../../api'
 import Swal from 'sweetalert2';
-import ChangePasswordModal from "./changepassworddoctor";
-import logo from "../assets/images/image 13.png";
+import './signin.css'
+// import ChangePasswordModal from "./changepassworddoctor";
+import logo from "../images/Made4Ever New Logo (600 x 300 px) (1).png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";  // 👁️ eye icons
 
 
@@ -15,32 +15,21 @@ function SignIn() {
    const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   const navigate=useNavigate()
-  // Step 1: Track selected role in state
-  const [role, setRole] = useState("admin"); // default is 'admin'
 
   const [Email,setEmail]=useState("")
   const[Password,setPassword]=useState("")
-    const [showPassword, setShowPassword] = useState(false);
-  // Optionally, you can show different forms or adapt text for each role
-  // const getFormTitle = () => {
-  //   if (role === "admin")  return "Admin Sign in";
-  //   if (role === "doctor") return "Doctor Sign in";
-  //   if (role === "patient") return "Patient Sign in";
-  //   return "Sign in";
-  // };
+  const [showPassword, setShowPassword] = useState(false);
+
 
 const login = async (e) => {
   e.preventDefault();
 
-  if (Email === 'admin' && Password === '123') {
-    navigate('/admindashboard');
-    return;
-  }
-
 
     try {
-      const resp = await api.post('api/v1/admin/AssetLogin', { Email, Password });
+      const resp = await api.post('api/msp/signin/sign-in', { Email, Password });
 
+      if(resp.status===200)
+      {
       // Success
       Swal.fire({
         icon: 'success',
@@ -51,33 +40,19 @@ const login = async (e) => {
           confirmButton: 'my-swal-button',
         },
       });
+    }
 
       console.log(resp);
       
-      localStorage.setItem('token', resp.data.data.token);
-      localStorage.setItem('user', JSON.stringify(resp.data.data.user.Entity));
-      localStorage.setItem('main_user', JSON.stringify(resp.data.data.user));
+      localStorage.setItem('token', resp.data.token);
+      localStorage.setItem('user', JSON.stringify(resp.data.user));
 
-      navigate('/doctordashboard');
+      navigate('/buerau-dashboard');
 
     } catch (error) {
-      const status = error.response?.status;
+
       const message = error.response?.data?.message || 'Something went wrong!';
 
-      if (status === 403) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Change Password Required',
-          text: message,
-          showConfirmButton: true,
-             customClass: {
-          confirmButton: 'my-swal-button',
-        },
-        }).then(()=>
-        {
-         setShowChangePasswordModal(true);
-        });
-      } else {
         Swal.fire({
           icon: 'error',
           title: 'Login Failed',
@@ -90,7 +65,7 @@ const login = async (e) => {
       }
     }
 
-};
+
 
 
 
@@ -145,26 +120,12 @@ const login = async (e) => {
           <button className="login-btn" onClick={login}>
             Login
           </button>
-{
+{/* {
   showChangePasswordModal ? <ChangePasswordModal/> :""
-}
+} */}
         
 
-          {/* <div className="or-divider">OR</div>
-          <div className="social-row">
-            <button type="button" className="g">
-              G
-            </button>
-            <button type="button" className="f">
-              F
-            </button>
-            <button type="button" className="x">
-              X
-            </button>
-            <button type="button" className="in">
-              in
-            </button>
-          </div> */}
+       
         </form>
 
       </div>

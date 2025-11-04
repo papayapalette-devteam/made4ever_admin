@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { type } = require("../../Validation/user_profile");
+const { ref } = require("joi");
+const msp = require("../Msp/msp");
 
 const PersonalDetailsSchema = new mongoose.Schema({
   Name: { type: String, default: "" },
@@ -92,6 +94,7 @@ const PropertyDetailsSchema = new mongoose.Schema({
 
 const UserProfileSchema = new mongoose.Schema(
   {
+    Bureau: { type: mongoose.Schema.Types.ObjectId, ref: "msp" },
     PersonalDetails: { type: PersonalDetailsSchema, required: true },
     ReligiousDetails: { type: ReligiousDetailsSchema, required: true },
     FamilyDetails: { type: FamilyDetailsSchema, required: true },

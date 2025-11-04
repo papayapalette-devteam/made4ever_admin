@@ -1,26 +1,57 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../images/Made4Ever New Logo (600 x 300 px) (1).png";
 import { User, LogOut, Settings, CreditCard } from "lucide-react";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation(); // 👈 Detects current route automatically
 
-  const user = {
-    name: "Rajesh Kumar",
-    email: "rajesh@matrimonials.com",
-    credits: 150,
-    bureauName: "Perfect Match Bureau",
-  };
+const user = JSON.parse(localStorage.getItem('user'));
+
+
+const navigate=useNavigate()
+
 
   const navigation = [
-    { name: "Dashboard", href: "/" },
+    { name: "Dashboard", href: "/buerau-dashboard" },
     { name: "Profiles", href: "/profiles" },
     { name: "Matches", href: "/matches" },
     { name: "Billing", href: "/billing" },
   ];
+
+
+    const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "swal-confirm-btn",
+        cancelButton:"swal-confirm-btn" 
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        Swal.fire({
+          icon: "success",
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        navigate("/");
+      }
+    });
+  };
+
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -59,7 +90,7 @@ const Header = () => {
           <div className="flex items-center space-x-3">
             {/* Credits */}
             <span className="hidden sm:inline-block bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700">
-              {user.credits} Credits
+              {user?.credits} Credits
             </span>
 
             {/* Profile Dropdown */}
@@ -68,7 +99,7 @@ const Header = () => {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-700 hover:bg-gray-300 transition"
               >
-                {user.name
+                {user?.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
@@ -78,10 +109,10 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg p-3">
                   <div className="border-b pb-2 mb-2">
                     <p className="text-sm font-semibold text-gray-800">
-                      {user.name}
+                      {user?.name}
                     </p>
-                    <p className="text-xs text-gray-500">{user.bureauName}</p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
+                    <p className="text-xs text-gray-500">{user?.bureauName}</p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
                   <ul className="text-sm text-gray-700 space-y-1 text-left p-0">
                     <li>
@@ -103,7 +134,7 @@ const Header = () => {
                       </button>
                     </li>
                     <li className="border-t pt-1 mt-1">
-                      <button className="w-full flex items-center gap-2 px-2 py-1 rounded text-red-600 hover:bg-gray-100">
+                      <button onClick={handleLogout} className="w-full flex items-center gap-2 px-2 py-1 rounded text-red-600 hover:bg-gray-100">
                         <LogOut className="h-4 w-4 text-red-600" />
                         <span>Log out</span>
                       </button>

@@ -43,15 +43,46 @@ const userProfileSchema =require( "../../Validation/user_profile.js");
 
 
 // 🟡 Get all user profiles
- const getAllUserProfiles = async (req, res) => {
+const getAllUserProfiles = async (req, res) => {
   try {
-    const users = await UserProfile.find();
-    res.status(200).json(users);
+    const { bureau, page = 1, limit = 10 } = req.query;
+
+ 
+    
+    // Build filter condition
+    const filter = {};
+    if (bureau) {
+      filter.Bureau = bureau;
+    }
+
+    // Convert pagination values to numbers
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+
+    // Fetch paginated data
+    const users = await UserProfile.find(filter)
+      .populate("Bureau")
+      .sort({ createdAt: -1 })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    // Count total documents (for pagination info)
+    const total = await UserProfile.countDocuments(filter);
+
+    res.status(200).json({
+      success: true,
+      total,
+      page: pageNumber,
+      totalPages: Math.ceil(total / pageSize),
+      count: users.length,
+      data: users,
+    });
   } catch (err) {
     console.error("Error in getAllUserProfiles:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 // 🔵 Get user profile by ID
  const getUserProfileById = async (req, res) => {

@@ -38,7 +38,7 @@ function Msp() {
     password: "",
     confirm_password: "",
     mobile_number: "",
-    registered_business_name: "",
+    registered_business_name: "test",
     address: "",
     id: [],
   });

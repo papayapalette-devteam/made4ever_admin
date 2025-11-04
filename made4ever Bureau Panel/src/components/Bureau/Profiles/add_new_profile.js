@@ -10,9 +10,12 @@ import { FormControl, CircularProgress, Select, MenuItem, Chip, Box,Checkbox } f
 export default function NewProfileForm() {
   const [step, setStep] = useState(1);
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
 //======================== state for adding a user=========================================
 
   const[user_profile,setuser_profile]=useState({
+    Bureau:user.id,
     PersonalDetails:{
     Name:"",
     DateOfBirth:"",
@@ -95,6 +98,7 @@ export default function NewProfileForm() {
       PropertyDescription:"",
     },
   })
+
 
 
    const calculateAge = (dob) => {

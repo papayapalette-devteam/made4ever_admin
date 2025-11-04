@@ -105,6 +105,7 @@ const propertyDetailsSchema = Joi.object({
 
 // ✅ Full User Profile Schema
 const userProfileSchema = Joi.object({
+  Bureau: Joi.string().required(),
   PersonalDetails: personalDetailsSchema.required(),
   ReligiousDetails: religiousDetailsSchema.required(),
   FamilyDetails: familyDetailsSchema.required(),

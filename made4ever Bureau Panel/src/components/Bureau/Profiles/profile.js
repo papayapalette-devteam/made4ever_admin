@@ -45,7 +45,10 @@ export default function ProfilesPage() {
 
   const navigate=useNavigate()
 
+  const user = JSON.parse(localStorage.getItem('user'));
+
   
+
   const [searchTerm, setSearchTerm] = useState("");
   const [genderFilter, setGenderFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -56,8 +59,8 @@ export default function ProfilesPage() {
   {
     try {
 
-      const resp=await api.get(`api/user/get-all-profile`);
-      setall_profile(resp.data)
+      const resp=await api.get(`api/user/get-all-profile?bureau=${user.id}`);
+      setall_profile(resp.data.data)
       
     } catch (error) {
       console.log(error);
@@ -84,10 +87,16 @@ export default function ProfilesPage() {
             <p className="text-gray-600">Manage your bureau's member profiles</p>
           </div>
          
-            <button onClick={()=>navigate('/add-new-profile')} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md mt-4 sm:mt-0 flex items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-end items-center w-full mt-4 sm:mt-0">
+            <button
+              onClick={() => navigate("/add-new-profile")}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center justify-center w-full sm:w-auto"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Add New Profile
             </button>
+          </div>
+
          
         </div>
 
@@ -144,13 +153,17 @@ export default function ProfilesPage() {
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-2xl font-bold text-purple-600">
-              {all_profile.filter((p) => p.PersonalDetails.Gender === "Male").length}
+              {Array.isArray(all_profile)
+                ? all_profile.filter((p) => p?.PersonalDetails?.Gender === "Male").length
+                : 0}
             </div>
             <p className="text-sm text-gray-600">Male Profiles</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
-            <div className="text-2xl font-bold text-pink-600">
-              {all_profile.filter((p) => p.PersonalDetails.Gender === "Female").length}
+           <div className="text-2xl font-bold text-purple-600">
+              {Array.isArray(all_profile)
+                ? all_profile.filter((p) => p?.PersonalDetails?.Gender === "Female").length
+                : 0}
             </div>
             <p className="text-sm text-gray-600">Female Profiles</p>
           </div>
@@ -158,7 +171,7 @@ export default function ProfilesPage() {
 
         {/* Profiles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {all_profile.map((profile) => (
+          {all_profile?.map((profile) => (
             <div key={profile.id} className="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
@@ -168,7 +181,9 @@ export default function ProfilesPage() {
                     className="h-12 w-12 rounded-full object-cover"
                   />
                   <div>
-                    <h2 className="text-lg font-semibold">{profile.name}</h2>
+                    <h2 className="text-lg font-semibold">
+                      {profile?.PersonalDetails?.Name?profile.PersonalDetails.Name:""}
+                      </h2>
                     <p className="text-sm text-gray-500">
                       {profile?.PersonalDetails?.Age?profile.PersonalDetails.Age:0} years • {profile.gender}
                     </p>
