@@ -57,8 +57,6 @@ export default function ProfilesPage() {
     try {
 
       const resp=await api.get(`api/user/get-all-profile`);
-      console.log(resp);
-      
       setall_profile(resp.data)
       
     } catch (error) {
@@ -213,8 +211,8 @@ export default function ProfilesPage() {
               </div>
 
               <div className="flex gap-2 mt-4">
-                <button className="border border-gray-300 rounded-md py-2 flex-1 flex items-center justify-center hover:bg-gray-50">
-                  <Eye className="mr-2 h-4 w-4" />
+                <button onClick={()=>navigate('/view-profiles',{state:{id:profile._id}})} className="border border-gray-300 rounded-md py-2 flex-1 flex items-center justify-center hover:bg-gray-50">
+                  <Eye className="mr-2 h-4 w-4"  />
                   View
                 </button>
                 <button className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center">

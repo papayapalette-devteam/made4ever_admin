@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/add-new-profile", createUserProfile);
 router.get("/get-all-profile", getAllUserProfiles);
-router.get("/:_id", getUserProfileById);
+router.get("/get-profile-by-id/:_id", getUserProfileById);
 router.put("/:_id", updateUserProfile);
 router.delete("/:_id", deleteUserProfile);
 
