@@ -2,7 +2,9 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useState,useRef,useEffect } from 'react';
 import bellicon from '../../assets/images/bellicon.png'
-import messageicon from '../../assets/images/mail.png'
+import adminlogo from '../Admin/images/admin.webp'
+import { User, LogOut, Settings, CreditCard } from "lucide-react";
+import Swal from 'sweetalert2';
 
 function Doctorheader() {
 
@@ -50,6 +52,36 @@ const ChevronDownIcon = () => (
     <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
+
+
+   const logout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "swal-confirm-btn",
+        cancelButton:"swal-confirm-btn" 
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        Swal.fire({
+          icon: "success",
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        navigate("/");
+      }
+    });
+  };
 
 
 
@@ -101,7 +133,7 @@ const ChevronDownIcon = () => (
          onClick={() => setIsOpen(!isOpen)} aria-label="User profile picture">
       <div
         className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-300 rounded-full bg-cover bg-center"
-        // style={{ backgroundImage: `url(${doctordetails.user.profile_pic})` }}
+        style={{ backgroundImage: `url(${adminlogo})` }}
       ></div>
       {/* Hide text on xs screens to avoid overflow */}
       <div className=" xs:block">
@@ -109,52 +141,43 @@ const ChevronDownIcon = () => (
         <div className="text-black text-16px sm:text-sm truncate max-w-[auto]">Admin</div>
       </div>
       {isOpen && (
-       <div
-  ref={dropdownRef}
-  className="absolute right-0 sm:right-2 top-14 mt-2 w-44 sm:w-48 bg-white shadow-lg rounded-2xl border border-gray-200 z-50 overflow-hidden"
->
-  <ul className="py-2">
-    {/* Profile */}
-    <li
-      onClick={() => navigate('/editdoctorprofile')}
-      className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 cursor-pointer transition duration-200 ease-in-out"
-    >
-      <div className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
-        <svg
-          className="w-5 h-5 text-blue-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M5.121 17.804A9.937 9.937 0 0112 15c2.21 0 4.21.721 5.879 1.927M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      </div>
-      <span className="text-gray-700 font-medium">Profile</span>
+<div className="absolute right-0 top-full mt-2 w-56 bg-white border rounded-lg shadow-lg p-3 z-[9999]">
+  {/* Top user info */}
+  <div className="border-b pb-2 mb-2">
+    <p className="text-sm font-semibold text-gray-800">Admin</p>
+    <p className="text-xs text-gray-500">admin@gmail.com</p>
+  </div>
+
+  {/* Menu items */}
+  <ul className="text-sm text-gray-700 space-y-1 text-left p-0">
+    <li>
+      <button className="w-full flex gap-2 px-2 py-1 rounded hover:bg-gray-100">
+        <User className="h-4 w-4 text-gray-500" />
+        <span>Profile</span>
+      </button>
     </li>
 
-    {/* Divider */}
-    <li className="border-t border-gray-200 mx-4"></li>
+    <li>
+      <button className="w-full flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-100">
+        <Settings className="h-4 w-4 text-gray-500" />
+        <span>Settings</span>
+      </button>
+    </li>
 
-    {/* Logout */}
-    <li
-      className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 cursor-pointer transition duration-200 ease-in-out"
-    >
-      <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-full">
-        <svg
-          className="w-5 h-5 text-red-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M17 16l4-4m0 0l-4-4m4 4H7" />
-        </svg>
-      </div>
-      <span className="text-red-600 font-medium">Logout</span>
+    <li className="border-t pt-1 mt-1">
+      <button
+        onClick={logout}
+        className="w-full flex items-center gap-2 px-2 py-1 rounded text-red-600 hover:bg-gray-100"
+      >
+        <LogOut className="h-4 w-4 text-red-600" />
+        <span>Log out</span>
+      </button>
     </li>
   </ul>
 </div>
+
+
+
 
       )}
     </div>

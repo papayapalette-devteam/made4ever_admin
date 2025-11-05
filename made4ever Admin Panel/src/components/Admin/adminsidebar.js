@@ -6,20 +6,16 @@ import mspvideo from "../Admin/images/video-camera.png";
 import mspgallary from "../Admin/images/gallary.png";
 import mspeventimage from "../Admin/images/picture.png";
 import headingtext from "../Admin/images/heading.png";
-import weddingfriends from "../Admin/images/friend.png";
 import mspmatch from "../Admin/images/distance-love.png";
 import paymentdetails from "../Admin/images/credit-card.png";
-import mobileloginotp from "../Admin/images/one-time-password.png";
-import updateage from "../Admin/images/rotation.png";
 import dashboardicon from "../Admin/images/dashboard new.png";
-import user from "../Admin/images/user.png";
 import logout from "../Admin/images/logout.png";
 import addhospitalicon from "../Admin/images/user-plus-alt-1-svgrepo-com 1.png";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const menuItems = [
-  { icon: dashboardicon, label: "Dashboard", path: "/" },
+  { icon: dashboardicon, label: "Dashboard", path: "/admin-dashboard" },
   { icon: mspvideo, label: "MSP Data", path: "/msp" },
  
   {
@@ -107,14 +103,33 @@ const Adminsidebar = () => {
     localStorage.setItem("openDropdown", newDropdown ?? "");
   };
 
-  const logout = () => {
+   const logout = () => {
     Swal.fire({
-      icon: "success",
-      title: "Logout",
-      text: "You are successfully logged out.",
-      showConfirmButton: true,
-      customClass: { confirmButton: "my-swal-button" },
-    }).then(() => navigate("/"));
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "swal-confirm-btn",
+        cancelButton:"swal-confirm-btn" 
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        Swal.fire({
+          icon: "success",
+          title: "Logged out!",
+          text: "You have been successfully logged out.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        navigate("/");
+      }
+    });
   };
 
   

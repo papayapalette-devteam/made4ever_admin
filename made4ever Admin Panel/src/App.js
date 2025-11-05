@@ -33,6 +33,8 @@ import Musicians from "./components/Admin/Wedding_Friends/Musicians";
 import DressMaterials from "./components/Admin/Wedding_Friends/Dress_Materials";
 import EventProduction from "./components/Admin/Wedding_Friends/Event_Production";
 import Jwellers from "./components/Admin/Wedding_Friends/Jwellers";
+import SignIn from "./components/other component/signin";
+import ProtectedRoute from "./components/other component/protected_route";
 
 
 
@@ -41,10 +43,10 @@ function App() {
    
     <BrowserRouter>
       <Routes>
-         <Route path="/" element={<Admindashboard/>}></Route>
+         <Route path="/" element={<SignIn/>}></Route>
     
-
-
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin-dashboard" element={<Admindashboard/>}></Route>
         {/*==================== user Group section ==================================*/}
 
         <Route path="/education-group" element={<EducationGroup/>}></Route>
@@ -96,7 +98,7 @@ function App() {
         <Route path="/msp-header-text" element={<MspHeaderText/>}></Route>
 
       {/*============================== other routes end==================================== */}
-
+    </Route>
 
       </Routes>
       {/* <ActivePatient/> */}
