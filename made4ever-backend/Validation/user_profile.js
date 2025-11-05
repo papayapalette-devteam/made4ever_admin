@@ -20,7 +20,9 @@ const personalDetailsSchema = Joi.object({
   Manglik: Joi.string().allow(""),
   Living: Joi.string().allow(""),
   AnyDisability: Joi.string().allow(""),
-  MaritalStatus: Joi.string().allow("")
+  MaritalStatus: Joi.string().allow(""),
+  HasChildren: Joi.boolean().allow(null),
+  ChildrenCount:Joi.number().allow("")
 });
 
 // ✅ Religious Details Schema

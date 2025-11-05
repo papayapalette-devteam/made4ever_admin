@@ -22,7 +22,9 @@ const PersonalDetailsSchema = new mongoose.Schema({
   Manglik: { type: String, default: "" },
   Living: { type: String, default: "" },
   AnyDisability: { type: String, default: "" },
-  MaritalStatus: { type: String, default: "" }
+  MaritalStatus: { type: String, default: "" },
+  HasChildren: { type: Boolean, default: false },     
+  ChildrenCount: { type: Number, default: 0 },
 });
 
 const ReligiousDetailsSchema = new mongoose.Schema({
