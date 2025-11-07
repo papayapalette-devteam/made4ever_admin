@@ -101,7 +101,7 @@ function App() {
     </Route>
 
       </Routes>
-      {/* <ActivePatient/> */}
+   
       
         
     </BrowserRouter>
