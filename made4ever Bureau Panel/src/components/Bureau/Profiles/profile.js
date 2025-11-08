@@ -73,6 +73,9 @@ export default function ProfilesPage() {
     get_all_profile()
     
   },[])
+
+
+
  
 
   return (
@@ -230,7 +233,7 @@ export default function ProfilesPage() {
                   <Eye className="mr-2 h-4 w-4"  />
                   View
                 </button>
-                <button className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center">
+                <button onClick={()=> navigate("/matched-profile", { state: { profileId: profile._id } })} className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center">
                   <Heart className="mr-2 h-4 w-4" />
                   Find Match
                 </button>

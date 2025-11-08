@@ -10,6 +10,8 @@ import BillingPage from "./components/Bureau/Billing/billing";
 import UserProfile from "./components/Bureau/Profiles/view_profile";
 import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
+import MatchingProfiles from "./components/Bureau/Profiles/matched_profile";
+import MatchDetailsPage from "./components/Bureau/Profiles/full_view_matched_profile";
 
 
 
@@ -29,6 +31,8 @@ function App() {
 
          <Route path="/profiles" element={<ProfilesPage/>}></Route>
          <Route path="/view-profiles" element={<UserProfile/>}></Route>
+         <Route path="/matched-profile" element={<MatchingProfiles/>}></Route>
+         <Route path="/match-details" element={<MatchDetailsPage/>}></Route>
          <Route path="/add-new-profile" element={<NewProfileForm/>}></Route>
 
          <Route path="/matches" element={<MatchesPage/>}></Route>
