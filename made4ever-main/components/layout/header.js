@@ -13,9 +13,11 @@ function cn(...classes) {
 // Navigation links
 const navigation = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
+  { name: 'About', href: '/aboutus' },
   { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
+  { name: 'Contact', href: '/contactus' },
+  { name: 'Admin Login', href: 'https://made4ever-admin.vercel.app/' },
+  { name: 'Bureau Login', href: 'https://made4ever-admin-dkjf.vercel.app/' },
 ];
 
 export default function Header() {
