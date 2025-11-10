@@ -14,11 +14,16 @@ import {
   Box,
   Checkbox,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 export default function NewProfileForm() {
   const [step, setStep] = useState(1);
 
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const location=useLocation()
+  const existing_user_profile=location?.state?.id
+
 
   //======================== state for adding a user=========================================
 
@@ -109,6 +114,53 @@ export default function NewProfileForm() {
       PropertyDescription: "",
     },
   });
+
+useEffect(() => {
+  if (existing_user_profile) {
+    // Clone the existing profile
+    const updatedProfile = { ...existing_user_profile };
+
+    // Convert Bureau object to its string ID
+    if (updatedProfile.Bureau && typeof updatedProfile.Bureau === "object") {
+      updatedProfile.Bureau = updatedProfile.Bureau._id || updatedProfile.Bureau.id || "";
+    }
+
+    // Remove top-level createdAt & updatedAt
+    delete updatedProfile.createdAt;
+    delete updatedProfile.updatedAt;
+    delete updatedProfile.__v;
+
+    // Recursive cleaner for nested objects
+    const cleanObject = (obj) => {
+      if (Array.isArray(obj)) {
+        return obj.map(cleanObject);
+      } else if (obj && typeof obj === "object") {
+        const cleaned = {};
+        for (const key in obj) {
+          // Remove unwanted fields
+          if (["_id", "createdAt", "updatedAt", "__v"].includes(key)) continue;
+          cleaned[key] = cleanObject(obj[key]);
+        }
+        return cleaned;
+      }
+      return obj;
+    };
+
+    // Clean nested objects but keep top-level _id
+    for (const key in updatedProfile) {
+      if (key !== "_id" && key !== "Bureau") {
+        updatedProfile[key] = cleanObject(updatedProfile[key]);
+      }
+    }
+
+    // ✅ Set the cleaned profile to state
+    setuser_profile(updatedProfile);
+  }
+}, [existing_user_profile]);
+
+
+
+
 
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
@@ -400,7 +452,7 @@ export default function NewProfileForm() {
   const add_new_profile = async () => {
     try {
       const resp = await api.post("api/user/add-new-profile", user_profile);
-
+     
       if (resp.status === 200) {
         Swal.fire({
           icon: "success",
@@ -441,7 +493,10 @@ export default function NewProfileForm() {
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
-            <h1 className="text-3xl font-bold">Create New Profile</h1>
+          <h1 className="text-3xl font-bold">
+              {existing_user_profile ? "Update New Profile" : "Create New Profile"}
+            </h1>
+
             <p className="text-sm opacity-90 mt-1">
               Step {step} of 8 — Complete your details to get the best matches!
             </p>
@@ -2681,18 +2736,24 @@ export default function NewProfileForm() {
                       onChange={(e) => handleFileChange(e, "Gallary")}
                     />
                   </div>
-                  <div className="w-28 h-28  flex items-center justify-center text-gray-400 text-sm">
-                    {loading === "Gallary" && <CircularProgress size={24} />}
+                 <div className="w-full min-h-28 flex flex-wrap gap-3 items-center justify-start text-gray-400 text-sm">
+                    {loading === "Gallary" && (
+                      <div className="flex justify-center items-center w-full">
+                        <CircularProgress size={24} />
+                      </div>
+                    )}
+
                     {Array.isArray(user_profile?.Upload?.Gallary) &&
                       user_profile.Upload.Gallary.map((item, index) => (
                         <img
                           key={index}
                           src={item}
-                          alt="Profile Preview"
-                          className="mx-auto mt-3 w-24 h-24 object-cover rounded-lg"
+                          alt={`Gallery ${index}`}
+                          className="w-24 h-24 object-cover rounded-lg border border-gray-200 shadow-sm"
                         />
                       ))}
                   </div>
+
                 </div>
               </div>
             )}

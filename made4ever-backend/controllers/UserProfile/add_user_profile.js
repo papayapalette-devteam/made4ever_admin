@@ -3,38 +3,76 @@ const UserProfile =require( "../../models/AddProfile/add_new_profile.js");
 const userProfileSchema =require( "../../Validation/user_profile.js"); 
 
 // 🟢 Create new user profile
- const createUserProfile = async (req, res) => {
+const createUserProfile = async (req, res) => {
   try {
-    // Validate request body with Joi
-    const { error } = userProfileSchema.validate(req.body);
+    // 🧩 Extract _id (if present)
+    const { _id, ...profileData } = req.body;
+
+    // ✅ Validate request body (without _id)
+    const { error } = userProfileSchema.validate(profileData);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const mobile = req.body?.PersonalDetails?.MobileNumber?.trim();
-
+    const mobile = profileData?.PersonalDetails?.MobileNumber;
     if (!mobile) {
       return res.status(400).json({ error: "Mobile number is required" });
     }
 
-    // 🔍 Check for duplicate user by MobileNumber
+    // 🧠 If _id is provided → Update existing profile
+    if (_id) {
+      const existingUser = await UserProfile.findById(_id);
+
+      if (!existingUser) {
+        return res.status(404).json({ error: "User not found for update" });
+      }
+
+      // Optional: Check if another user already has the same mobile
+      const duplicateUser = await UserProfile.findOne({
+        "PersonalDetails.MobileNumber": mobile,
+        _id: { $ne: _id },
+      });
+
+      if (duplicateUser) {
+        return res.status(400).json({
+          error: `A user with mobile number ${mobile} already exists`,
+        });
+      }
+
+      // ✅ Update the existing user
+      const updatedUser = await UserProfile.findByIdAndUpdate(
+        _id,
+        { $set: profileData },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        message: "User profile updated successfully",
+        data: updatedUser,
+        action: "updated",
+      });
+    }
+
+    // 🧠 If no _id → Create new profile
     const existingUser = await UserProfile.findOne({
-      "PersonalDetails.MobileNumber": mobile
+      "PersonalDetails.MobileNumber": mobile,
     });
 
     if (existingUser) {
       return res.status(400).json({
-        error: `A user with mobile number ${mobile} already exists`
+        error: `A user with mobile number ${mobile} already exists`,
       });
     }
 
-    // ✅ Save new user to MongoDB
-    const newUser = new UserProfile(req.body);
+    // ✅ Create new user
+    const newUser = new UserProfile(profileData);
     await newUser.save();
 
-    res
-      .status(200)
-      .json({ message: "User profile created successfully", data: newUser });
+    res.status(200).json({
+      message: "User profile created successfully",
+      data: newUser,
+      action: "created",
+    });
   } catch (err) {
     console.error("Error in createUserProfile:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -42,13 +80,13 @@ const userProfileSchema =require( "../../Validation/user_profile.js");
 };
 
 
+
 // 🟡 Get all user profiles
 const getAllUserProfiles = async (req, res) => {
   try {
     const { bureau, page = 1, limit = 10 } = req.query;
 
- 
-    
+
     // Build filter condition
     const filter = {};
     if (bureau) {
@@ -120,7 +158,7 @@ const getAllUserProfiles = async (req, res) => {
 // 🔴 Delete user profile by ID
  const deleteUserProfile = async (req, res) => {
   try {
-    const deletedUser = await UserProfile.findByIdAndDelete(req.params.id);
+    const deletedUser = await UserProfile.findByIdAndDelete(req.params._id);
     if (!deletedUser) return res.status(404).json({ error: "User profile not found" });
 
     res.status(200).json({ message: "User profile deleted successfully" });

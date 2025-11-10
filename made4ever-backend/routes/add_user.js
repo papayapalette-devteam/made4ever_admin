@@ -14,7 +14,7 @@ router.post("/add-new-profile", createUserProfile);
 router.get("/get-all-profile", getAllUserProfiles);
 router.get("/get-profile-by-id/:_id", getUserProfileById);
 router.put("/:_id", updateUserProfile);
-router.delete("/:_id", deleteUserProfile);
+router.delete("/delete-user/:_id", deleteUserProfile);
 
 router.get("/matching-profile/:userId", getMatches);
 
