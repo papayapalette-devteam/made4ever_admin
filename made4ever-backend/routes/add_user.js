@@ -7,6 +7,7 @@ const {
   deleteUserProfile
 } =require('../controllers/UserProfile/add_user_profile');
 const { getMatches } = require('../controllers/UserProfile/matching_profile');
+const { saveAcceptedProfile, getAcceptedProfiles } = require('../controllers/AcceptMatches/accept_matches');
 
 const router = express.Router();
 
@@ -17,5 +18,10 @@ router.put("/:_id", updateUserProfile);
 router.delete("/delete-user/:_id", deleteUserProfile);
 
 router.get("/matching-profile/:userId", getMatches);
+
+
+router.post("/accept-profile", saveAcceptedProfile);
+router.get("/accept-profile", getAcceptedProfiles);
+
 
 module.exports= router;

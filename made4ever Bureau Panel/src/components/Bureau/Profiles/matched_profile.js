@@ -14,7 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import Swal from "sweetalert2";
 
 import StatsCard from "../../../UI/state_card";
 import Card from "../../../UI/card";
@@ -86,6 +86,64 @@ export default function MatchingProfiles() {
         return <Heart className="h-4 w-4" />;
     }
   };
+
+
+// accept matches
+
+
+const acceptProfile = async () => {
+  try {
+    const userId = selectedMatch.userprofile._id;
+    const candidateId = selectedMatch.candidateId._id;
+    const MatchingPercentage=selectedMatch.matchPercentage
+
+    const res = await api.post("/api/user/accept-profile", {
+      userId,
+      candidateId,
+      MatchingPercentage
+    });
+
+    if (res.status === 200 || res.status === 201) {
+      Swal.fire({
+        icon: "success",
+        title: "Profile Accepted!",
+        text: res.data.message || "Match saved successfully!",
+        confirmButtonText: "OK",
+        customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+      }).then(()=>
+      (
+        window.location.reload()
+      ));
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Unexpected Response",
+        text: res.data.message || "Something went wrong.",
+        customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+      });
+    }
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.response?.data?.message || "Failed to accept profile. Please try again.",
+      customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+    });
+  }
+};
+
+
+
+  console.log(selectedMatch);
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -316,7 +374,7 @@ export default function MatchingProfiles() {
           <Button variant="outline" className="flex-1">
             <X className="h-4 w-4 mr-2" /> Reject Match
           </Button>
-          <Button className="flex-1">
+          <Button className="flex-1" onClick={acceptProfile}>
             <CheckCircle className="h-4 w-4 mr-2" /> Accept Match
           </Button>
         </div>

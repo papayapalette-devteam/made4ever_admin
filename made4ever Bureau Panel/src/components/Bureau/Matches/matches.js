@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Heart,
   Users,
-  MessageCircle,
   CheckCircle,
-  X,
   Eye,
   MapPin,
   Briefcase,
@@ -13,6 +11,8 @@ import {
   Star,
   TrendingUp,
 } from "lucide-react";
+import api from "../../../api"; // ✅ your axios instance
+import Swal from "sweetalert2";
 
 import StatsCard from "../../../UI/state_card";
 import Card from "../../../UI/card";
@@ -25,353 +25,237 @@ import Progress from "../../../UI/progress";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 
-// ✅ Mock profiles
-const mockProfiles = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    age: 28,
-    gender: "Male",
-    occupation: "Software Engineer",
-    education: "B.Tech",
-    city: "Delhi",
-    state: "Delhi",
-    income: "₹10 LPA",
-    height: "5'9\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/men/1.jpg"]
-  },
-  {
-    id: 2,
-    name: "Priya Mehta",
-    age: 25,
-    gender: "Female",
-    occupation: "Doctor",
-    education: "MBBS",
-    city: "Mumbai",
-    state: "Maharashtra",
-    income: "₹12 LPA",
-    height: "5'5\"",
-    isActive: false,
-    photos: ["https://randomuser.me/api/portraits/women/2.jpg"]
-  },
-  {
-    id: 3,
-    name: "Amit Verma",
-    age: 30,
-    gender: "Male",
-    occupation: "Architect",
-    education: "M.Arch",
-    city: "Pune",
-    state: "Maharashtra",
-    income: "₹15 LPA",
-    height: "5'10\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/men/3.jpg"]
-  },
-  {
-    id: 4,
-    name: "Neha Singh",
-    age: 27,
-    gender: "Female",
-    occupation: "Data Analyst",
-    education: "MBA",
-    city: "Bangalore",
-    state: "Karnataka",
-    income: "₹11 LPA",
-    height: "5'6\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/women/4.jpg"]
-  }
-];
-
-
-
-// ✅ Mock Matches
-const matches = [
-  {
-    id: "1",
-    profile: mockProfiles[0],
-    matchedProfile: mockProfiles[1],
-    score: 92,
-    status: "pending",
-    createdAt: "2024-01-25",
-    commonInterests: ["Music", "Travel", "Cooking"],
-    compatibilityFactors: {
-      location: 85,
-      education: 95,
-      lifestyle: 90,
-      family: 88
-    }
-  },
-  {
-    id: "2",
-    profile: mockProfiles[1],
-    matchedProfile: mockProfiles[2],
-    score: 87,
-    status: "contacted",
-    createdAt: "2024-01-24",
-    commonInterests: ["Movies", "Reading", "Fitness"],
-    compatibilityFactors: {
-      location: 90,
-      education: 85,
-      lifestyle: 88,
-      family: 85
-    }
-  },
-  {
-    id: "3",
-    profile: mockProfiles[2],
-    matchedProfile: mockProfiles[3],
-    score: 78,
-    status: "accepted",
-    createdAt: "2024-01-23",
-    commonInterests: ["Technology", "Travel"],
-    compatibilityFactors: {
-      location: 75,
-      education: 80,
-      lifestyle: 78,
-      family: 82
-    }
-  }
-];
-
 export default function MatchesPage() {
-  const [selectedMatch, setSelectedMatch] = useState(matches[0]);
+  const [matches, setMatches] = useState([]);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "accepted":
-        return "bg-green-100 text-green-700";
-      case "contacted":
-        return "bg-blue-100 text-blue-700";
-      case "rejected":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-yellow-100 text-yellow-700";
+  // ✅ Fetch accepted matches from backend
+  const fetchMatches = async () => {
+    try {
+      const res = await api.get("/api/user/accept-profile");
+      if (res.status === 200 && Array.isArray(res.data.data)) {
+        setMatches(res.data.data);
+        setSelectedMatch(res.data.data[0] || null);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error Fetching Matches",
+        text: error.response?.data?.message || "Something went wrong!",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "accepted":
-        return <CheckCircle className="h-4 w-4" />;
-      case "contacted":
-        return <MessageCircle className="h-4 w-4" />;
-      case "rejected":
-        return <X className="h-4 w-4" />;
-      default:
-        return <Heart className="h-4 w-4" />;
-    }
+  useEffect(() => {
+    fetchMatches();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600 text-lg">
+        Loading matches...
+      </div>
+    );
+  }
+
+  const renderProfile = (profile, label) => {
+    if (!profile)
+      return <p className="text-gray-500 text-center">No {label} Data</p>;
+
+    const { PersonalDetails, EducationDetails, ContactDetails, Upload } =
+      profile;
+
+    const image =
+      Upload?.ProfilePhoto?.[0] ||
+      "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    return (
+      <Card className="bg-gray-50">
+        <CardContent>
+          <div className="text-center">
+            <Avatar src={image} />
+            <h3 className="font-semibold text-lg mt-2">
+              {PersonalDetails?.Name || "N/A"}
+            </h3>
+            <p className="text-gray-600">
+              {PersonalDetails?.Age || "--"} yrs •{" "}
+              {PersonalDetails?.Gender || "--"}
+            </p>
+            <p className="text-gray-500 text-sm mt-1">
+              {PersonalDetails?.MaritalStatus || "Unmarried"}
+            </p>
+          </div>
+
+          <div className="space-y-2 mt-3 text-sm text-gray-600">
+            <div className="flex items-center">
+              <GraduationCap className="mr-2 h-4 w-4" />
+              {EducationDetails?.HighestEducation || "N/A"}
+            </div>
+            <div className="flex items-center">
+              <Briefcase className="mr-2 h-4 w-4" />
+              {EducationDetails?.Occupation || "N/A"}
+            </div>
+            <div className="flex items-center">
+              <MapPin className="mr-2 h-4 w-4" />
+              {ContactDetails?.City || "--"}, {ContactDetails?.State || "--"}
+            </div>
+            <p>
+              <b>Height:</b> {PersonalDetails?.Height || "--"}
+            </p>
+            <p>
+              <b>Complexion:</b> {PersonalDetails?.Complexion || "--"}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-        <Header/>
+      <Header />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-2 text-gray-900">Matches</h1>
-        <p className="text-gray-600 mb-6">AI-powered matches for your profiles</p>
+        <h1 className="text-2xl font-bold mb-2 text-gray-900">
+          Accepted Matches
+        </h1>
+        <p className="text-gray-600 mb-6">
+          View all matched profiles with complete details
+        </p>
 
-        {/* Stats */}
+        {/* ✅ Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <StatsCard
             title="Total Matches"
-            value="89"
-            description="This month"
+            value={matches.length}
+            description="Accepted profiles"
             icon={<Heart className="h-4 w-4 text-gray-500" />}
-            trend={{ value: 12, isPositive: true }}
           />
           <StatsCard
-            title="Pending Matches"
-            value="23"
-            description="Awaiting response"
+            title="Active Profiles"
+            value={matches.length}
+            description="Currently visible"
             icon={<Users className="h-4 w-4 text-gray-500" />}
           />
           <StatsCard
             title="Success Rate"
-            value="78%"
-            description="Accepted matches"
+            value="100%"
+            description="Filtered accepted profiles"
             icon={<TrendingUp className="h-4 w-4 text-gray-500" />}
-            trend={{ value: 5, isPositive: true }}
           />
           <StatsCard
             title="Credits Used"
-            value="45"
-            description="This month"
+            value="N/A"
+            description="For viewing profiles"
             icon={<Star className="h-4 w-4 text-gray-500" />}
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Matches List */}
+          {/* ✅ Matches List */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader className="flex items-center justify-between">
-                <h2 className="font-semibold text-gray-800">Recent Matches</h2>
+                <h2 className="font-semibold text-gray-800">
+                  Matched Profiles
+                </h2>
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4 mr-2" /> Filter
                 </Button>
               </CardHeader>
               <CardContent>
-                {matches.map((match) => (
-                  <div
-                    key={match.id}
-                    onClick={() => setSelectedMatch(match)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                      selectedMatch.id === match.id
-                        ? "bg-red-50 border-red-200"
-                        : "hover:bg-gray-50"
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Avatar src={match.profile.photos[0]} />
-                      <Avatar src={match.matchedProfile.photos[0]} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {match.profile.name} × {match.matchedProfile.name}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs text-gray-600">
-                            {match.score}% match
+                {matches.length === 0 ? (
+                  <p className="text-gray-600 text-center py-6">
+                    No accepted matches found.
+                  </p>
+                ) : (
+                  matches.map((match) => (
+                    <div
+                      key={match._id}
+                      onClick={() => setSelectedMatch(match)}
+                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                        selectedMatch?._id === match._id
+                          ? "bg-red-50 border-red-200"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Avatar
+                          src={
+                            match.MaleProfile?.Upload?.ProfilePhoto?.[0] ||
+                            "/default-male.jpg"
+                          }
+                        />
+                        <Avatar
+                          src={
+                            match.FemaleProfile?.Upload?.ProfilePhoto?.[0] ||
+                            "/default-female.jpg"
+                          }
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {match.MaleProfile?.PersonalDetails?.Name || "Male"}{" "}
+                            ×{" "}
+                            {match.FemaleProfile?.PersonalDetails?.Name ||
+                              "Female"}
                           </p>
-                          <Badge className={getStatusColor(match.status)}>
-                            {match.status}
+                          <Badge className="bg-green-100 text-green-700">
+                            Accepted
                           </Badge>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-2">
-                      <Progress value={match.score} />
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Match Details */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <Badge className={getStatusColor(selectedMatch.status)}>
-                      {getStatusIcon(selectedMatch.status)}
-                      <span className="ml-1 capitalize">
-                        {selectedMatch.status}
-                      </span>
+          {/* ✅ Selected Match Details */}
+          {selectedMatch && (
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  {/* Top Badge + Date */}
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-green-100 text-green-700 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-1" /> Accepted
                     </Badge>
                     <span className="text-sm text-gray-600">
-                      Created on{" "}
+                      Matched on{" "}
                       {new Date(selectedMatch.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-2" /> View
-                    </Button>
-                    <Button size="sm">
-                      <MessageCircle className="h-4 w-4 mr-2" /> Contact
-                    </Button>
+
+                  {/* Centered Names + Percentage */}
+                  <div className="flex flex-col items-center justify-center mt-4 text-center">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {selectedMatch.MaleProfile?.PersonalDetails?.Name} ❤️{" "}
+                      {selectedMatch.FemaleProfile?.PersonalDetails?.Name}
+                    </h3>
+
+                    <span className="mt-2 inline-block text-sm bg-blue-100 text-blue-800 font-medium px-4 py-1 rounded-full">
+                      {selectedMatch.MatchingPercentage || 0}% Match
+                    </span>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[selectedMatch.profile, selectedMatch.matchedProfile].map(
-                    (profile) => (
-                      <Card key={profile.id} className="bg-gray-50">
-                        <CardContent>
-                          <div className="text-center">
-                            <Avatar src={profile.photos[0]} />
-                            <h3 className="font-semibold text-lg mt-2">
-                              {profile.name}
-                            </h3>
-                            <p className="text-gray-600">
-                              {profile.age} years • {profile.gender}
-                            </p>
-                          </div>
-                          <div className="space-y-2 mt-3 text-sm text-gray-600">
-                            <div className="flex items-center">
-                              <GraduationCap className="mr-2 h-4 w-4" />
-                              {profile.education}
-                            </div>
-                            <div className="flex items-center">
-                              <Briefcase className="mr-2 h-4 w-4" />
-                              {profile.occupation}
-                            </div>
-                            <div className="flex items-center">
-                              <MapPin className="mr-2 h-4 w-4" />
-                              {profile.city}, {profile.state}
-                            </div>
-                            <p>
-                              <b>Income:</b> {profile.income}
-                            </p>
-                            <p>
-                              <b>Height:</b> {profile.height}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  )}
-                </div>
+                </CardHeader>
 
-                {/* Match Score */}
-                <div className="mt-6 text-center">
-                  <div className="text-3xl font-bold text-red-600 mb-1">
-                    {selectedMatch.score}%
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {renderProfile(selectedMatch.MaleProfile, "Male")}
+                    {renderProfile(selectedMatch.FemaleProfile, "Female")}
                   </div>
-                  <p className="text-gray-600 mb-3">Overall Compatibility</p>
-                  <Progress value={selectedMatch.score} className="max-w-xs mx-auto" />
-                </div>
-
-                {/* Compatibility Breakdown */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {Object.entries(selectedMatch.compatibilityFactors).map(
-                    ([factor, score]) => (
-                      <div key={factor} className="text-center">
-                        <div className="text-lg font-semibold text-gray-800">
-                          {score}%
-                        </div>
-                        <div className="text-sm text-gray-600 capitalize">
-                          {factor}
-                        </div>
-                        <Progress value={score} className="h-1 mt-1" />
-                      </div>
-                    )
-                  )}
-                </div>
-
-                {/* Common Interests */}
-                <div className="mt-6">
-                  <h4 className="font-medium mb-3">Common Interests</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedMatch.commonInterests.map((interest) => (
-                      <Badge key={interest} variant="secondary">
-                        {interest}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-3 mt-6 pt-6 border-t">
-                  <Button variant="outline" className="flex-1">
-                    <X className="h-4 w-4 mr-2" /> Reject Match
-                  </Button>
-                  <Button className="flex-1">
-                    <CheckCircle className="h-4 w-4 mr-2" /> Accept Match
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
 
-    <Footer/>
+      <Footer />
     </div>
   );
 }
