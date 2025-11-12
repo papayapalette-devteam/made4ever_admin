@@ -1086,7 +1086,8 @@ useEffect(() => {
                   </div>
 
                    {/* ✅ Show extra fields if Divorce is selected */}
-  {user_profile.PersonalDetails.MaritalStatus === "Divorce" || user_profile.PersonalDetails.MaritalStatus=== "Widow/Widower"  && (
+  {(user_profile.PersonalDetails.MaritalStatus === "Divorce" || 
+  user_profile.PersonalDetails.MaritalStatus === "Widow/Widower")  && (
     <div className="mt-3 ml-4 space-y-2">
       <label className="flex items-center gap-2">
         <input
