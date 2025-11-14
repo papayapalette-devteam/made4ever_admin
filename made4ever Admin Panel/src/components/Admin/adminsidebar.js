@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 const menuItems = [
   { icon: dashboardicon, label: "Dashboard", path: "/admin-dashboard" },
   { icon: mspvideo, label: "MSP Data", path: "/msp" },
+  { icon: usersgroup, label: "Create Sub-Admin", path: "/sub-admin" },
  
   {
     icon: usersgroup,
@@ -41,43 +42,12 @@ const menuItems = [
   { icon: addhospitalicon, label: "Verify Msp Email", path: "/verify-msp-email" },
   ]
   },
-
   { icon: mspvideo, label: "MSP Video", path: "/msp-video" },
   { icon: mspgallary, label: "MSP Gallary", path: "/msp-gallary" },
   { icon: mspeventimage, label: "MSP Event Image", path: "/msp-event-image" },
   { icon: headingtext, label: "MSP Header Text", path: "/msp-header-text" },
-
-  // {
-  //   icon: weddingfriends,
-  //   label: "Wedding Friends",
-  //   children: [
-  // { icon: addhospitalicon, label: "Wonderfull Wedding Planners", path: "/wonderfull-wedding-planners" },
-  // { icon: addhospitalicon, label: "Video And Photography Phenoms", path: "/video-photography" },
-  // { icon: addhospitalicon, label: "Lovely Wedding Locations", path: "/weddeing-location" },
-  // { icon: addhospitalicon, label: "Fabulous Florals", path: "/fabulous-florals" },
-  // { icon: addhospitalicon, label: "Creative Catering And Cakes", path: "/creative-catering" },
-  // { icon: addhospitalicon, label: "Marvelous Musicians/Djs And Entertainment Booking Agents", path: "/musicians" },
-  // { icon: addhospitalicon, label: "Wedding Dress Materials", path: "/dress-material" },
-  // { icon: addhospitalicon, label: "Events Production And Rentals", path: "/event-production" },
-  // { icon: addhospitalicon, label: "Jwellers", path: "/jwellers" },
-  //   ],
-  // },
-
   { icon: mspmatch, label: "Matches", path: "/event-master" },
   { icon: paymentdetails, label: "Payment Details", path: "/event-master" },
-  // { icon: mobileloginotp, label: "Mobile Login Otp", path: "/event-master" },
-
-  // {
-  //   icon: updateage,
-  //   label: "Update Age",
-  //   children: [
-  // { icon: addhospitalicon, label: "Update Msp User Age", path: "/patient-referral-type" },
-  // { icon: addhospitalicon, label: "Update Partner Preference Age", path: "/symptom-class-master" },
-  //   ],
-  // },
-    
-
-  
   { icon: logout, label: "Logout" },
 ];
 

@@ -42,7 +42,7 @@ const login = async (e) => {
     //   });
     // }
 
-    if(Email==="admin@made4ever.com" && Password==="admin@123")
+    if(Email==="admin@made4ever.in" && Password==="admin@123")
     {
 
         Swal.fire({

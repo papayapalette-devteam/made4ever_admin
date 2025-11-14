@@ -31,7 +31,7 @@ import Adminheader from "../adminheader";
 import "../admincss/common_config.css";
 import UniqueLoader from "../loader";
 
-function Msp() {
+function SubAdmin() {
   const [Msp, setMsp] = useState({
     name: "",
     email: "",
@@ -334,9 +334,9 @@ function Msp() {
         <div className="content-wrapper">
           <div className="main-content">
             <div className="profile-header">
-              <h3>Enter Details for Msp</h3>
+              <h3>Enter Details for Sub-Admin</h3>
               <p>
-                Add or update the required details for the msp to keep records
+                Add or update the required details for the sub-admin to keep records
                 accurate and complete.
               </p>
             </div>
@@ -397,17 +397,7 @@ function Msp() {
                   />
                 </FormControl>
 
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Registered Business Name</label>
-                  <TextField
-                    name="registered_business_name"
-                    placeholder="Registered Business Name"
-                    defaultValue={Msp.registered_business_name}
-                    onChange={handlechange}
-                    size="small"
-                  />
-                   
-                </FormControl>
+            
 
                 <FormControl fullWidth size="small">
                   <label className="form-label">Upload Your Id</label>
@@ -421,15 +411,7 @@ function Msp() {
                   />
                 </FormControl>
 
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Address</label>
-                  <TextField
-                    name="address"
-                    defaultValue={Msp.address}
-                    onChange={handlechange}
-                    placeholder="Address"
-                  ></TextField>
-                </FormControl>
+                
               </div>
 
               <Button className="submit-button" onClick={add_msp_data}>
@@ -479,4 +461,4 @@ function Msp() {
   );
 }
 
-export default Msp;
+export default SubAdmin;

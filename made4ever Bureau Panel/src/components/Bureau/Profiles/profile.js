@@ -6,6 +6,7 @@ import {
   Edit,
   Eye,
   Trash2,
+  Blocks,
   Heart,
   MapPin,
   Briefcase,
@@ -386,8 +387,8 @@ export default function ProfilesPage() {
                       onClick={() => delete_user_profile(profile._id)}
                       className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center"
                     >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
+                      <Blocks className="mr-2 h-4 w-4" />
+                      Block
                     </button>
                   </div>
                 </div>

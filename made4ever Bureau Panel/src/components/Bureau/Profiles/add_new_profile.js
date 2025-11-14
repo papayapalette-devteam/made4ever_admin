@@ -201,6 +201,149 @@ useEffect(() => {
     }
   }, [user_profile.PersonalDetails.DateOfBirth]);
 
+
+  // get mother tongue
+
+  const[select_loading,setselect_loading]=useState("")
+
+   const [All_Mother_Tongue, setAll_Mother_Tongue] = useState([]);
+  const getall_mother_tongue = async () => {
+    try {
+      setselect_loading("mother_tongue");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "mother_tongue");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Mother_Tongue(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+// get community
+
+  const [All_Community_Group, setAll_Community_Group] = useState([]);
+
+  const getall_community_group = async () => {
+    try {
+      setselect_loading("community");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "religion_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Community_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get religion
+
+   const [All_Religion_Group, setAll_Religion_Group] = useState([]);
+
+  const getall_religion_group = async () => {
+    try {
+      setselect_loading("religion");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "religion_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Religion_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get cast
+
+   const [All_Cast_Group, setAll_Cast_Group] = useState([]);
+  const getall_cast_group = async () => {
+    try {
+      setselect_loading("cast");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "cast_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Cast_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get gotra
+
+   const [All_Gothra_Group, setAll_Gothra_Group] = useState([]);
+  const getall_gothra_group = async () => {
+    try {
+      setselect_loading("gotra");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "gothra_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Gothra_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get occupation 
+
+    const [All_Occupation, setAll_Occupation] = useState([]);
+  const getall_occupation = async () => {
+    try {
+      setselect_loading("occupation");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "occupation");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Occupation(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get education specialization
+
+  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
+  const getall_education_specialization = async () => {
+    try {
+      setselect_loading("education_specialization");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "education_specialization");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Education_Specialization(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get income
+
+  
+  const [All_Income_Group, setAll_Income_Group] = useState([]);
+  const getall_income_group = async () => {
+    try {
+      setselect_loading("income");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "income_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Income_Group(resp.data.data);
+  
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
   // ===========================common onchange event=======================================
 
   const handleChange = (section, field, value, isArray = false) => {
@@ -783,6 +926,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                       onClick={() => {
+                          if (All_Mother_Tongue.length === 0) getall_mother_tongue(); 
+                        }}
                     >
                       <option
                         value={
@@ -792,11 +938,15 @@ useEffect(() => {
                         {user_profile?.PersonalDetails?.MotherTongue ||
                           "Select Mother Tongue"}
                       </option>
-                      <option>Hindi</option>
-                      <option>English</option>
-                      <option>Tamil</option>
-                      <option>Telugu</option>
-                      <option>Bengali</option>
+                      {/* Show loader while fetching */}
+                        {select_loading==="mother_tongue" && (
+                          <option disabled>Loading...</option>
+                        )}
+                      {All_Mother_Tongue.map((item) => (
+                        <option key={item._id} value={item._id}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1155,6 +1305,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                          onClick={() => {
+                            if (All_Community_Group.length === 0) getall_community_group();
+                          }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Community || ""}
@@ -1162,13 +1315,19 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Community ||
                           "Select Religion"}
                       </option>
-                      <option>Hindu</option>
-                      <option>Muslim</option>
-                      <option>Christian</option>
-                      <option>Sikh</option>
-                      <option>Buddhist</option>
-                      <option>Jain</option>
-                      <option>Other</option>
+                            {/* Show loader while fetching */}
+                        {select_loading==="community" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Community_Group.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -1187,6 +1346,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                      onClick={() => {
+                        if (All_Cast_Group.length === 0) getall_cast_group();
+                      }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Caste || ""}
@@ -1194,13 +1356,18 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Caste ||
                           "Select Caste"}
                       </option>
-                      <option value="brahmin">Brahmin</option>
-                      <option value="rajput">Rajput</option>
-                      <option value="yadav">Yadav</option>
-                      <option value="baniya">Baniya</option>
-                      <option value="kurmi">Kurmi</option>
-                      <option value="gupta">Gupta</option>
-                      <option value="other">Other</option>
+                      {select_loading==="cast" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Cast_Group.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -1218,6 +1385,10 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                        onClick={() => {
+                            if (All_Religion_Group.length === 0) getall_religion_group();
+                          }
+                        }
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Religion || ""}
@@ -1225,10 +1396,18 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Religion ||
                           "Select Religion"}
                       </option>
-                      <option value="sub1">Sub-caste 1</option>
-                      <option value="sub2">Sub-caste 2</option>
-                      <option value="sub3">Sub-caste 3</option>
-                      <option value="other">Other</option>
+                      {select_loading==="religion" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Religion_Group.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -1246,6 +1425,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                      onClick={() => {
+                        if (All_Gothra_Group.length === 0) getall_gothra_group();
+                      }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Gothram || ""}
@@ -1253,12 +1435,18 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Gothram ||
                           "Select Gotra"}
                       </option>
-                      <option value="bharadwaj">Bharadwaj</option>
-                      <option value="kashyap">Kashyap</option>
-                      <option value="gautam">Gautam</option>
-                      <option value="vashishtha">Vashishtha</option>
-                      <option value="agastya">Agastya</option>
-                      <option value="other">Other</option>
+                      {select_loading==="gotra" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Gothra_Group.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
                 </div>
@@ -1330,6 +1518,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                       onClick={() => {
+                          if (All_Occupation.length === 0) getall_occupation();
+                        }}
                     >
                       <option
                         value={
@@ -1339,13 +1530,18 @@ useEffect(() => {
                         {user_profile?.FamilyDetails?.FatherOccupation ||
                           "Select Occupation"}
                       </option>
-                      <option value="business">Business</option>
-                      <option value="government_job">Government Job</option>
-                      <option value="private_job">Private Job</option>
-                      <option value="retired">Retired</option>
-                      <option value="farmer">Farmer</option>
-                      <option value="self_employed">Self Employed</option>
-                      <option value="other">Other</option>
+                      {loading==="occupation" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Occupation.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -1373,13 +1569,13 @@ useEffect(() => {
                         {user_profile?.FamilyDetails?.MotherOccupation ||
                           "Select Occupation"}
                       </option>
-                      <option value="homemaker">Homemaker</option>
-                      <option value="business">Business</option>
-                      <option value="government_job">Government Job</option>
-                      <option value="private_job">Private Job</option>
-                      <option value="retired">Retired</option>
-                      <option value="self_employed">Self Employed</option>
-                      <option value="other">Other</option>
+                        {
+                          All_Occupation.map((item) => (
+                            <option key={item._id} value={item._id}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -1499,6 +1695,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                      onClick={() => {
+                        if (All_Education_Specialization.length === 0) getall_education_specialization();
+                      }}
                     >
                       <option
                         value={
@@ -1509,14 +1708,18 @@ useEffect(() => {
                         {user_profile?.EducationDetails
                           ?.EducationSpecialization || "Select Specialization"}
                       </option>
-                      <option value="engineering">Engineering</option>
-                      <option value="medical">Medical</option>
-                      <option value="commerce">Commerce</option>
-                      <option value="arts">Arts</option>
-                      <option value="science">Science</option>
-                      <option value="law">Law</option>
-                      <option value="management">Management</option>
-                      <option value="other">Other</option>
+                      {loading==="education_specialization" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_Education_Specialization.map((item) => (
+                          <option key={item._id} value={item._id}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
 
@@ -1542,14 +1745,13 @@ useEffect(() => {
                         {user_profile?.EducationDetails?.Occupation ||
                           "Select Occupation"}
                       </option>
-                      <option value="business">Business</option>
-                      <option value="government_job">Government Job</option>
-                      <option value="private_job">Private Job</option>
-                      <option value="self_employed">Self Employed</option>
-                      <option value="retired">Retired</option>
-                      <option value="student">Student</option>
-                      <option value="homemaker">Homemaker</option>
-                      <option value="other">Other</option>
+                      {
+                        All_Occupation.map((item) => (
+                          <option key={item._id} value={item._id}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
 
@@ -1568,6 +1770,9 @@ useEffect(() => {
                           e.target.value
                         )
                       }
+                       onClick={() => {
+                        if (All_Income_Group.length === 0) getall_income_group();
+                      }}
                     >
                       <option
                         value={
@@ -1578,11 +1783,18 @@ useEffect(() => {
                         {user_profile?.EducationDetails?.AnnualFamilyIncome ||
                           "Select Annual Family Income"}
                       </option>
-                      <option value="0-2">0 - 2 Lakh</option>
-                      <option value="2-5">2 - 5 Lakh</option>
-                      <option value="5-10">5 - 10 Lakh</option>
-                      <option value="10-20">10 - 20 Lakh</option>
-                      <option value="20+">Above 20 Lakh</option>
+                        {loading==="income" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_Income_Group.map((item) => (
+                          <option key={item._id} value={item._id}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
                 </div>

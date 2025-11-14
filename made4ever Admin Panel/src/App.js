@@ -35,6 +35,7 @@ import EventProduction from "./components/Admin/Wedding_Friends/Event_Production
 import Jwellers from "./components/Admin/Wedding_Friends/Jwellers";
 import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
+import SubAdmin from "./components/Admin/SubAdmin/create_subadmin";
 
 
 
@@ -89,6 +90,12 @@ function App() {
        <Route path="/msp" element={<Msp/>}></Route>
 
       {/*===================== users data section route end ===========================*/}
+
+      {/*===================== create sub-admin route start ===========================*/}
+
+       <Route path="/sub-admin" element={<SubAdmin/>}></Route>
+
+      {/*===================== create sub-admin route end ===========================*/}
 
       {/*=============================== other routes start============================ */}
 
