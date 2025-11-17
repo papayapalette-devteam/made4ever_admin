@@ -21,8 +21,8 @@ const personalDetailsSchema = Joi.object({
   Living: Joi.string().allow(""),
   AnyDisability: Joi.string().allow(""),
   MaritalStatus: Joi.string().allow(""),
-  HasChildren: Joi.boolean().allow(null),
-  ChildrenCount:Joi.number().allow("")
+  HasChildren: Joi.boolean().allow(""),
+  ChildrenCount:Joi.number().allow(null)
 });
 
 // ✅ Religious Details Schema

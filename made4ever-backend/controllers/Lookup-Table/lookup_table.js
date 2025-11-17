@@ -101,7 +101,7 @@ exports.getLookup = async (req, res) => {
           message: "Invalid parent_lookup_id",
         });
       }
-      query.parent_lookup_id = mongoose.Types.ObjectId(parent_lookup_id);
+      query.parent_lookup_id =new mongoose.Types.ObjectId(parent_lookup_id);
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);

@@ -13,7 +13,7 @@ const PersonalDetailsSchema = new mongoose.Schema({
   Complexion: { type: String, default: "" },
   Height: { type: String, default: "" },
   Weight: { type: String, default: "" },
-  MotherTongue: { type: String, default: "" },
+  MotherTongue: {type: String, default: ""},
   Gender: { type: String, default: "" },
   Drinking: { type: String, default: "" },
   Smoking: { type: String, default: "" },
@@ -28,36 +28,36 @@ const PersonalDetailsSchema = new mongoose.Schema({
 });
 
 const ReligiousDetailsSchema = new mongoose.Schema({
-  Community: { type: String, default: "" },
-  Caste: { type: String, default: "" },
-  Religion: { type: String, default: "" },
-  Gothram: { type: String, default: "" }
+  Community: {type: String, default: ""},
+  Caste: {type: String, default: ""},
+  Religion: {type: String, default: ""},
+  Gothram: {type: String, default: ""}
 });
 
 const FamilyDetailsSchema = new mongoose.Schema({
   FatherName: { type: String, default: "" },
   MotherName: { type: String, default: "" },
-  FatherOccupation: { type: String, default: "" },
-  MotherOccupation: { type: String, default: "" },
+  FatherOccupation: {type: String, default: ""},
+  MotherOccupation: {type: String, default: ""},
   NoOfSiblings: { type: Number, default: 0 },
   FamilyType: { type: String, default: "" },
   FamilyDescription: { type: String, default: "" }
 });
 
 const EducationDetailsSchema = new mongoose.Schema({
-  HighestEducation: { type: String, default: "" },
-  EducationSpecialization: { type: String, default: "" },
-  Occupation: { type: String, default: "" },
-  AnnualFamilyIncome: { type: String, default: "" },
+  HighestEducation: {type: String, default: ""},
+  EducationSpecialization: {type: String, default: ""},
+  Occupation: {type: String, default: ""},
+  AnnualFamilyIncome: {type: String, default: ""},
   EducationDetails: { type: String, default: "" },
   OccupationDetails: { type: String, default: "" }
 });
 
 const ContactDetailsSchema = new mongoose.Schema({
   ParmanentAddress: { type: String, default: "" },
-  Country: { type: String, default: "" },
-  State: { type: String, default: "" },
-  City: { type: String, default: "" },
+  Country: {type: String, default: ""},
+  State: {type: String, default: ""},
+  City: {type: String, default: ""},
   PostalCode: { type: Number, default: "" }
 });
 
@@ -68,15 +68,15 @@ const PartnerPrefrencesSchema = new mongoose.Schema({
   NonVeg: { type: String, default: "" },
   Manglik: { type: String, default: "" },
   Nri: { type: String, default: "" },
-  Community: { type: String, default: "" },
-  Religion: { type: String, default: "" },
+  Community: {type: String, default: ""},
+  Religion: {type: String, default: ""},
   Caste: { type: String, default: "" },
-  MotherTongue: { type: String, default: "" },
-  HeighstEducation: { type: Array, default: [] },
-  Occupation: { type: Array, default: [] },
-  Country: { type: Array, default: [] },
-  State: { type: Array, default: [] },
-  City: { type: Array, default: [] }
+  MotherTongue: {type: String, default: ""},
+  HeighstEducation: {type: Array, default: []},
+  Occupation: {type: Array, default: []},
+  Country: {type: Array, default: []},
+  State: {type: Array, default: []},
+  City: {type: Array, default: []},
 });
 
 const UploadSchema = new mongoose.Schema({

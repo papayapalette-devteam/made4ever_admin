@@ -50,7 +50,7 @@ export default function NewProfileForm() {
       AnyDisability: "",
       MaritalStatus: "",
       HasChildren: false,     
-      ChildrenCount: "", 
+      ChildrenCount: 0, 
 
     },
     ReligiousDetails: {
@@ -308,6 +308,24 @@ useEffect(() => {
     }
   };
 
+  // get education
+
+  const [All_Education_Group, setAll_Education_Group] = useState([]);
+  const getAll_Education_Group = async () => {
+    try {
+      setselect_loading("education");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "education_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Education_Group(resp.data.data)
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+
   // get education specialization
 
   const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
@@ -337,6 +355,95 @@ useEffect(() => {
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Income_Group(resp.data.data);
   
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get country
+
+    const [All_Country_Group, setAll_Country_Group] = useState([]);
+  const getall_country_group = async () => {
+    try {
+      setselect_loading("country");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "country_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Country_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get state
+
+   const [All_State_Group, setAll_State_Group] = useState([]);
+  const getall_state_group = async (selectedId) => {
+    try {
+      setselect_loading("state");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "state_group");
+      params.append("parent_lookup_id", selectedId);
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_State_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get city
+
+    const [All_City_Group, setAll_City_Group] = useState([]);
+  const getall_city_group = async (selectedId) => {
+    try {
+      setselect_loading("city");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "city_group");
+      params.append("parent_lookup_id", selectedId);
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_City_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get property type
+
+   const [All_Property_Type, setAll_Property_Type] = useState([]);
+
+  const getall_property_type = async () => {
+    try {
+      setselect_loading("property_type");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "property_type");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Property_Type(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
+  // get ResidentialType
+
+  const [All_Residence_Type, setAll_Residence_Type] = useState([]);
+  const getall_residence_type = async (selectedId) => {
+    try {
+      setselect_loading("residence_type");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "residence_type");
+      params.append("parent_lookup_id", selectedId);
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Residence_Type(resp.data.data)
     } catch (error) {
       console.log(error);
     } finally {
@@ -943,7 +1050,7 @@ useEffect(() => {
                           <option disabled>Loading...</option>
                         )}
                       {All_Mother_Tongue.map((item) => (
-                        <option key={item._id} value={item._id}>
+                        <option key={item._id} value={item.lookup_value}>
                           {item.lookup_value}
                         </option>
                       ))}
@@ -1265,7 +1372,7 @@ useEffect(() => {
             type="number"
             min="1"
             className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
-            value={user_profile.PersonalDetails.ChildrenCount || ""}
+            value={user_profile.PersonalDetails.ChildrenCount || 0}
             onChange={(e) =>
               handleChange(
                 "PersonalDetails",
@@ -1323,7 +1430,7 @@ useEffect(() => {
                         {/* Show fetched values */}
                         {
                           All_Community_Group.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1363,7 +1470,7 @@ useEffect(() => {
                         {/* Show fetched values */}
                         {
                           All_Cast_Group.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1403,7 +1510,7 @@ useEffect(() => {
                         {/* Show fetched values */}
                         {
                           All_Religion_Group.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1442,7 +1549,7 @@ useEffect(() => {
                         {/* Show fetched values */}
                         {
                           All_Gothra_Group.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1537,7 +1644,7 @@ useEffect(() => {
                         {/* Show fetched values */}
                         {
                           All_Occupation.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1571,7 +1678,7 @@ useEffect(() => {
                       </option>
                         {
                           All_Occupation.map((item) => (
-                            <option key={item._id} value={item._id}>
+                            <option key={item._id} value={item.lookup_value}>
                               {item.lookup_value}
                             </option>
                           ))
@@ -1660,16 +1767,15 @@ useEffect(() => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Highest Education */}
-                  <div>
+              
+
+                   <div>
                     <label className="block text-gray-700 font-medium mb-1">
                       Highest Education
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Highest Education"
+                    <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="HighestEducation"
-                      value={user_profile.EducationDetails.HighestEducation}
                       onChange={(e) =>
                         handleChange(
                           "EducationDetails",
@@ -1677,8 +1783,34 @@ useEffect(() => {
                           e.target.value
                         )
                       }
-                    />
+                      onClick={() => {
+                        if (All_Education_Group.length === 0) getAll_Education_Group();
+                      }}
+                    >
+                      <option
+                        value={
+                          user_profile?.EducationDetails
+                            ?.HighestEducation || ""
+                        }
+                      >
+                        {user_profile?.EducationDetails
+                          ?.HighestEducation || "Select Education"}
+                      </option>
+                      {loading==="education" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_Education_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                    </select>
                   </div>
+
 
                   {/* Education Specialization */}
                   <div>
@@ -1715,7 +1847,7 @@ useEffect(() => {
                       {/* Show fetched values */}
                       {
                         All_Education_Specialization.map((item) => (
-                          <option key={item._id} value={item._id}>
+                          <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
                         ))
@@ -1747,7 +1879,7 @@ useEffect(() => {
                       </option>
                       {
                         All_Occupation.map((item) => (
-                          <option key={item._id} value={item._id}>
+                          <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
                         ))
@@ -1790,7 +1922,7 @@ useEffect(() => {
                       {/* Show fetched values */}
                       {
                         All_Income_Group.map((item) => (
-                          <option key={item._id} value={item._id}>
+                          <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
                         ))
@@ -1881,12 +2013,19 @@ useEffect(() => {
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="Country"
                       onChange={(e) =>
+                      {
+                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id");
                         handleChange(
                           "ContactDetails",
                           "Country",
                           e.target.value
                         )
+                         getall_state_group(selectedId);
                       }
+                      }
+                       onClick={() => {
+                        if (All_Country_Group.length === 0) getall_country_group();
+                      }}
                     >
                       <option
                         value={user_profile?.ContactDetails?.Country || ""}
@@ -1894,12 +2033,18 @@ useEffect(() => {
                         {user_profile?.ContactDetails?.Country ||
                           "Select Country"}
                       </option>
-                      <option value="">Select Country</option>
-                      <option>India</option>
-                      <option>USA</option>
-                      <option>Canada</option>
-                      <option>Australia</option>
-                      <option>United Kingdom</option>
+                     {loading==="country" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_Country_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
 
@@ -1912,17 +2057,29 @@ useEffect(() => {
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="State"
                       onChange={(e) =>
+                      {
+                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id")
                         handleChange("ContactDetails", "State", e.target.value)
+                        getall_city_group(selectedId);
                       }
+                      }
+                    
                     >
                       <option value={user_profile?.ContactDetails?.State || ""}>
                         {user_profile?.ContactDetails?.State || "Select State"}
                       </option>
-                      <option>Maharashtra</option>
-                      <option>Delhi</option>
-                      <option>Uttar Pradesh</option>
-                      <option>Karnataka</option>
-                      <option>Tamil Nadu</option>
+                      {loading==="state" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_State_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
 
@@ -1937,15 +2094,23 @@ useEffect(() => {
                       onChange={(e) =>
                         handleChange("ContactDetails", "City", e.target.value)
                       }
+                    
                     >
                       <option value={user_profile?.ContactDetails?.City || ""}>
                         {user_profile?.ContactDetails?.City || "Select City"}
                       </option>
-                      <option>Mumbai</option>
-                      <option>Delhi</option>
-                      <option>Bengaluru</option>
-                      <option>Chennai</option>
-                      <option>Lucknow</option>
+                       {loading==="city" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_City_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                     </select>
                   </div>
 
@@ -2362,6 +2527,7 @@ useEffect(() => {
                             e.target.value
                           )
                         }
+                        onClick={() => {getall_religion_group()}}
                       >
                         <option
                           value={
@@ -2371,11 +2537,13 @@ useEffect(() => {
                           {user_profile?.PartnerPrefrences?.Community ||
                             "Select Community"}
                         </option>
-                        <option>Brahmin</option>
-                        <option>Kshatriya</option>
-                        <option>Vaishya</option>
-                        <option>Shudra</option>
-                        <option>Other</option>
+                          {
+                        All_Religion_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                       </select>
                     </div>
 
@@ -2394,6 +2562,7 @@ useEffect(() => {
                             e.target.value
                           )
                         }
+                        onClick={() => {getall_religion_group()}}
                       >
                         <option
                           value={
@@ -2403,12 +2572,13 @@ useEffect(() => {
                           {user_profile?.PartnerPrefrences?.Religion ||
                             "Select Religion"}
                         </option>
-                        <option>Hindu</option>
-                        <option>Muslim</option>
-                        <option>Sikh</option>
-                        <option>Christian</option>
-                        <option>Jain</option>
-                        <option>Buddhist</option>
+                          {
+                        All_Religion_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                       </select>
                     </div>
 
@@ -2418,9 +2588,17 @@ useEffect(() => {
                         Caste
                       </label>
                       <input
+                        defaultValue={user_profile?.PartnerPrefrences?.Caste? user_profile.PartnerPrefrences.Caste:""}
                         type="text"
                         placeholder="Caste"
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        onChange={(e) =>
+                        handleChange(
+                          "PartnerPrefrences",
+                          "Caste",
+                          e.target.value
+                        )
+                      }
                       />
                     </div>
 
@@ -2439,6 +2617,7 @@ useEffect(() => {
                             e.target.value
                           )
                         }
+                        onClick={() => {getall_mother_tongue()}}
                       >
                         <option
                           value={
@@ -2448,12 +2627,13 @@ useEffect(() => {
                           {user_profile?.PartnerPrefrences?.MotherTongue ||
                             "Select Mother Tongue"}
                         </option>
-                        <option>Hindi</option>
-                        <option>English</option>
-                        <option>Tamil</option>
-                        <option>Telugu</option>
-                        <option>Marathi</option>
-                        <option>Gujarati</option>
+                          {
+                        All_Mother_Tongue.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
                       </select>
                     </div>
 
@@ -2476,6 +2656,7 @@ useEffect(() => {
                             setselectedEducation(newValues);
                             handleMultiSelectChange(e, "HeighstEducation");
                           }}
+                          onClick={() => {getAll_Education_Group()}}
                           displayEmpty
                           renderValue={(selected) => {
                             if (selected.length === 0) {
@@ -2506,13 +2687,13 @@ useEffect(() => {
                             );
                           }}
                         >
-                          {options.HeighstEducation.map((option) => (
-                            <MenuItem key={option} value={option}>
+                          {All_Education_Group.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedEducation.includes(option)}
+                                checked={selectedEducation.includes(option.lookup_value)}
                                 color="primary"
                               />
-                              {option}
+                              {option.lookup_value}
                             </MenuItem>
                           ))}
                         </Select>
@@ -2537,6 +2718,7 @@ useEffect(() => {
                             setselectedOccupation(newValues);
                             handleMultiSelectChange(e, "Occupation");
                           }}
+                          onClick={() => {getall_occupation()}}
                           displayEmpty
                           renderValue={(selected) => {
                             if (selected.length === 0) {
@@ -2567,13 +2749,13 @@ useEffect(() => {
                             );
                           }}
                         >
-                          {options.Occupation.map((option) => (
-                            <MenuItem key={option} value={option}>
+                          {All_Occupation.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedOccupation.includes(option)}
+                                checked={selectedOccupation.includes(option.lookup_value)}
                                 color="primary"
                               />
-                              {option}
+                              {option.lookup_value}
                             </MenuItem>
                           ))}
                         </Select>
@@ -2628,13 +2810,13 @@ useEffect(() => {
                             );
                           }}
                         >
-                          {options.Country.map((option) => (
-                            <MenuItem key={option} value={option}>
+                          {All_Country_Group.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedCountry.includes(option)}
+                                checked={selectedCountry.includes(option.lookup_value)}
                                 color="primary"
                               />
-                              {option}
+                              {option.lookup_value}
                             </MenuItem>
                           ))}
                         </Select>
@@ -2689,13 +2871,13 @@ useEffect(() => {
                             );
                           }}
                         >
-                          {options.State.map((option) => (
-                            <MenuItem key={option} value={option}>
+                          {All_State_Group.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedState.includes(option)}
+                                checked={selectedState.includes(option.lookup_value)}
                                 color="primary"
                               />
-                              {option}
+                              {option.lookup_value}
                             </MenuItem>
                           ))}
                         </Select>
@@ -2750,13 +2932,13 @@ useEffect(() => {
                             );
                           }}
                         >
-                          {options.City.map((option) => (
-                            <MenuItem key={option} value={option}>
+                          {All_City_Group.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedCity.includes(option)}
+                                checked={selectedCity.includes(option.lookup_value)}
                                 color="primary"
                               />
-                              {option}
+                              {option.lookup_value}
                             </MenuItem>
                           ))}
                         </Select>
@@ -2989,12 +3171,19 @@ useEffect(() => {
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="PropertyType"
                       onChange={(e) =>
+                      {
+                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id");
                         handleChange(
                           "PropertyDetails",
                           "PropertyType",
                           e.target.value
                         )
+                        getall_residence_type(selectedId);
                       }
+                      }
+                       onClick={() => {
+                          if (All_Property_Type.length === 0) getall_property_type();
+                        }}
                     >
                       <option
                         value={
@@ -3004,11 +3193,18 @@ useEffect(() => {
                         {user_profile?.PropertyDetails?.PropertyType ||
                           "Select Property Type"}
                       </option>
-                      <option value="Flat">Flat</option>
-                      <option value="Villa">Villa</option>
-                      <option value="Plot">Plot</option>
-                      <option value="Bungalow">Bungalow</option>
-                      <option value="Farmhouse">Farmhouse</option>
+                       {loading==="property_type" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Property_Type.map((item) => (
+                            <option key={item._id} value={item.lookup_value} data-id={item._id} >
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
 
@@ -3021,12 +3217,15 @@ useEffect(() => {
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="ResidentialType"
                       onChange={(e) =>
+                      {
                         handleChange(
                           "PropertyDetails",
                           "ResidentialType",
                           e.target.value
                         )
                       }
+                      }
+                     
                     >
                       <option
                         value={
@@ -3036,10 +3235,18 @@ useEffect(() => {
                         {user_profile?.PropertyDetails?.ResidentialType ||
                           "Select Residential Type"}
                       </option>
-                      <option value="Owned">Owned</option>
-                      <option value="Rented">Rented</option>
-                      <option value="Leased">Leased</option>
-                      <option value="Family Property">Family Property</option>
+                      {loading==="residence_type" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Residence_Type.map((item) => (
+                            <option key={item._id} value={item.lookup_value}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
                     </select>
                   </div>
                 </div>
