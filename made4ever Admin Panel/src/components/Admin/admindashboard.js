@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../Admin/admincss/admindashboard.css";
 import "../Admin/admincss/common_config.css";
 import Adminheader from "./adminheader";
@@ -12,6 +12,7 @@ import docotorsicon from '../Admin/images/doctor-m-svgrepo-com 1.png'
 import medicalassociationicon from '../Admin/images/medical-kit-svgrepo-com 1.png'
 import patientreferralsicon from '../Admin/images/online-health-doctor-patient-video-consultation-medical-2-svgrepo-com 1.png'
 import deleteicon from '../Admin/images/delete-svgrepo-com 1.png'
+import api from "../../api";
 
 const overviewData = [
   { icon: continenticon, bg: "#6C61E7", title: "Continent", value: "0.5k" },
@@ -24,13 +25,45 @@ const overviewData = [
   { icon: patientreferralsicon, bg: "#374DA4", title: "Msp Referrals", value: "1.3" },
 ];
 
-const doctors = [
-  { name: "Rajinder Bansal", phone: "+91 1234567890", specialty: "truematermony@gmail.com", hospital: "True Matrimony" },
-  { name: "Meenakshi Gupta", phone: "+91 1234567890", specialty: "mannat@gmail.com", hospital: "Mannat Marriage Bureau" },
-  { name: "Rajiv Shukla", phone: "+91 1234567890", specialty: "bandhanv@gmail.com", hospital: "Vivah Bandhan" },
-];
 
-const Admindashboard = () => (
+
+
+function Admindashboard() {
+
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0, // DataGrid pages start from 0
+    pageSize: 10,
+  });
+
+  const [All_Msp_Data, setAll_Msp_Data] = useState([]);
+  const getall_msp_data = async (
+    pageNumber = paginationModel.page,
+    limitNumber = paginationModel.pageSize
+  ) => {
+    try {
+   
+      const params = new URLSearchParams();
+
+      // Pagination
+      params.append("page", pageNumber + 1); // backend is 1-indexed
+      params.append("limit", limitNumber);
+
+      const resp = await api.get(`api/msp/Getmsp?${params.toString()}`);
+
+      setAll_Msp_Data(resp.data.msp);
+      setRowCount(resp.data.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getall_msp_data();
+  }, []);
+
+
+    return (
     <div>
     <Adminheader />
 
@@ -65,14 +98,14 @@ const Admindashboard = () => (
           </tr>
         </thead>
         <tbody>
-          {doctors.map((doc, idx) => (
+          {All_Msp_Data?.map((doc, idx) => (
             <tr key={idx}>
               <td>
                 <span className="doctor-link">{doc.name}</span>
               </td>
-              <td>{doc.phone}</td>
-              <td>{doc.specialty}</td>
-              <td>{doc.hospital}</td>
+              <td>{doc.mobile_number}</td>
+              <td>{doc.email}</td>
+              <td>{doc.registered_business_name}</td>
               <td className="action-button">
                 <button className="view-profile-btn">
                   View Profile <i className="fa fa-angle-right"></i>
@@ -90,6 +123,7 @@ const Admindashboard = () => (
   </div>
   </div>
   </div>
-);
+    )
+}
 
 export default Admindashboard;

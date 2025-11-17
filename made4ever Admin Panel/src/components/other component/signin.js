@@ -26,21 +26,7 @@ const login = async (e) => {
 
 
     try {
-      // const resp = await api.post('api/msp/signin/sign-in', { Email, Password });
-
-    //   if(resp.status===200)
-    //   {
-    //   // Success
-    //   Swal.fire({
-    //     icon: 'success',
-    //     title: 'Login Successful',
-    //     text: resp.data.message || 'Welcome!',
-    //     showConfirmButton: true,
-    //      customClass: {
-    //       confirmButton: 'my-swal-button',
-    //     },
-    //   });
-    // }
+     
 
     if(Email==="admin@made4ever.in" && Password==="admin@123")
     {
@@ -58,6 +44,32 @@ const login = async (e) => {
       localStorage.setItem('token',"Admin");
 
       navigate('/admin-dashboard');
+
+    }
+    else
+    {
+       const resp = await api.post('api/msp/signin/sub-admin-sign-in', { Email, Password });
+
+      if(resp.status===200)
+      {
+      // Success
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: resp.data.message || 'Welcome!',
+        showConfirmButton: true,
+         customClass: {
+          confirmButton: 'my-swal-button',
+        },
+      });
+
+      localStorage.setItem('token',resp.data.token);
+      localStorage.setItem('user', JSON.stringify(resp.data.user));
+
+
+      navigate('/admin-dashboard');
+
+    }
 
     }
    

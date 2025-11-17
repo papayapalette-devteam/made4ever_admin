@@ -83,6 +83,8 @@ const ChevronDownIcon = () => (
     });
   };
 
+  const loggeduser = JSON.parse(localStorage.getItem('user'));
+
 
 
   return (
@@ -137,15 +139,15 @@ const ChevronDownIcon = () => (
       ></div>
       {/* Hide text on xs screens to avoid overflow */}
       <div className=" xs:block">
-        <div className="text-black text-16px sm:text-sm truncate max-w-[auto]">Welcome Admin</div>
-        <div className="text-black text-16px sm:text-sm truncate max-w-[auto]">Admin</div>
+        <div className="text-black text-16px sm:text-sm truncate max-w-[auto]">{loggeduser?loggeduser.name:"Welcome Admin"}</div>
+        <div className="text-black text-16px sm:text-sm truncate max-w-[auto]">{loggeduser?"Sub-Admin":"Admin"}</div>
       </div>
       {isOpen && (
 <div className="absolute right-0 top-full mt-2 w-56 bg-white border rounded-lg shadow-lg p-3 z-[9999]">
   {/* Top user info */}
   <div className="border-b pb-2 mb-2">
-    <p className="text-sm font-semibold text-gray-800">Admin</p>
-    <p className="text-xs text-gray-500">admin@gmail.com</p>
+    <p className="text-sm font-semibold text-gray-800">{loggeduser?"Sub-Admin":"Admin"}</p>
+    <p className="text-xs text-gray-500">{loggeduser?loggeduser.email:"admin@made4ever.in"}</p>
   </div>
 
   {/* Menu items */}

@@ -1,25 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Box,
-  Grid,
   Button,
-  Typography,
-  Card,
-  Avatar,
   TextField,
   FormControl,
-  InputLabel,
-  Select,
   MenuItem,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Fade,
-  Chip,
   Menu,
   Paper,
 } from "@mui/material";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import api from "../../../api";
@@ -32,14 +20,12 @@ import "../admincss/common_config.css";
 import UniqueLoader from "../loader";
 
 function SubAdmin() {
-  const [Msp, setMsp] = useState({
+  const [SubAdmin, setSubAdmin] = useState({
     name: "",
     email: "",
     password: "",
     confirm_password: "",
     mobile_number: "",
-    registered_business_name: "test",
-    address: "",
     id: [],
   });
 
@@ -51,8 +37,8 @@ function SubAdmin() {
     pageSize: 10,
   });
 
-  const [All_Msp_Data, setAll_Msp_Data] = useState([]);
-  const getall_msp_data = async (
+  const [All_Sub_Admin, setAll_Sub_Admin] = useState([]);
+  const getallsub_admin = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
   ) => {
@@ -64,9 +50,9 @@ function SubAdmin() {
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
 
-      const resp = await api.get(`api/msp/Getmsp?${params.toString()}`);
+      const resp = await api.get(`api/sub-admin/GetSubAdmin?${params.toString()}`);
 
-      setAll_Msp_Data(resp.data.msp);
+      setAll_Sub_Admin(resp.data.subadmin);
       setRowCount(resp.data.total);
     } catch (error) {
       console.log(error);
@@ -76,7 +62,7 @@ function SubAdmin() {
   };
 
   useEffect(() => {
-    getall_msp_data();
+    getallsub_admin();
   }, []);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -141,7 +127,6 @@ function SubAdmin() {
       flex: 1.5,
     },
     { field: "createdAt", headerName: "Add Date", flex: 1.5 },
-    { field: "total_match", headerName: "Total Match", flex: 1.5 },
 
     {
       field: "actions",
@@ -185,7 +170,7 @@ function SubAdmin() {
     },
   ];
 
-  const rows = All_Msp_Data?.map((doc, index) => ({
+  const rows = All_Sub_Admin?.map((doc, index) => ({
     id: doc._id || index,
     ...doc,
   }));
@@ -209,10 +194,8 @@ function SubAdmin() {
       const res = await api.post("api/upload/upload-files", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(res);
-      
-
-      setMsp({ ...Msp, id: res.data.urls });
+  
+      setSubAdmin({ ...SubAdmin, id: res.data.urls });
     } catch (error) {
       console.error("Upload failed:", error);
       alert("Upload failed!");
@@ -224,7 +207,7 @@ function SubAdmin() {
   const handlechange = (e) => {
     const { name, value, checked, type } = e.target;
 
-    setMsp((prev) => {
+    setSubAdmin((prev) => {
       // Handle boolean radios (true/false as string)
       const booleanFields = ["IsEmailVerified", "IsPhoneVerified"];
       if (booleanFields.includes(name)) {
@@ -255,9 +238,9 @@ function SubAdmin() {
 
   const add_msp_data = async () => {
     try {
-        const { confirm_password, ...payload } = Msp;
+        const { confirm_password, ...payload } = SubAdmin;
       setloading(true);
-      if (Msp.password !== Msp.confirm_password) {
+      if (SubAdmin.password !== SubAdmin.confirm_password) {
         setTimeout(() => {
           Swal.fire({
             icon: "error",
@@ -274,14 +257,14 @@ function SubAdmin() {
         }, 0);
         return;
       }
-      const resp = await api.post("api/msp/Savemsp", payload);
+      const resp = await api.post("api/sub-admin/SaveSubAdmin", payload);
 
       if (resp.status === 200) {
         setTimeout(() => {
           Swal.fire({
             icon: "success",
-            title: "MSP Added",
-            text: "MSP Addedd Successfully...",
+            title: "Sub Admin Added",
+            text: "Sub Admin Addedd Successfully...",
             showConfirmButton: true,
             customClass: {
               popup: "small-swal-popup",
@@ -349,7 +332,7 @@ function SubAdmin() {
                   <TextField
                     name="name"
                     placeholder="Name"
-                    defaultValue={Msp.name}
+                    defaultValue={SubAdmin.name}
                     onChange={handlechange}
                   />
                 </FormControl>
@@ -359,7 +342,7 @@ function SubAdmin() {
                   <TextField
                     name="email"
                     placeholder="Email"
-                    defaultValue={Msp.email}
+                    defaultValue={SubAdmin.email}
                     onChange={handlechange}
                   />
                 </FormControl>
@@ -369,7 +352,7 @@ function SubAdmin() {
                   <TextField
                     name="password"
                     placeholder="Password"
-                    defaultValue={Msp.password}
+                    defaultValue={SubAdmin.password}
                     onChange={handlechange}
                     size="small"
                   />
@@ -380,7 +363,7 @@ function SubAdmin() {
                   <TextField
                     name="confirm_password"
                     placeholder="Confirm Password"
-                    defaultValue={Msp.confirm_password}
+                    defaultValue={SubAdmin.confirm_password}
                     onChange={handlechange}
                     size="small"
                   />
@@ -391,7 +374,7 @@ function SubAdmin() {
                   <TextField
                     name="mobile_number"
                     placeholder="Mobile Number"
-                    defaultValue={Msp.mobile_number}
+                    defaultValue={SubAdmin.mobile_number}
                     onChange={handlechange}
                     size="small"
                   />
@@ -405,7 +388,7 @@ function SubAdmin() {
                     type="file"
                     name="id"
                     placeholder="Mobile Number"
-                    defaultValue={Msp.id}
+                    defaultValue={SubAdmin.id}
                     onChange={handleFileChange}
                     size="small"
                   />
