@@ -40,6 +40,13 @@ const mspValidationSchema = Joi.object({
   is_active: Joi.boolean().default(true),
 
   other: Joi.object().optional(),
+
+    // ⭐ NEW FIELDS (OPTIONAL)
+  credits: Joi.number().default(0), // user starts with 0 credits
+  current_plan: Joi.string().optional().allow(""),
+  subscription_valid_till: Joi.date().optional().allow(null),
+
+  
 });
 
 module.exports = mspValidationSchema;

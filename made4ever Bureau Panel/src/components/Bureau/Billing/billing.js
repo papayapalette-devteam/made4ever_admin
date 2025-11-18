@@ -21,6 +21,7 @@ import Badge from "../../../UI/badge";
 import Progress from "../../../UI/progress";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
+import api from '../../../api'
 
 
 
@@ -29,7 +30,7 @@ const mockPlans = [
   {
     id: "basic",
     name: "Basic",
-    price: 2999,
+    price: 500,
     credits: 50,
     validity: 30,
     features: ["Access basic tools", "Email support", "Monthly updates"],
@@ -37,15 +38,15 @@ const mockPlans = [
   {
     id: "premium",
     name: "Premium",
-    price: 7999,
-    credits: 150,
+    price: 2000,
+    credits: 250,
     validity: 90,
     features: ["Everything in Basic", "Priority support", "Advanced analytics"],
   },
   {
     id: "enterprise",
     name: "Enterprise",
-    price: 19999,
+    price: 3000,
     credits: 500,
     validity: 365,
     features: ["Dedicated account manager", "Custom integrations", "24/7 support"],
@@ -80,6 +81,13 @@ const transactions = [
 ];
 
 export default function BillingPage() {
+
+
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  
+
+
   const [selectedPlan, setSelectedPlan] = useState("premium");
 
   const currentSubscription = {
@@ -90,6 +98,50 @@ export default function BillingPage() {
     expiryDate: "2024-06-01",
     daysLeft: 120,
   };
+
+const handlePurchase = async () => {
+  try {
+    const selected = mockPlans.find((p) => p.id === selectedPlan);
+
+    if (!selected) {
+      console.error("No plan selected");
+      return;
+    }
+
+    const payload = {
+      plan_id: selected.id,
+      plan_name: selected.name,
+      price: selected.price,
+      credits: selected.credits,
+      validity: selected.validity,
+
+      user_id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.mobile_number,
+      address: user.address,
+      business_name: user.registered_business_name,
+    };
+
+    // 🚀 IMPORTANT
+    const response = await api.post("api/payu/start-payment", payload);
+
+    const html = response.data;  // Backend gives HTML
+
+    // 🚀 Render the HTML so the form auto-submits
+    const newWindow = window.open("", "_self");
+    newWindow.document.write(html);
+    newWindow.document.close();
+
+  } catch (error) {
+    console.error("Payment Error:", error.message);
+  }
+};
+
+
+
+
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -281,7 +333,7 @@ export default function BillingPage() {
                       ₹{mockPlans.find((p) => p.id === selectedPlan)?.price.toLocaleString()}
                     </span>
                   </div>
-                  <Button className="w-full bg-red-600 hover:bg-red-700">
+                  <Button onClick={handlePurchase} className="w-full bg-red-600 hover:bg-red-700">
                     <CreditCard className="h-4 w-4 mr-2" />
                     Purchase Plan
                   </Button>

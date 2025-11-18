@@ -44,6 +44,8 @@ app.use('/api/msp/signin',require('./routes/sign_in'));
 
 app.use('/api/sub-admin',require('./routes/sub_admin'));
 
+app.use('/api/payu',require('./routes/payment'));
+
 
 const server=app.listen(process.env.PORT,()=>
 {

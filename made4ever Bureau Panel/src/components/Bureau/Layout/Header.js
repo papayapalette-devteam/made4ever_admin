@@ -11,7 +11,6 @@ const Header = () => {
 
 const user = JSON.parse(localStorage.getItem('user'));
 
-
 const navigate=useNavigate()
 
 
@@ -93,7 +92,7 @@ const navigate=useNavigate()
           <div className="flex items-center space-x-3">
             {/* Credits */}
             <span className="hidden sm:inline-block bg-gray-100 px-3 py-1 rounded-full text-sm font-medium text-gray-700">
-              💎 {user?.credits ?? 0} Credits
+              💎 {user?.credit ?? 0} Credits
             </span>
 
             {/* Profile Dropdown */}

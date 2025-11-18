@@ -36,7 +36,8 @@ exports.loginMSP = async (req, res) => {
         email: user.email,
         mobile_number: user.mobile_number,
         registered_business_name: user.registered_business_name,
-        address: user.address
+        address: user.address,
+        credit:user.credits
       },
     });
   } catch (error) {
