@@ -1,16 +1,14 @@
-const express = require("express");
-const router = express.Router();
+
 const crypto = require("crypto");
 const Transaction = require("../../models/Payment/payment");
 const User = require("../../models/Msp/msp");
-const axios = require("axios");
 
 // ======= PAYU CREDENTIALS =======
 const MERCHANT_KEY = process.env.PAYU_KEY;
 const MERCHANT_SALT = process.env.PAYU_SALT;
-// const PAYU_BASE_URL = "https://secure.payu.in";
+const PAYU_BASE_URL = "https://secure.payu.in";
 const PAYU_LIVE_URL = "https://secure.payu.in/merchant/postservice.php?form=2";
-const PAYU_BASE_URL = "https://test.payu.in"; 
+// const PAYU_BASE_URL = "https://test.payu.in"; 
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
@@ -162,7 +160,68 @@ const callback = async (req, res) => {
 };
 
 
+const getAllTransaction = async (req, res) => {
+  try {
+    const {  page = 1, limit = 10 } = req.query;
 
+
+
+    // Convert pagination values to numbers
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+
+    // Fetch paginated data
+    const payment = await Transaction.find()
+      .populate("user_id")
+      .sort({ created_at: -1 })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    // Count total documents (for pagination info)
+    const total = await Transaction.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      total,
+      page: pageNumber,
+      totalPages: Math.ceil(total / pageSize),
+      count: payment.length,
+      data: payment,
+    });
+  } catch (err) {
+    console.error("Error in get payment details:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const remove_transaction = async (req, res) => {
+  try {
+    const  id = req.query.id;
+ 
+    if (!id) {
+      return res.status(400).json({
+        status: "error",
+        message: "id is required",
+      });
+    }
+
+
+
+    // Fetch paginated data
+    const payment_details = await Transaction.findByIdAndDelete(id)
+    
+    res.status(200).json({
+      status: "success",
+      data: payment_details,
+    });
+  } catch (error) {
+    console.error("❌ Error deleting lookups:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
 
 // const callback = async (req, res) => {
 //   try {
@@ -190,4 +249,5 @@ const callback = async (req, res) => {
 // };
 
 
-module.exports = { StartPayment, callback };
+
+module.exports = { StartPayment, callback ,getAllTransaction,remove_transaction};

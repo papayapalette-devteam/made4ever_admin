@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
-import image from '../Admin/images/Made4Ever New Logo (600 x 300 px) (1).png'
 import { useNavigate } from "react-router-dom";
 import api from '../../api'
 import Swal from 'sweetalert2';
 import './signin.css'
 // import ChangePasswordModal from "./changepassworddoctor";
 import logo from "../Admin/images/Made4Ever New Logo (600 x 300 px) (1).png";
+import image from "../Admin/images/M4E_Admin Login.jpg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";  // 👁️ eye icons
 
 
@@ -102,6 +102,7 @@ const login = async (e) => {
         <img
           src={image}
           alt=""
+          style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"12px"}}
         />
       </div>
 

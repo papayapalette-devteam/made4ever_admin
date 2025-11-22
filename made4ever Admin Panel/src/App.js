@@ -36,6 +36,7 @@ import Jwellers from "./components/Admin/Wedding_Friends/Jwellers";
 import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
 import SubAdmin from "./components/Admin/SubAdmin/create_subadmin";
+import PaymentDetails from "./components/Admin/PaymentDetails/payment";
 
 
 
@@ -105,6 +106,12 @@ function App() {
         <Route path="/msp-header-text" element={<MspHeaderText/>}></Route>
 
       {/*============================== other routes end==================================== */}
+
+            {/*=============================== payment routes start============================ */}
+
+        <Route path="/payment-details" element={<PaymentDetails/>}></Route>
+
+      {/*============================== payment routes end==================================== */}
     </Route>
 
       </Routes>

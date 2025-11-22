@@ -58,7 +58,7 @@
 
 /* Make cards flexible, not fixed */
 .overview-card {
-  display: flex;
+  /* display: flex; */
   align-items: center;
   flex: 1 1 calc(25% - 20px); /* 4 cards per row by default */
   box-sizing: border-box;
