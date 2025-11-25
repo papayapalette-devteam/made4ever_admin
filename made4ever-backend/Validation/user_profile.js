@@ -115,7 +115,8 @@ const userProfileSchema = Joi.object({
   ContactDetails: contactDetailsSchema.required(),
   PartnerPrefrences: partnerPrefrencesSchema.required(),
   Upload: uploadSchema.required(),
-  PropertyDetails: propertyDetailsSchema.required()
+  PropertyDetails: propertyDetailsSchema.required(),
+  IsActive: Joi.boolean().default(true)
 });
 
 module.exports = userProfileSchema;

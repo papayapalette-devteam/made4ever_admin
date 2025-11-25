@@ -230,6 +230,7 @@ const getMatches = async (req, res) => {
     // Fetch candidates of opposite gender
     const candidates = await UserProfile.find({
       "PersonalDetails.Gender": oppositeGender,
+      IsActive:true
     })
       .populate("Bureau")
       .lean();

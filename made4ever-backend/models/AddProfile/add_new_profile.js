@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { type } = require("../../Validation/user_profile");
-const { ref } = require("joi");
+const { ref, boolean } = require("joi");
 const msp = require("../Msp/msp");
 
 const PersonalDetailsSchema = new mongoose.Schema({
@@ -104,7 +104,8 @@ const UserProfileSchema = new mongoose.Schema(
     ContactDetails: { type: ContactDetailsSchema, required: true },
     PartnerPrefrences: { type: PartnerPrefrencesSchema, required: true },
     Upload: { type: UploadSchema, required: true },
-    PropertyDetails: { type: PropertyDetailsSchema, required: true }
+    PropertyDetails: { type: PropertyDetailsSchema, required: true },
+    IsActive: { type: Boolean, default: true }
   },
   { timestamps: true } // adds createdAt & updatedAt
 );

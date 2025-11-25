@@ -106,14 +106,68 @@ export default function ProfilesPage() {
 
   // delete user
 
-  const delete_user_profile = async (_id) => {
+//   const delete_user_profile = async (_id) => {
+//   try {
+//     const confirmDelete = await Swal.fire({
+//       title: "Are you sure?",
+//       text: "This action will permanently delete the user profile!",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonText: "Yes, delete it!",
+//       cancelButtonText: "Cancel",
+//       reverseButtons: true,
+//       customClass: {
+//         confirmButton: "swal-confirm-btn",
+//         cancelButton: "swal-confirm-btn",
+//       },
+//     });
+
+//     // If user cancels, stop here
+//     if (!confirmDelete.isConfirmed) return;
+
+//     setLoading(true);
+//     const resp = await api.delete(`api/user/delete-user/${_id}`);
+
+//     if (resp.status === 200) {
+//       await Swal.fire({
+//         icon: "success",
+//         title: "Profile Deleted!",
+//         text: resp.data.message || "User profile deleted successfully.",
+//         confirmButtonText: "OK",
+//         customClass: {
+//           confirmButton: "swal-confirm-btn",
+//         },
+//       });
+
+//       // Refresh after confirmation closes
+//       window.location.reload();
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Error!",
+//       text:
+//         error.response?.data?.error ||
+//         "Something went wrong! Please try again.",
+//       confirmButtonText: "OK",
+//       customClass: {
+//         confirmButton: "swal-confirm-btn",
+//       },
+//     });
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+const toggle_user = async (id) => {
   try {
-    const confirmDelete = await Swal.fire({
+     const confirmUpdate = await Swal.fire({
       title: "Are you sure?",
-      text: "This action will permanently delete the user profile!",
+      text: "This action will update the user profile!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, update it!",
       cancelButtonText: "Cancel",
       reverseButtons: true,
       customClass: {
@@ -123,27 +177,23 @@ export default function ProfilesPage() {
     });
 
     // If user cancels, stop here
-    if (!confirmDelete.isConfirmed) return;
+    if (!confirmUpdate.isConfirmed) return;
 
-    setLoading(true);
-    const resp = await api.delete(`api/user/delete-user/${_id}`);
-
-    if (resp.status === 200) {
-      await Swal.fire({
+    const res = await api.put(`api/user/block-unblock/${id}`);
+    if (res.status===200) {
+       await Swal.fire({
         icon: "success",
-        title: "Profile Deleted!",
-        text: resp.data.message || "User profile deleted successfully.",
+        title: "Profile Updated!",
+        text: res.data.message || "User profile updated successfully.",
         confirmButtonText: "OK",
         customClass: {
           confirmButton: "swal-confirm-btn",
         },
       });
-
-      // Refresh after confirmation closes
-      window.location.reload();
+      get_all_profile(); 
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     Swal.fire({
       icon: "error",
       title: "Error!",
@@ -155,10 +205,9 @@ export default function ProfilesPage() {
         confirmButton: "swal-confirm-btn",
       },
     });
-  } finally {
-    setLoading(false);
   }
 };
+
 
 
   return (
@@ -384,11 +433,11 @@ export default function ProfilesPage() {
                       Edit
                     </button>
                     <button
-                      onClick={() => delete_user_profile(profile._id)}
+                      onClick={() => toggle_user(profile._id)}
                       className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center"
                     >
                       <Blocks className="mr-2 h-4 w-4" />
-                      Block
+                      {profile.IsActive ? "Block" : "Unblock"}
                     </button>
                   </div>
                 </div>

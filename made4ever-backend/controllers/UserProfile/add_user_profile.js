@@ -168,11 +168,37 @@ const getAllUserProfiles = async (req, res) => {
   }
 };
 
+const block_unblock= async (req, res) => {
+  try {
+    const user = await UserProfile.findById(req.params._id);
+   
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Toggle logic
+    user.IsActive = !user.IsActive;
+
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: user.IsActive ? "Profile Unblocked" : "Profile Blocked",
+      user
+    });
+  } catch (error) {
+    console.error("Toggle error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+}
+
+
 
 module.exports=
 {createUserProfile,
 getAllUserProfiles,
 getUserProfileById,
 updateUserProfile,
-deleteUserProfile
+deleteUserProfile,
+block_unblock
 }
