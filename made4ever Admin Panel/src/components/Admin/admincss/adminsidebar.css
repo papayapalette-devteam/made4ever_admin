@@ -98,6 +98,34 @@
   z-index: 900;
 }
 
+/* Active main menu */
+.active-menu {
+  background: white !important;
+  color:#373fa4 !important;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  
+}
+
+/* Active dropdown open */
+.active-dropdown {
+  background: white !important;
+  color:#373fa4 !important;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+/* Active submenu */
+.active-submenu {
+  background: #ffffff !important;
+  padding-left: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+
 /* Mobile styles */
 @media (max-width: 900px) {
   .sidebar {

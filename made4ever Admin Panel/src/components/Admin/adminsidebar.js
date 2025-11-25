@@ -1,45 +1,115 @@
 import React, { useState, useEffect } from "react";
 import "../Admin/admincss/adminsidebar.css";
-import logo from '../Admin/images/Made4Ever New Logo (600 x 300 px) (1).png'
-import usersgroup from "../Admin/images/group.png";
-import mspvideo from "../Admin/images/video-camera.png";
-import mspgallary from "../Admin/images/gallary.png";
-import mspeventimage from "../Admin/images/picture.png";
-import headingtext from "../Admin/images/heading.png";
-import mspmatch from "../Admin/images/distance-love.png";
-import paymentdetails from "../Admin/images/credit-card.png";
-import dashboardicon from "../Admin/images/dashboard new.png";
+import logo from '../Admin/images/Made4Ever New Logo (400 x 150 px).png'
+import usersgroup from "../Admin/images/icons8-user-group-96.png";
+import subadmin from "../Admin/images/icons8-administrator-male-100.png";
+import mspvideo from "../Admin/images/icons8-video-96.png";
+import mspdata from "../Admin/images/icons8-data-quality-100.png";
+import mspgallary from "../Admin/images/icons8-gallery-96.png";
+import mspeventimage from "../Admin/images/icons8-image-96.png";
+import headingtext from "../Admin/images/icons8-header-1-100.png";
+import mspmatch from "../Admin/images/icons8-match-100.png";
+import paymentdetails from "../Admin/images/icons8-payment-80.png";
+import dashboardicon from "../Admin/images/icons8-dashboard-96.png";
 import logout from "../Admin/images/logout.png";
-import addhospitalicon from "../Admin/images/user-plus-alt-1-svgrepo-com 1.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const menuItems = [
   { icon: dashboardicon, label: "Dashboard", path: "/admin-dashboard" },
-  { icon: mspvideo, label: "MSP Data", path: "/msp" },
-  { icon: usersgroup, label: "Create Sub-Admin", path: "/sub-admin" },
+  { icon: mspdata, label: "MSP Data", path: "/msp" },
+  { icon: subadmin, label: "Create Sub-Admin", path: "/sub-admin" },
  
   {
     icon: usersgroup,
     label: "Users Group",
     children: [
-  { icon: addhospitalicon, label: "Education Group", path: "/education-group" },
-  { icon: addhospitalicon, label: "Income Group", path: "/income-group" },
-  { icon: addhospitalicon, label: "City Group", path: "/city-group" },
-  { icon: addhospitalicon, label: "State Group", path: "/state-group" },
-  { icon: addhospitalicon, label: "Country Group", path: "/country-group" },
-  { icon: addhospitalicon, label: "Mother Tongue", path: "/mother-tongue" },
-  { icon: addhospitalicon, label: "Religion Group", path: "/religion-group" },
-  { icon: addhospitalicon, label: "Caste Group", path: "/cast-group" },
-  { icon: addhospitalicon, label: "Gothra Group", path: "/gothra-group" },
-  { icon: addhospitalicon, label: "Property Type", path: "/property-type" },
-  { icon: addhospitalicon, label: "Residence Type", path: "/residence-type" },
-  { icon: addhospitalicon, label: "Education Specialization", path: "/education-specialization" },
-  { icon: addhospitalicon, label: "Occupation", path: "/occupation" },
-  { icon: addhospitalicon, label: "Occupation Functional Area", path: "/occupation-functional-area" },
-  { icon: addhospitalicon, label: "Occupation Role", path: "/occupation-role" },
-  { icon: addhospitalicon, label: "Verify User Email", path: "/verify-user-email" },
-  { icon: addhospitalicon, label: "Verify Msp Email", path: "/verify-msp-email" },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/graduation-cap.png",
+        label: "Education Group",
+        path: "/education-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/money-bag.png",
+        label: "Income Group",
+        path: "/income-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/city.png",
+        label: "City Group",
+        path: "/city-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/map.png",
+        label: "State Group",
+        path: "/state-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/globe-earth.png",
+        label: "Country Group",
+        path: "/country-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/speech-bubble.png",
+        label: "Mother Tongue",
+        path: "/mother-tongue",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/chapel.png",
+        label: "Religion Group",
+        path: "/religion-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/groups.png",
+        label: "Caste Group",
+        path: "/cast-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/genealogy.png",
+        label: "Gothra Group",
+        path: "/gothra-group",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/home.png",
+        label: "Property Type",
+        path: "/property-type",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/apartment.png",
+        label: "Residence Type",
+        path: "/residence-type",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/book.png",
+        label: "Education Specialization",
+        path: "/education-specialization",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/businessman.png",
+        label: "Occupation",
+        path: "/occupation",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/services.png",
+        label: "Occupation Functional Area",
+        path: "/occupation-functional-area",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/technical-support.png",
+        label: "Occupation Role",
+        path: "/occupation-role",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/email-open.png",
+        label: "Verify User Email",
+        path: "/verify-user-email",
+      },
+      {
+        icon: "https://img.icons8.com/ios-filled/50/000000/secured-letter.png",
+        label: "Verify MSP Email",
+        path: "/verify-msp-email",
+      },
+    
   ]
   },
   { icon: mspvideo, label: "MSP Video", path: "/msp-video" },
@@ -52,6 +122,15 @@ const menuItems = [
 ];
 
 const Adminsidebar = () => {
+
+  const location = useLocation();
+
+  const isActive = (path) => {
+  return location.pathname === path;
+};
+
+
+
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(
     Number(localStorage.getItem("openDropdown")) || null
@@ -159,7 +238,7 @@ const Adminsidebar = () => {
           </button>
         </div>
 
-        <ul className="sidebar-menu">
+        <ul className="sidebar-menu mt-2">
           {menuItems.map((item, idx) => (
             <React.Fragment key={idx}>
               <li
@@ -173,9 +252,11 @@ const Adminsidebar = () => {
                     setIsMobileMenuOpen(false);
                   }
                 }}
-                 className={`sidebar-item ${
-                item.label.toLowerCase() === "logout" ? "logout-item" : ""
-              } ${openDropdown === idx ? "active" : ""}`}
+                 className={`sidebar-item 
+                  ${item.label.toLowerCase() === "logout" ? "logout-item" : ""}
+                  ${isActive(item.path) ? "active-menu" : ""}
+                  ${openDropdown === idx ? "active-dropdown" : ""}
+                `}
               >
                 <img
                   src={item.icon}

@@ -24,7 +24,7 @@ import {
   UsersRound,
   Share2,
 } from "lucide-react";
-
+import ProfileModal from "../other component/msp_profile_view";
 
 
 const StatsCard = ({ title, value, description, icon, trend, bg }) => {
@@ -202,6 +202,15 @@ function Admindashboard() {
     value: "1.3k",
   },
 ];
+
+// profile modal
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = (doc) => {
+    setSelectedUser(doc);
+    setShowModal(true);
+  };
   
   return (
     <div>
@@ -286,17 +295,21 @@ function Admindashboard() {
                       <td>{doc.email}</td>
                       <td>{doc.registered_business_name}</td>
                       <td className="action-button">
-                        <button className="view-profile-btn">
+                        <button className="view-profile-btn" onClick={() => openModal(doc)}>
                           View Profile <i className="fa fa-angle-right"></i>
                         </button>
-                        <button className="delete-button">
-                          <img src={deleteicon} alt=""></img>
-                        </button>
+                   
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+               {/* Modal Component */}
+                <ProfileModal
+                  show={showModal}
+                  onHide={() => setShowModal(false)}
+                  data={selectedUser}
+                />
             </div>
           </div>
         </div>
