@@ -62,7 +62,7 @@ function EducationSpecialization() {
 
   useEffect(() => {
     getall_education_specialization();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

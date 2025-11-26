@@ -37,6 +37,7 @@ import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
 import SubAdmin from "./components/Admin/SubAdmin/create_subadmin";
 import PaymentDetails from "./components/Admin/PaymentDetails/payment";
+import PropertySize from "./components/Admin/Users_Group/property_size";
 
 
 
@@ -60,6 +61,7 @@ function App() {
         <Route path="/cast-group" element={<CastGroup/>}></Route>
         <Route path="/gothra-group" element={<GothraGroup/>}></Route>
         <Route path="/property-type" element={<PropertyType/>}></Route>
+        <Route path="/property-size" element={<PropertySize/>}></Route>
         <Route path="/residence-type" element={<ResidenceType/>}></Route>
         <Route path="/mother-tongue" element={<MotherTongue/>}></Route>
         <Route path="/education-specialization" element={<EducationSpecialization/>}></Route>

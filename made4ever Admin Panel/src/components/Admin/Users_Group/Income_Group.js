@@ -62,7 +62,7 @@ function IncomeGroup() {
 
   useEffect(() => {
     getall_income_group();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

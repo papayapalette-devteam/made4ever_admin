@@ -61,7 +61,7 @@ function MotherTongue() {
 
   useEffect(() => {
     getall_mother_tongue();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

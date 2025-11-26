@@ -433,15 +433,32 @@ useEffect(() => {
     }
   };
 
+   // get property size
+
+   const [All_Property_Size, setAll_Property_Size] = useState([]);
+
+  const getall_property_size = async () => {
+    try {
+      setselect_loading("property_size");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "property_size");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Property_Size(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
+
   // get ResidentialType
 
   const [All_Residence_Type, setAll_Residence_Type] = useState([]);
-  const getall_residence_type = async (selectedId) => {
+  const getall_residence_type = async () => {
     try {
       setselect_loading("residence_type");
       const params = new URLSearchParams();
       params.append("lookup_type", "residence_type");
-      params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Residence_Type(resp.data.data)
     } catch (error) {
@@ -1929,6 +1946,51 @@ useEffect(() => {
                       }
                     </select>
                   </div>
+
+                  {/* Personal Income */}
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Personal Income (in Package)
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      name="AnnualFamilyIncome"
+                      onChange={(e) =>
+                        handleChange(
+                          "EducationDetails",
+                          "AnnualFamilyIncome",
+                          e.target.value
+                        )
+                      }
+                       onClick={() => {
+                        if (All_Income_Group.length === 0) getall_income_group();
+                      }}
+                    >
+                      <option
+                        value={
+                          user_profile?.EducationDetails?.AnnualFamilyIncome ||
+                          ""
+                        }
+                      >
+                        {user_profile?.EducationDetails?.AnnualFamilyIncome ||
+                          "Select Personal Income"}
+                      </option>
+                        {loading==="income" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {
+                        All_Income_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                    </select>
+                  </div>
+
+
                 </div>
 
                 {/* Education Details */}
@@ -3172,13 +3234,13 @@ useEffect(() => {
                       name="PropertyType"
                       onChange={(e) =>
                       {
-                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id");
+                 
                         handleChange(
                           "PropertyDetails",
                           "PropertyType",
                           e.target.value
                         )
-                        getall_residence_type(selectedId);
+                       
                       }
                       }
                        onClick={() => {
@@ -3225,6 +3287,9 @@ useEffect(() => {
                         )
                       }
                       }
+                      onClick={() => {
+                          if (All_Residence_Type.length === 0) getall_residence_type();
+                        }}
                      
                     >
                       <option
@@ -3249,6 +3314,52 @@ useEffect(() => {
                         }
                     </select>
                   </div>
+
+                     {/* Property Size */}
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Property Size
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      name="ResidentialType"
+                      onChange={(e) =>
+                      {
+                        handleChange(
+                          "PropertyDetails",
+                          "ResidentialType",
+                          e.target.value
+                        )
+                      }
+                      }
+                      onClick={() => {
+                          if (All_Property_Size.length === 0) getall_property_size();
+                        }}
+                    >
+                      <option
+                        value={
+                          user_profile?.PropertyDetails?.ResidentialType || ""
+                        }
+                      >
+                        {user_profile?.PropertyDetails?.ResidentialType ||
+                          "Select Property Size"}
+                      </option>
+                      {loading==="residence_type" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Property_Size.map((item) => (
+                            <option key={item._id} value={item.lookup_value}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
+                    </select>
+                  </div>
+
+
                 </div>
 
                 {/* Property Description */}

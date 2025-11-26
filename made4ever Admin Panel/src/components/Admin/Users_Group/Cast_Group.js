@@ -64,7 +64,7 @@ function CastGroup() {
 
   useEffect(() => {
     getall_cast_group();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

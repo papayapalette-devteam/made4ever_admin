@@ -75,6 +75,11 @@ const menuItems = [
         path: "/property-type",
       },
       {
+        icon: "https://img.icons8.com/ios-filled/50/000000/floor-plan.png",
+        label: "Property Size",
+        path: "/property-size",
+      },
+      {
         icon: "https://img.icons8.com/ios-filled/50/000000/apartment.png",
         label: "Residence Type",
         path: "/residence-type",

@@ -284,8 +284,8 @@ function GothraGroup() {
         setTimeout(() => {
           Swal.fire({
             icon: "success",
-            title: "Cast Group Added",
-            text: "Cast Group Addedd Successfully...",
+            title: "Gothra Group Added",
+            text: "Gothra Group Addedd Successfully...",
             showConfirmButton: true,
             customClass: {
               popup: "small-swal-popup",

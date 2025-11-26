@@ -19,10 +19,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 
-function ResidenceType() {
+function PropertySize() {
   const [loading, setloading] = useState(false);
-  const [Residence_Type, setResidence_Type] = useState({
-    residence_type: "",
+  const [Property_Size, setProperty_Size] = useState({
+    property_size: "",
   });
 
   const [rowCount, setRowCount] = useState(0);
@@ -31,8 +31,8 @@ function ResidenceType() {
     pageSize: 10,
   });
 
-  const [All_Residence_Type, setAll_Residence_Type] = useState([]);
-  const getall_residence_type = async (
+  const [All_Property_Size, setAll_Property_Size] = useState([]);
+  const getall_property_sze = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
   ) => {
@@ -45,14 +45,11 @@ function ResidenceType() {
       params.append("limit", limitNumber);
 
       // Always include lookup_type
-      params.append("lookup_type", "residence_type");
-
-      // Optionally, if you want to filter by parent_lookup_id
-      // params.append("parent_lookup_id", "SOME_PARENT_ID");
+      params.append("lookup_type", "property_size");
 
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
 
-      setAll_Residence_Type(resp.data.data);
+      setAll_Property_Size(resp.data.data);
       setRowCount(resp.data.total);
     } catch (error) {
       console.log(error);
@@ -62,7 +59,7 @@ function ResidenceType() {
   };
 
   useEffect(() => {
-    getall_residence_type();
+    getall_property_sze();
   }, []);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -81,8 +78,8 @@ function ResidenceType() {
   const [lookup_id, setlookup_id] = useState(null);
   const onEdit = (row) => {
     setlookup_id(row._id);
-    setResidence_Type({
-      residence_type: row.lookup_value,
+    setProperty_Size({
+      property_size: row.lookup_value,
     });
   };
 
@@ -90,7 +87,7 @@ function ResidenceType() {
     try {
       const confirmResult = await Swal.fire({
         title: "Are you sure?",
-        text: "Do you really want to delete this Residence Type?",
+        text: "Do you really want to delete this Property Size?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, Delete it!",
@@ -112,8 +109,8 @@ function ResidenceType() {
         setTimeout(() => {
           Swal.fire({
             icon: "success",
-            title: "Residence Type Deleted",
-            text: "Residence Type Deleted Successfully...",
+            title: "Property Size Deleted",
+            text: "Property Size Deleted Successfully...",
             showConfirmButton: true,
             customClass: {
               popup: "small-swal-popup",
@@ -162,7 +159,7 @@ function ResidenceType() {
       flex: 0.4,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-    { field: "lookup_value", headerName: "Residence", flex: 1 },
+    { field: "lookup_value", headerName: "Property Size", flex: 1 },
    
     {
       field: "actions",
@@ -206,60 +203,47 @@ function ResidenceType() {
     },
   ];
 
-  const rows = All_Residence_Type?.map((doc, index) => ({
+  const rows = All_Property_Size?.map((doc, index) => ({
     id: doc._id || index,
     ...doc,
   }));
 
 
 
-  const handlechange = (e) => {
-    const { name, value, checked, type } = e.target;
+const handlechange = (e) => {
+  let val = e.target.value;
 
-    setResidence_Type((prev) => {
-      if (Array.isArray(value)) {
-        return { ...prev, [name]: value };
-      }
+  // Remove old " gaj" if user edits again
+  val = val.replace(" GAJ", "");
 
-      if (Array.isArray(prev[name])) {
-        const updated = checked
-          ? [...prev[name], value] // Add
-          : prev[name].filter((item) => item !== value); // Remove
-        return { ...prev, [name]: updated };
-      }
+  // If value is empty, do not append
+  if (val.trim() === "") {
+    setProperty_Size({ ...Property_Size, property_size: "" });
+    return;
+  }
 
-      if (type === "checkbox" && Array.isArray(prev[name])) {
-        const updated = checked
-          ? [...prev[name], value] // Add to array
-          : prev[name].filter((item) => item !== value); // Remove from array
-        return { ...prev, [name]: updated };
-      }
+  setProperty_Size({
+    ...Property_Size,
+    property_size: val + " GAJ",
+  });
+};
 
-      if (type === "checkbox") {
-        return { ...prev, [name]: checked };
-      }
 
-      // Normal single-value field
-      return { ...prev, [name]: type === "checkbox" ? checked : value };
-    });
-  };
-
-  const add_residence_type = async () => {
+  const add_property_size = async () => {
     try {
       setloading(true);
       const resp = await api.post("api/admin/SaveLookup", {
         lookup_id: lookup_id ? lookup_id : null,
-        lookup_type: "residence_type",
-        lookup_value: Residence_Type.residence_type,
-        parent_lookup_id: Residence_Type.property_type,
+        lookup_type: "property_size",
+        lookup_value: Property_Size.property_size,
       });
 
       if (resp.status === 200) {
         setTimeout(() => {
           Swal.fire({
             icon: "success",
-            title: "Residence Type Added",
-            text: "Residence Type Addedd Successfully...",
+            title: "Property Size Added",
+            text: "Property Size Addedd Successfully...",
             showConfirmButton: true,
             customClass: {
               popup: "small-swal-popup",
@@ -312,9 +296,9 @@ function ResidenceType() {
         <div className="content-wrapper">
           <div className="main-content">
             <div className="profile-header">
-              <h3>Enter Details for Residence Type Master</h3>
+              <h3>Enter Details for Property Size Master</h3>
               <p>
-                Add or update the required details for the residence type master
+                Add or update the required details for the property size master
                 to keep records accurate and complete.
               </p>
             </div>
@@ -323,19 +307,21 @@ function ResidenceType() {
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
               <div className="form-grid">
                 <FormControl fullWidth size="small">
-                  <label className="form-label">Residence Type</label>
+                  <label className="form-label">Property Size</label>
                   <TextField
-                    name="residence_type"
-                    defaultValue={Residence_Type.residence_type}
+                    type="number"
+                    name="property_size"
+                    defaultValue={Property_Size.property_size}
                     onChange={handlechange}
-                    placeholder="Residence Type"
+                    placeholder="Property Size In GAJ"
+                    
                   ></TextField>
                 </FormControl>
 
              
               </div>
 
-              <Button className="submit-button" onClick={add_residence_type}>
+              <Button className="submit-button" onClick={add_property_size}>
                 Submit
               </Button>
             </Paper>
@@ -377,4 +363,4 @@ function ResidenceType() {
   );
 }
 
-export default ResidenceType;
+export default PropertySize;

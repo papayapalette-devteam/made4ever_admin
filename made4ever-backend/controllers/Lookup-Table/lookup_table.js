@@ -25,6 +25,7 @@ exports.saveLookup = async (req, res) => {
     const exists = await LookupTable.findOne({
       lookup_type: lookup_type,
       lookup_value: lookup_value,
+      parent_lookup_id:parent_lookup_id
     });
 
     if (exists) {
@@ -82,7 +83,7 @@ exports.saveLookup = async (req, res) => {
 
 exports.getLookup = async (req, res) => {
   try {
-    const { lookup_type, parent_lookup_id, page = 1, limit = 10 } = req.query;
+    const { lookup_type, parent_lookup_id, page, limit } = req.query;
 
     if (!lookup_type) {
       return res.status(400).json({
