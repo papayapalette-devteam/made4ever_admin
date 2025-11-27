@@ -172,6 +172,9 @@ const calculateMatchScore = (prefs, person) => {
     ["Religion", "ReligiousDetails.Religion"],
     ["Caste", "ReligiousDetails.Caste"],
     ["MotherTongue", "PersonalDetails.MotherTongue"],
+    ["AnnualFamilyIncome", "EducationDetails.AnnualFamilyIncome"],
+    ["PersonalIncome", "EducationDetails.PersonalIncome"],
+    ["PropertySize", "PropertyDetails.PropertySize"],
   ];
 
   stringMatches.forEach(([prefField, path]) => {

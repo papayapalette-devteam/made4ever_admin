@@ -73,6 +73,7 @@ export default function NewProfileForm() {
       EducationSpecialization: "",
       Occupation: "",
       AnnualFamilyIncome: "",
+      PersonalIncome: "",
       EducationDetails: "",
       OccupationDetails: "",
     },
@@ -94,6 +95,9 @@ export default function NewProfileForm() {
       Religion: "",
       Caste: "",
       MotherTongue: "",
+      AnnualFamilyIncome: "",
+      PersonalIncome: "",
+      PropertySize:"",
       HeighstEducation: [],
       Occupation: [],
       Country: [],
@@ -111,6 +115,7 @@ export default function NewProfileForm() {
     PropertyDetails: {
       PropertyType: "",
       ResidentialType: "",
+      PropertySize: "",
       PropertyDescription: "",
     },
   });
@@ -155,10 +160,9 @@ useEffect(() => {
 
     // ✅ Set the cleaned profile to state
     setuser_profile(updatedProfile);
+
   }
 }, [existing_user_profile]);
-
-
 
 
 
@@ -324,6 +328,11 @@ useEffect(() => {
       setselect_loading("");
     }
   };
+
+  // useEffect(()=>
+  // {
+  //   getAll_Education_Group()
+  // },[])
 
 
   // get education specialization
@@ -544,30 +553,7 @@ useEffect(() => {
 
   //============================== multiple value onchange =================================
 
-  const options = {
-    HeighstEducation: [
-      "Bachelor’s",
-      "Master’s",
-      "Doctorate",
-      "Diploma",
-      "Other",
-    ],
-    Occupation: [
-      "Engineer",
-      "Doctor",
-      "Teacher",
-      "Business",
-      "Artist",
-      "Other",
-    ],
-    Country: ["India", "USA", "UK", "Canada", "Australia"],
-    State: ["Maharashtra", "Gujarat", "Delhi", "Karnataka", "Tamil Nadu"],
-    City: ["Mumbai", "Pune", "Delhi", "Bengaluru", "Chennai", "Ahmedabad"],
-  };
-
-  const [selectedEducation, setselectedEducation] = useState([]);
-  const [selectedOccupation, setselectedOccupation] = useState([]);
-  const [selectedCountry, setselectedCountry] = useState([]);
+ 
   const [selectedState, setselectedState] = useState([]);
   const [selectedCity, setselectedCity] = useState([]);
 
@@ -584,6 +570,8 @@ useEffect(() => {
       },
     }));
   };
+
+
 
   //=============================== paste function=========================================
 
@@ -1954,11 +1942,11 @@ useEffect(() => {
                     </label>
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="AnnualFamilyIncome"
+                      name="PersonalIncome"
                       onChange={(e) =>
                         handleChange(
                           "EducationDetails",
-                          "AnnualFamilyIncome",
+                          "PersonalIncome",
                           e.target.value
                         )
                       }
@@ -1968,11 +1956,11 @@ useEffect(() => {
                     >
                       <option
                         value={
-                          user_profile?.EducationDetails?.AnnualFamilyIncome ||
+                          user_profile?.EducationDetails?.PersonalIncome ||
                           ""
                         }
                       >
-                        {user_profile?.EducationDetails?.AnnualFamilyIncome ||
+                        {user_profile?.EducationDetails?.PersonalIncome ||
                           "Select Personal Income"}
                       </option>
                         {loading==="income" && (
@@ -2644,25 +2632,45 @@ useEffect(() => {
                       </select>
                     </div>
 
-                    {/* Caste */}
-                    <div>
-                      <label className="block text-gray-700 font-medium mb-1">
-                        Caste
-                      </label>
-                      <input
-                        defaultValue={user_profile?.PartnerPrefrences?.Caste? user_profile.PartnerPrefrences.Caste:""}
-                        type="text"
-                        placeholder="Caste"
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        onChange={(e) =>
+               {/* Caste */}
+
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Caste
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      onChange={(e) =>
                         handleChange(
                           "PartnerPrefrences",
                           "Caste",
                           e.target.value
                         )
                       }
-                      />
-                    </div>
+                      onClick={() => {
+                        if (All_Cast_Group.length === 0) getall_cast_group();
+                      }}
+                    >
+                      <option
+                        value={user_profile?.PartnerPrefrences?.Caste || ""}
+                      >
+                        {user_profile?.PartnerPrefrences?.Caste ||
+                          "Select Caste"}
+                      </option>
+                      {select_loading==="cast" && (
+                          <option disabled>Loading...</option>
+                        )}
+
+                        {/* Show fetched values */}
+                        {
+                          All_Cast_Group.map((item) => (
+                            <option key={item._id} value={item.lookup_value}>
+                              {item.lookup_value}
+                            </option>
+                          ))
+                        }
+                    </select>
+                  </div>
 
                     {/* Mother Tongue */}
                     <div>
@@ -2699,6 +2707,114 @@ useEffect(() => {
                       </select>
                     </div>
 
+                    {/* Annual Family Income */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Annual Family Income
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="AnnualFamilyIncome"
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "AnnualFamilyIncome",
+                            e.target.value
+                          )
+                        }
+                        onClick={() => {getall_income_group()}}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.AnnualFamilyIncome || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.AnnualFamilyIncome ||
+                            "Select Annual Family Income"}
+                        </option>
+                          {
+                        All_Income_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                      </select>
+                    </div>
+
+                {/* Personal Income */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                         Personal Income
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="PersonalIncome"
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "PersonalIncome",
+                            e.target.value
+                          )
+                        }
+                        onClick={() => {getall_income_group()}}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.PersonalIncome || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.PersonalIncome ||
+                            "Select Personal Income"}
+                        </option>
+                          {
+                        All_Income_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                      </select>
+                    </div>
+
+                      {/* Property Size */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                         Property Size
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="PropertySize"
+                        value={user_profile?.PartnerPrefrences?.PropertySize}
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "PropertySize",
+                            e.target.value
+                          )
+                        }
+                        onClick={() => {getall_property_size()}}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.PropertySize || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.PropertySize ||
+                            "Select Property Size"}
+                        </option>
+                          {
+                        All_Property_Size.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                      </select>
+                    </div>
+
+
+
                     {/* Education */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
@@ -2709,16 +2825,11 @@ useEffect(() => {
                         <Select
                           name="HeighstEducation"
                           multiple
-                          value={selectedEducation}
+                          value={user_profile?.PartnerPrefrences?.HeighstEducation || []}
+                          onOpen={() => {getAll_Education_Group()}}
                           onChange={(e) => {
-                            const newValues =
-                              typeof e.target.value === "string"
-                                ? e.target.value.split(",")
-                                : e.target.value;
-                            setselectedEducation(newValues);
                             handleMultiSelectChange(e, "HeighstEducation");
                           }}
-                          onClick={() => {getAll_Education_Group()}}
                           displayEmpty
                           renderValue={(selected) => {
                             if (selected.length === 0) {
@@ -2752,7 +2863,7 @@ useEffect(() => {
                           {All_Education_Group.map((option) => (
                             <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedEducation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.HeighstEducation.includes(option.lookup_value)}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -2771,16 +2882,11 @@ useEffect(() => {
                         <Select
                           name="Occupation"
                           multiple
-                          value={selectedOccupation}
+                          value={user_profile?.PartnerPrefrences?.Occupation || []}
+                          onOpen={() => {getall_occupation()}}
                           onChange={(e) => {
-                            const newValues =
-                              typeof e.target.value === "string"
-                                ? e.target.value.split(",")
-                                : e.target.value;
-                            setselectedOccupation(newValues);
                             handleMultiSelectChange(e, "Occupation");
                           }}
-                          onClick={() => {getall_occupation()}}
                           displayEmpty
                           renderValue={(selected) => {
                             if (selected.length === 0) {
@@ -2814,7 +2920,7 @@ useEffect(() => {
                           {All_Occupation.map((option) => (
                             <MenuItem key={option._id} value={option.lookup_value}>
                               <Checkbox
-                                checked={selectedOccupation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Occupation.includes(option.lookup_value)}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -2833,14 +2939,11 @@ useEffect(() => {
                         <Select
                           name="Country"
                           multiple
-                          value={selectedCountry}
+                          value={user_profile?.PartnerPrefrences?.Country || []}
+                          onOpen={() => {getall_country_group()}}
                           onChange={(e) => {
-                            const newValues =
-                              typeof e.target.value === "string"
-                                ? e.target.value.split(",")
-                                : e.target.value;
-                            setselectedCountry(newValues);
                             handleMultiSelectChange(e, "Country");
+                       
                           }}
                           displayEmpty
                           renderValue={(selected) => {
@@ -2873,9 +2976,13 @@ useEffect(() => {
                           }}
                         >
                           {All_Country_Group.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                             key={option._id}
+                              value={option.lookup_value}
+                              data-id={option._id}
+                              onClick={() => getall_state_group(option._id)}>
                               <Checkbox
-                                checked={selectedCountry.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Country.includes(option.lookup_value)}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -2894,13 +3001,10 @@ useEffect(() => {
                         <Select
                           name="State"
                           multiple
-                          value={selectedState}
+                          value={user_profile?.PartnerPrefrences?.State || []}
+                          onOpen={() => {getall_state_group()}}
+                          
                           onChange={(e) => {
-                            const newValues =
-                              typeof e.target.value === "string"
-                                ? e.target.value.split(",")
-                                : e.target.value;
-                            setselectedState(newValues);
                             handleMultiSelectChange(e, "State");
                           }}
                           displayEmpty
@@ -2934,9 +3038,14 @@ useEffect(() => {
                           }}
                         >
                           {All_State_Group.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                             key={option._id}
+                              value={option.lookup_value}
+                              data-id={option._id}
+                              onClick={() => getall_city_group(option._id)}
+                              >
                               <Checkbox
-                                checked={selectedState.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.State.includes(option.lookup_value)}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -2955,13 +3064,9 @@ useEffect(() => {
                         <Select
                           name="City"
                           multiple
-                          value={selectedCity}
+                          value={user_profile?.PartnerPrefrences?.City || []}
+                          onOpen={() => {getall_city_group()}}
                           onChange={(e) => {
-                            const newValues =
-                              typeof e.target.value === "string"
-                                ? e.target.value.split(",")
-                                : e.target.value;
-                            setselectedCity(newValues);
                             handleMultiSelectChange(e, "City");
                           }}
                           displayEmpty
@@ -2995,9 +3100,12 @@ useEffect(() => {
                           }}
                         >
                           {All_City_Group.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                             key={option._id} 
+                             value={option.lookup_value}
+                             >
                               <Checkbox
-                                checked={selectedCity.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.City.includes(option.lookup_value)}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3327,7 +3435,7 @@ useEffect(() => {
                       {
                         handleChange(
                           "PropertyDetails",
-                          "ResidentialType",
+                          "PropertySize",
                           e.target.value
                         )
                       }
@@ -3338,10 +3446,10 @@ useEffect(() => {
                     >
                       <option
                         value={
-                          user_profile?.PropertyDetails?.ResidentialType || ""
+                          user_profile?.PropertyDetails?.PropertySize || ""
                         }
                       >
-                        {user_profile?.PropertyDetails?.ResidentialType ||
+                        {user_profile?.PropertyDetails?.PropertySize ||
                           "Select Property Size"}
                       </option>
                       {loading==="residence_type" && (

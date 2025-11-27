@@ -50,6 +50,7 @@ const educationDetailsSchema = Joi.object({
   EducationSpecialization: Joi.string().allow(""),
   Occupation: Joi.string().allow(""),
   AnnualFamilyIncome: Joi.string().allow(""),
+  PersonalIncome: Joi.string().allow(""),
   EducationDetails: Joi.string().allow(""),
   OccupationDetails: Joi.string().allow("")
 });
@@ -81,6 +82,9 @@ const partnerPrefrencesSchema = Joi.object({
   Religion: Joi.string().allow(""),
   Caste: Joi.string().allow(""),
   MotherTongue: Joi.string().allow(""),
+  AnnualFamilyIncome: Joi.string().allow(""),
+  PersonalIncome: Joi.string().allow(""),
+  PropertySize: Joi.string().allow(""),
   HeighstEducation: Joi.array().items(Joi.string().allow("")),
   Occupation: Joi.array().items(Joi.string().allow("")),
   Country: Joi.array().items(Joi.string().allow("")),
@@ -102,6 +106,7 @@ const uploadSchema = Joi.object({
 const propertyDetailsSchema = Joi.object({
   PropertyType: Joi.string().allow(""),
   ResidentialType: Joi.string().allow(""),
+  PropertySize: Joi.string().allow(""),
   PropertyDescription: Joi.string().allow("")
 });
 

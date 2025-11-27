@@ -49,6 +49,7 @@ const EducationDetailsSchema = new mongoose.Schema({
   EducationSpecialization: {type: String, default: ""},
   Occupation: {type: String, default: ""},
   AnnualFamilyIncome: {type: String, default: ""},
+  PersonalIncome: {type: String, default: ""},
   EducationDetails: { type: String, default: "" },
   OccupationDetails: { type: String, default: "" }
 });
@@ -72,6 +73,9 @@ const PartnerPrefrencesSchema = new mongoose.Schema({
   Religion: {type: String, default: ""},
   Caste: { type: String, default: "" },
   MotherTongue: {type: String, default: ""},
+  AnnualFamilyIncome: {type: String, default: ""},
+  PersonalIncome: {type: String, default: ""},
+  PropertySize: { type: String, default: "" },
   HeighstEducation: {type: Array, default: []},
   Occupation: {type: Array, default: []},
   Country: {type: Array, default: []},
@@ -91,6 +95,7 @@ const UploadSchema = new mongoose.Schema({
 const PropertyDetailsSchema = new mongoose.Schema({
   PropertyType: { type: String, default: "" },
   ResidentialType: { type: String, default: "" },
+  PropertySize: { type: String, default: "" },
   PropertyDescription: { type: String, default: "" }
 });
 
