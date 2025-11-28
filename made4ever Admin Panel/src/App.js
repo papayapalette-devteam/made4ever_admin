@@ -38,6 +38,7 @@ import ProtectedRoute from "./components/other component/protected_route";
 import SubAdmin from "./components/Admin/SubAdmin/create_subadmin";
 import PaymentDetails from "./components/Admin/PaymentDetails/payment";
 import PropertySize from "./components/Admin/Users_Group/property_size";
+import FindMatches from "./components/Admin/Matches/find_matches";
 
 
 
@@ -109,11 +110,17 @@ function App() {
 
       {/*============================== other routes end==================================== */}
 
-            {/*=============================== payment routes start============================ */}
+      {/*=============================== payment routes start============================ */}
 
         <Route path="/payment-details" element={<PaymentDetails/>}></Route>
 
       {/*============================== payment routes end==================================== */}
+
+        {/*=============================== matches routes start============================ */}
+
+        <Route path="/find-matches" element={<FindMatches/>}></Route>
+
+      {/*============================== matches routes end==================================== */}
     </Route>
 
       </Routes>

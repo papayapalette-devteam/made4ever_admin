@@ -366,7 +366,7 @@ const toggle_user = async (id) => {
                           : "bg-gray-200 text-gray-700"
                       }`}
                     >
-                      {profile.isActive ? "Active" : "Inactive"}
+                      {profile.IsActive ? "Active" : "Inactive"}
                     </span>
                   </div>
 

@@ -122,6 +122,7 @@ const menuItems = [
   { icon: mspeventimage, label: "MSP Event Image", path: "/msp-event-image" },
   { icon: headingtext, label: "MSP Header Text", path: "/msp-header-text" },
   { icon: mspmatch, label: "Matches", path: "/event-master" },
+  { icon: mspmatch, label: "Find Matches", path: "/find-matches" },
   { icon: paymentdetails, label: "Payment Details", path: "/payment-details" },
   { icon: logout, label: "Logout" },
 ];
