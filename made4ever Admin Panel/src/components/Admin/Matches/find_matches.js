@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
+import MatchCard from "./matches_card";
 
 export default function FindMatches() {
   const [step, setStep] = useState(1);
@@ -26,6 +27,8 @@ export default function FindMatches() {
 
   const [user_profile, setuser_profile] = useState({
     PartnerPrefrences: {
+      Gender:"",
+      Gothra:"",
       AgeRange: { MinAge: "", MaxAge: "" },
       HeightRange: { MinHeight: "", MaxHeight: "" },
       MaritialStatus: "",
@@ -68,23 +71,7 @@ export default function FindMatches() {
     }
   };
 
-// get community
 
-  const [All_Community_Group, setAll_Community_Group] = useState([]);
-
-  const getall_community_group = async () => {
-    try {
-      setselect_loading("community");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "religion_group");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Community_Group(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
 
   // get religion
 
@@ -175,24 +162,10 @@ export default function FindMatches() {
 
 
 
-  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
-  const getall_education_specialization = async () => {
-    try {
-      setselect_loading("education_specialization");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "education_specialization");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Education_Specialization(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
+  
 
   // get income
 
-  
   const [All_Income_Group, setAll_Income_Group] = useState([]);
   const getall_income_group = async () => {
     try {
@@ -262,23 +235,6 @@ export default function FindMatches() {
     }
   };
 
-  // get property type
-
-   const [All_Property_Type, setAll_Property_Type] = useState([]);
-
-  const getall_property_type = async () => {
-    try {
-      setselect_loading("property_type");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "property_type");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Property_Type(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
 
    // get property size
 
@@ -298,22 +254,6 @@ export default function FindMatches() {
     }
   };
 
-  // get ResidentialType
-
-  const [All_Residence_Type, setAll_Residence_Type] = useState([]);
-  const getall_residence_type = async () => {
-    try {
-      setselect_loading("residence_type");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "residence_type");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Residence_Type(resp.data.data)
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
 
   // ===========================common onchange event=======================================
 
@@ -379,15 +319,18 @@ export default function FindMatches() {
 
   //========================= post method for adding new profile===============================
 
-  const add_new_profile = async () => {
+  const[matches,setmatches]=useState([])
+
+  const find_matches = async () => {
     try {
-      const resp = await api.post("api/user/add-new-profile", user_profile);
-     
+      const resp = await api.post("api/user/find-matches", user_profile);
+      setmatches(resp.data.matches)
+  
       if (resp.status === 200) {
         Swal.fire({
           icon: "success",
-          title: "Profile Created!",
-          text: resp.data.message || "User profile created successfully",
+          title: "Matches Found!",
+          text:  `${resp.data.totalMatches} Matches Found successfully`,
           showConfirmButton: true,
           confirmButtonText: "OK",
           customClass: {
@@ -395,7 +338,7 @@ export default function FindMatches() {
           },
         }).then(() => {
           // Refresh the page after alert closes
-          window.location.reload();
+          // window.location.reload();
         });
       }
     } catch (error) {
@@ -416,6 +359,8 @@ export default function FindMatches() {
     }
   };
 
+  console.log(matches);
+  
   return (
     <div>
       <Adminheader />
@@ -445,11 +390,89 @@ export default function FindMatches() {
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   Partner Preferences
                 </h2>
+
+                <div className="space-y-5">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                    Personal Details
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    {/* Gender */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Gender
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="Gender"
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "Gender",
+                            e.target.value
+                          )
+                        }
+                        onClick={() => {getall_mother_tongue()}}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.Gender || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.Gender ||
+                            "Select Gender"}
+                        </option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                      
+                      </select>
+                    </div>
+
+                       {/* Gothra */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Gothra
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="Gothra"
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "Gothra",
+                            e.target.value
+                          )
+                        }
+                        onClick={() => {getall_gothra_group()}}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.Gothra || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.Gothra ||
+                            "Select Gothra"}
+                        </option>
+                          {
+                        All_Gothra_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))
+                      }
+                      </select>
+                    </div>
+
+                  </div>
+              </div>
+                    
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-gray-800 mb-2">
                     Preferred Partner Details
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
                     {/* Preferred Age Range */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
@@ -1376,7 +1399,7 @@ export default function FindMatches() {
           <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-t">
               <button
                 className="px-6 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
-                onClick={add_new_profile}
+                // onClick={add_new_profile}
               >
                 Cancel
               </button>
@@ -1384,7 +1407,7 @@ export default function FindMatches() {
         
               <button
                 className="px-6 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-                onClick={add_new_profile}
+                onClick={find_matches}
               >
                 Find
               </button>
@@ -1392,6 +1415,15 @@ export default function FindMatches() {
           </div>
         </div>
       </div>
+
+      {/* show matches start */}
+<div className="w-full max-w-full px-2 sm:px-4 md:px-8 lg:px-16">
+  <MatchCard matches={matches} />
+</div>
+
+
+ {/* show matches end */}
+
 
       </div>
     </div>
