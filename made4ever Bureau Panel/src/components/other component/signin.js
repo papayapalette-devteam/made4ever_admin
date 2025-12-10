@@ -24,7 +24,6 @@ function SignIn() {
 const login = async (e) => {
   e.preventDefault();
 
-
     try {
       const resp = await api.post('api/msp/signin/sign-in', { Email, Password });
 
@@ -64,73 +63,187 @@ const login = async (e) => {
         });
       }
     }
+    
+      // OTP LOGIN STATES
+  const [isOtpLogin, setIsOtpLogin] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
+     // 📌 Send OTP
+  const sendOtp = async () => {
+    if (!phone) return Swal.fire("Enter mobile number");
+
+    try {
+      const resp = await api.post("api/msp/signin/send-otp", { phone }); // Your backend OTP API
+      setOtpSent(true);
+    Swal.fire({
+      icon: "success",
+      text: "OTP sent on WhatsApp!",
+      customClass: {
+        confirmButton: "my-swal-button",
+      },
+    });
+
+    } catch (err) {
+      Swal.fire("Failed to send OTP!");
+    }
+  };
+
+  // 📌 Verify OTP
+  const verifyOtp = async () => {
+    if (!otp) return Swal.fire("Enter OTP");
+
+   try {
+  const resp = await api.post("/api/msp/signin/otp-sign-in", { phone, otp });
+  
+  Swal.fire({
+    icon: "success",
+    title: "Success",
+    text: resp.data.message,
+    customClass: {
+      confirmButton: "my-swal-button",
+    },
+  });
+
+        console.log(resp);
+      
+      localStorage.setItem('token', resp.data.token);
+      localStorage.setItem('user', JSON.stringify(resp.data.user));
+
+      navigate('/buerau-dashboard');
+} catch (err) {
+  // Get message from server response or fallback
+  const message = err.response?.data?.message || "Something went wrong";
+
+  Swal.fire({
+    icon: "error",
+    title: "Error",
+    text: message,
+    customClass: {
+      confirmButton: "my-swal-button",
+    },
+  });
+}
+
+  };
 
 
 
 
 
   return (
-    <div className="signin-container">
-    
-  
-      <div className="visual-side" >
-        <img
-          src={image}
-          alt=""
-          style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"12px"}}
-        />
+  <div className="signin-container">
+
+  <div className="visual-side">
+    <img
+      src={image}
+      alt=""
+      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }}
+    />
+  </div>
+
+  <div className="form-side">
+    <form className="signin-form">
+      <div className="logo-container">
+        <img src={logo} alt="logo" />
       </div>
+      <h2>Welcome Back</h2>
 
-
-
-      <div className="form-side" >
-        <form className="signin-form">
-            <div className="logo-container">
-            <img src={logo} alt="logo" />
-          </div>
-          <h2>Welcome Back</h2>
+      {/* 🔥 Login With Password Section */}
+      {!isOtpLogin ? (
+        <>
           <div className="nav-links">
             <span>Need an account?</span>
             <a href="/register">Sign Up</a>
           </div>
-          
-        
 
-          {/* Step 3: The form updates (even just the heading here) */}
-           {/* <h2>Sign In</h2> */}
           <div className="input-group">
-           
             <label>Username</label>
-            <input type="text" placeholder="Username" required  onChange={(e)=>setEmail(e.target.value)}/>
+            <input
+              type="text"
+              placeholder="Username"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
             <label>Password</label>
-            <input type={showPassword ? "text" : "password"} placeholder="Password" required onChange={(e)=>setPassword(e.target.value)}/>
-              <span
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <span
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+
           <div className="options">
             <label>
-              <input type="checkbox" style={{marginRight:"10px",transform: "scale(1.5)",accentColor: "#4d7bf3"}} />
+              <input
+                type="checkbox"
+                style={{ marginRight: "10px", transform: "scale(1.5)", accentColor: "#4d7bf3" }}
+              />
               Remember me
             </label>
             <a href="/forgot">Forgot Password?</a>
           </div>
+
           <button className="login-btn" onClick={login}>
             Login
           </button>
-{/* {
-  showChangePasswordModal ? <ChangePasswordModal/> :""
-} */}
-        
 
-       
-        </form>
+          <p className="otp-switch" onClick={() => setIsOtpLogin(true)}>
+            Login with OTP?
+          </p>
+        </>
+      ) : (
+        <>
+          {/* 🔥 WhatsApp OTP Login Section */}
+          <div className="input-group">
+          <label>Mobile Number</label>
+          <input
+            type="text"
+            placeholder="Enter WhatsApp Number"
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          </div>
 
-      </div>
-    </div>
+          {!otpSent ? (
+            <button type="button" className="login-btn" onClick={sendOtp}>
+              Send OTP
+            </button>
+          ) : (
+            <>
+            <div className="input-group">
+              <label>Enter OTP</label>
+              <input className="input-group"
+                type="text"
+                placeholder="6-digit OTP"
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              </div>
+
+              <button type="button" className="login-btn" onClick={verifyOtp}>
+                Verify OTP
+              </button>
+            </>
+          )}
+
+          <p className="otp-switch" onClick={() => setIsOtpLogin(false)}>
+            Login with Password?
+          </p>
+        </>
+      )}
+    </form>
+  </div>
+</div>
+
   );
 }
 

@@ -39,6 +39,7 @@ import SubAdmin from "./components/Admin/SubAdmin/create_subadmin";
 import PaymentDetails from "./components/Admin/PaymentDetails/payment";
 import PropertySize from "./components/Admin/Users_Group/property_size";
 import FindMatches from "./components/Admin/Matches/find_matches";
+import CommunityGroup from "./components/Admin/Users_Group/community_group";
 
 
 
@@ -59,6 +60,7 @@ function App() {
         <Route path="/state-group" element={<StateGroup/>}></Route>
         <Route path="/country-group" element={<CountryGroup/>}></Route>
         <Route path="/religion-group" element={<ReligionGroup/>}></Route>
+        <Route path="/community-group" element={<CommunityGroup/>}></Route>
         <Route path="/cast-group" element={<CastGroup/>}></Route>
         <Route path="/gothra-group" element={<GothraGroup/>}></Route>
         <Route path="/property-type" element={<PropertyType/>}></Route>

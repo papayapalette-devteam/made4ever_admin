@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../Admin/admincss/adminsidebar.css";
-import logo from '../Admin/images/Made4Ever New Logo (400 x 150 px).png'
+import logo from "../Admin/images/Made4Ever New Logo (400 x 150 px).png";
 import usersgroup from "../Admin/images/icons8-user-group-96.png";
 import subadmin from "../Admin/images/icons8-administrator-male-100.png";
 import mspvideo from "../Admin/images/icons8-video-96.png";
@@ -14,128 +14,176 @@ import dashboardicon from "../Admin/images/icons8-dashboard-96.png";
 import logout from "../Admin/images/logout.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import {
+  MdDashboard,
+  MdGroup,
+  MdCastForEducation,
+  MdOutlinePayments,
+  MdEmail,
+  MdLogout,
+  MdOutlineWork,
+  MdOutlineBusinessCenter,
+  MdOutlineHome,
+  MdMap,
+  MdPeople,
+  MdApartment,
+} from "react-icons/md";
+
+import {
+  FaWallet,
+  FaCity,
+  FaFlag,
+  FaGlobeAsia,
+  FaPrayingHands,
+  FaUsers,
+  FaBuildingUser,
+} from "react-icons/fa";
+
+import { GiFamilyTree, GiResize } from "react-icons/gi";
+import { BiSolidVideos, BiImageAdd, BiBookContent } from "react-icons/bi";
+import { TbTextCaption } from "react-icons/tb";
+import { RiTeamLine, RiBuilding2Fill } from "react-icons/ri";
+import { HiOutlineMailOpen } from "react-icons/hi";
 
 const menuItems = [
-  { icon: dashboardicon, label: "Dashboard", path: "/admin-dashboard" },
-  { icon: mspdata, label: "MSP Data", path: "/msp" },
-  { icon: subadmin, label: "Create Sub-Admin", path: "/sub-admin" },
- 
   {
-    icon: usersgroup,
+    icon: <MdDashboard size={20} />,
+    label: "Dashboard",
+    path: "/admin-dashboard",
+  },
+  { icon: <FaWallet size={20} />, label: "MSP Data", path: "/msp" },
+  {
+    icon: <RiTeamLine size={20} />,
+    label: "Create Sub-Admin",
+    path: "/sub-admin",
+  },
+
+  {
+    icon: <MdGroup size={20} />,
     label: "Users Group",
     children: [
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/graduation-cap.png",
+        icon: <MdCastForEducation size={20} />,
         label: "Education Group",
         path: "/education-group",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/money-bag.png",
+        icon: <MdOutlinePayments size={20} />,
         label: "Income Group",
         path: "/income-group",
       },
+      { icon: <FaCity size={20} />, label: "City Group", path: "/city-group" },
+      { icon: <MdMap size={20} />, label: "State Group", path: "/state-group" },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/city.png",
-        label: "City Group",
-        path: "/city-group",
-      },
-      {
-        icon: "https://img.icons8.com/ios-filled/50/000000/map.png",
-        label: "State Group",
-        path: "/state-group",
-      },
-      {
-        icon: "https://img.icons8.com/ios-filled/50/000000/globe-earth.png",
+        icon: <FaGlobeAsia size={20} />,
         label: "Country Group",
         path: "/country-group",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/speech-bubble.png",
+        icon: <MdEmail size={20} />,
         label: "Mother Tongue",
         path: "/mother-tongue",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/chapel.png",
+        icon: <FaPrayingHands size={20} />,
         label: "Religion Group",
         path: "/religion-group",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/groups.png",
+        icon: <MdEmail size={20} />,
+        label: "Community Group",
+        path: "/community-group",
+      },
+      {
+        icon: <FaUsers size={20} />,
         label: "Caste Group",
         path: "/cast-group",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/genealogy.png",
+        icon: <GiFamilyTree size={20} />,
         label: "Gothra Group",
         path: "/gothra-group",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/home.png",
+        icon: <MdOutlineHome size={20} />,
         label: "Property Type",
         path: "/property-type",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/floor-plan.png",
+        icon: <GiResize size={20} />,
         label: "Property Size",
         path: "/property-size",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/apartment.png",
+        icon: <FaUsers size={20} />,
         label: "Residence Type",
         path: "/residence-type",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/book.png",
+        icon: <BiBookContent size={20} />,
         label: "Education Specialization",
         path: "/education-specialization",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/businessman.png",
+        icon: <MdOutlineWork size={20} />,
         label: "Occupation",
         path: "/occupation",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/services.png",
+        icon: <MdOutlineBusinessCenter size={20} />,
         label: "Occupation Functional Area",
         path: "/occupation-functional-area",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/technical-support.png",
+        icon: <RiBuilding2Fill size={20} />,
         label: "Occupation Role",
         path: "/occupation-role",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/email-open.png",
+        icon: <HiOutlineMailOpen size={20} />,
         label: "Verify User Email",
         path: "/verify-user-email",
       },
       {
-        icon: "https://img.icons8.com/ios-filled/50/000000/secured-letter.png",
+        icon: <MdEmail size={20} />,
         label: "Verify MSP Email",
         path: "/verify-msp-email",
       },
-    
-  ]
+    ],
   },
-  { icon: mspvideo, label: "MSP Video", path: "/msp-video" },
-  { icon: mspgallary, label: "MSP Gallary", path: "/msp-gallary" },
-  { icon: mspeventimage, label: "MSP Event Image", path: "/msp-event-image" },
-  { icon: headingtext, label: "MSP Header Text", path: "/msp-header-text" },
-  { icon: mspmatch, label: "Matches", path: "/event-master" },
-  { icon: mspmatch, label: "Find Matches", path: "/find-matches" },
-  { icon: paymentdetails, label: "Payment Details", path: "/payment-details" },
-  { icon: logout, label: "Logout" },
+
+  { icon: <BiSolidVideos size={20} />, label: "MSP Video", path: "/msp-video" },
+  {
+    icon: <BiImageAdd size={20} />,
+    label: "MSP Gallery",
+    path: "/msp-gallary",
+  },
+  {
+    icon: <FaUsers size={20} />,
+    label: "MSP Event Image",
+    path: "/msp-event-image",
+  },
+  {
+    icon: <TbTextCaption size={20} />,
+    label: "MSP Header Text",
+    path: "/msp-header-text",
+  },
+  { icon: <FaUsers size={20} />, label: "Matches", path: "/event-master" },
+  { icon: <MdGroup size={20} />, label: "Find Matches", path: "/find-matches" },
+  {
+    icon: <MdOutlinePayments size={20} />,
+    label: "Payment Details",
+    path: "/payment-details",
+  },
+  { icon: <MdLogout size={20} />, label: "Logout" },
 ];
 
 const Adminsidebar = () => {
-
   const location = useLocation();
 
   const isActive = (path) => {
-  return location.pathname === path;
-};
-
-
+    return location.pathname === path;
+  };
 
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(
@@ -151,14 +199,13 @@ const Adminsidebar = () => {
     document.body.classList.toggle("sidebar-collapsed");
   };
 
-
   const handleDropdownClick = (idx) => {
     const newDropdown = openDropdown === idx ? null : idx;
     setOpenDropdown(newDropdown);
     localStorage.setItem("openDropdown", newDropdown ?? "");
   };
 
-   const logout = () => {
+  const logout = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You will be logged out of your account.",
@@ -170,7 +217,7 @@ const Adminsidebar = () => {
       cancelButtonText: "Cancel",
       customClass: {
         confirmButton: "swal-confirm-btn",
-        cancelButton:"swal-confirm-btn" 
+        cancelButton: "swal-confirm-btn",
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -187,7 +234,6 @@ const Adminsidebar = () => {
     });
   };
 
-  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -228,18 +274,14 @@ const Adminsidebar = () => {
         }`}
       >
         <div className="sidebar-header">
-        <img
-          src={logo}
-          alt="Logo"
-          className="w-full h-auto block object-cover"
-        />
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-full h-auto block object-cover"
+          />
 
-       
           {/* 🔹 Collapse button */}
-          <button
-            className="collapse-btn"
-            onClick={()=>toggleSidebar()}
-          >
+          <button className="collapse-btn" onClick={() => toggleSidebar()}>
             {isCollapsed ? "»" : "«"}
           </button>
         </div>
@@ -258,28 +300,23 @@ const Adminsidebar = () => {
                     setIsMobileMenuOpen(false);
                   }
                 }}
-                 className={`sidebar-item 
+                className={`sidebar-item 
                   ${item.label.toLowerCase() === "logout" ? "logout-item" : ""}
                   ${isActive(item.path) ? "active-menu" : ""}
                   ${openDropdown === idx ? "active-dropdown" : ""}
                 `}
               >
-                <img
-                  src={item.icon}
-                  alt={`${item.label} icon`}
-                  className="sidebar-icon"
-                  style={{ height: "18px", width: "18px" }}
-                />
+                <div className="sidebar-icon">{item.icon}</div>
+
                 {!isCollapsed && (
                   <span className="sidebar-label">{item.label}</span>
                 )}
-                   {/* 🔹 Add + / - icon if item has submenu */}
-                  {!isCollapsed && item.children && (
-                     <span className="submenu-toggle-icon text-lg font-bold ml-auto">
-                      {openDropdown === idx ? "−" : "+"}
-                    </span>
-                  )}
-      
+                {/* 🔹 Add + / - icon if item has submenu */}
+                {!isCollapsed && item.children && (
+                  <span className="submenu-toggle-icon text-lg font-bold ml-auto">
+                    {openDropdown === idx ? "−" : "+"}
+                  </span>
+                )}
               </li>
 
               {item.children && openDropdown === idx && !isCollapsed && (
@@ -290,12 +327,7 @@ const Adminsidebar = () => {
                       className="sidebar-subitem"
                       onClick={() => navigate(child.path)}
                     >
-                      <img
-                        src={child.icon}
-                        alt={`${child.label} icon`}
-                        className="sidebar-icon"
-                        style={{ height: "16px", width: "16px" }}
-                      />
+                      <div className="sidebar-icon">{child.icon}</div>
                       <span>{child.label}</span>
                     </li>
                   ))}
@@ -308,6 +340,5 @@ const Adminsidebar = () => {
     </>
   );
 };
-
 
 export default Adminsidebar;

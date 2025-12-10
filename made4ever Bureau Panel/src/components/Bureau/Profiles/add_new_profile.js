@@ -995,10 +995,44 @@ useEffect(() => {
                       </option>
 
                       {/* <option value="">Select height</option> */}
-                      <option>5 ft.0 inch</option>
-                      <option>5 ft.5 inch</option>
-                      <option>6 ft.0 inch</option>
-                      <option>6 ft.2 inch</option>
+                    <option>4'0"</option>
+                    <option>4'1"</option>
+                    <option>4'2"</option>
+                    <option>4'3"</option>
+                    <option>4'4"</option>
+                    <option>4'5"</option>
+                    <option>4'6"</option>
+                    <option>4'7"</option>
+                    <option>4'8"</option>
+                    <option>4'9"</option>
+                    <option>4'10"</option>
+                    <option>4'11"</option>
+
+                    <option>5'0"</option>
+                    <option>5'1"</option>
+                    <option>5'2"</option>
+                    <option>5'3"</option>
+                    <option>5'4"</option>
+                    <option>5'5"</option>
+                    <option>5'6"</option>
+                    <option>5'7"</option>
+                    <option>5'8"</option>
+                    <option>5'9"</option>
+                    <option>5'10"</option>
+                    <option>5'11"</option>
+
+                    <option>6'0"</option>
+                    <option>6'1"</option>
+                    <option>6'2"</option>
+                    <option>6'3"</option>
+                    <option>6'4"</option>
+                    <option>6'5"</option>
+                    <option>6'6"</option>
+                    <option>6'7"</option>
+                    <option>6'8"</option>
+                    <option>6'9"</option>
+                    <option>6'10"</option>
+                    <option>6'11"</option>
                     </select>
                   </div>
 
@@ -2301,21 +2335,49 @@ useEffect(() => {
                             {user_profile?.PartnerPrefrences?.HeightRange
                               .MinHeight || "Min Height"}
                           </option>
-                          {[
-                            "4'5",
-                            "4'8",
-                            "5'0",
-                            "5'2",
-                            "5'5",
-                            "5'8",
-                            "6'0",
-                            "6'2",
-                            "6'5",
-                          ].map((h) => (
-                            <option key={h} value={h}>
-                              {h}
-                            </option>
-                          ))}
+                         {[
+                          "4'0\"",
+                          "4'1\"",
+                          "4'2\"",
+                          "4'3\"",
+                          "4'4\"",
+                          "4'5\"",
+                          "4'6\"",
+                          "4'7\"",
+                          "4'8\"",
+                          "4'9\"",
+                          "4'10\"",
+                          "4'11\"",
+                          "5'0\"",
+                          "5'1\"",
+                          "5'2\"",
+                          "5'3\"",
+                          "5'4\"",
+                          "5'5\"",
+                          "5'6\"",
+                          "5'7\"",
+                          "5'8\"",
+                          "5'9\"",
+                          "5'10\"",
+                          "5'11\"",
+                          "6'0\"",
+                          "6'1\"",
+                          "6'2\"",
+                          "6'3\"",
+                          "6'4\"",
+                          "6'5\"",
+                          "6'6\"",
+                          "6'7\"",
+                          "6'8\"",
+                          "6'9\"",
+                          "6'10\"",
+                          "6'11\"",
+                        ].map(h => (
+                          <option key={h} value={h}>
+                            {h}
+                          </option>
+                        ))}
+
                         </select>
                         <select
                           className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -2343,15 +2405,42 @@ useEffect(() => {
                               .MaxHeight || "Max Height"}
                           </option>
                           {[
-                            "4'5",
-                            "4'8",
-                            "5'0",
-                            "5'2",
-                            "5'5",
-                            "5'8",
-                            "6'0",
-                            "6'2",
-                            "6'5",
+                             "4'0\"",
+                              "4'1\"",
+                              "4'2\"",
+                              "4'3\"",
+                              "4'4\"",
+                              "4'5\"",
+                              "4'6\"",
+                              "4'7\"",
+                              "4'8\"",
+                              "4'9\"",
+                              "4'10\"",
+                              "4'11\"",
+                              "5'0\"",
+                              "5'1\"",
+                              "5'2\"",
+                              "5'3\"",
+                              "5'4\"",
+                              "5'5\"",
+                              "5'6\"",
+                              "5'7\"",
+                              "5'8\"",
+                              "5'9\"",
+                              "5'10\"",
+                              "5'11\"",
+                              "6'0\"",
+                              "6'1\"",
+                              "6'2\"",
+                              "6'3\"",
+                              "6'4\"",
+                              "6'5\"",
+                              "6'6\"",
+                              "6'7\"",
+                              "6'8\"",
+                              "6'9\"",
+                              "6'10\"",
+                              "6'11\"",
                           ].map((h) => (
                             <option key={h} value={h}>
                               {h}
