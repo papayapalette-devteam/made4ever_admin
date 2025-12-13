@@ -7,7 +7,6 @@ const personalDetailsSchema = Joi.object({
   TimeOfBirth: Joi.string().allow(""),
   PlaceOfBirth: Joi.string().allow(""),
   Age: Joi.number().allow(""),
-  MobileNumber: Joi.number().allow(""),
   Complexion: Joi.string().allow(""),
   Height: Joi.string().allow(""),
   Weight: Joi.string().allow(""),

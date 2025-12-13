@@ -14,10 +14,7 @@ const createUserProfile = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const mobile = profileData?.PersonalDetails?.MobileNumber;
-    if (!mobile) {
-      return res.status(400).json({ error: "Mobile number is required" });
-    }
+
 
     // 🧠 If _id is provided → Update existing profile
     if (_id) {
@@ -28,16 +25,16 @@ const createUserProfile = async (req, res) => {
       }
 
       // Optional: Check if another user already has the same mobile
-      const duplicateUser = await UserProfile.findOne({
-        "PersonalDetails.MobileNumber": mobile,
-        _id: { $ne: _id },
-      });
+      // const duplicateUser = await UserProfile.findOne({
+      //   "PersonalDetails.MobileNumber": mobile,
+      //   _id: { $ne: _id },
+      // });
 
-      if (duplicateUser) {
-        return res.status(400).json({
-          error: `A user with mobile number ${mobile} already exists`,
-        });
-      }
+      // if (duplicateUser) {
+      //   return res.status(400).json({
+      //     error: `A user with mobile number ${mobile} already exists`,
+      //   });
+      // }
 
       // ✅ Update the existing user
       const updatedUser = await UserProfile.findByIdAndUpdate(

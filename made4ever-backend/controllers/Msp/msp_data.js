@@ -86,3 +86,68 @@ exports.get_msp = async (req, res) => {
     });
   }
 };
+
+
+exports.update_msp = async (req, res) => {
+  try {
+    // const { error } = updateMspSchema.validate(req.body);
+    // if (error) {
+    //   return res.status(400).json({ message: error.details[0].message });
+    // }
+
+    const mspId = req.params._id;
+
+    const {
+      name,
+      email,
+      password,
+      mobile_number,
+      registered_business_name,
+      address,
+      id,
+    } = req.body;
+
+    // email conflict check
+    const emailExists = await msp_data.findOne({
+      email,
+      _id: { $ne: mspId },
+    });
+
+    if (emailExists) {
+      return res.status(400).json({
+        message: "This Email id already exists...",
+      });
+    }
+
+    const updateData = {
+      name,
+      email,
+      mobile_number,
+      registered_business_name,
+      address,
+      id,
+    };
+
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updated = await msp_data.findByIdAndUpdate(
+      mspId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "MSP not found" });
+    }
+
+    res.status(200).json({
+      message: "MSP profile updated successfully",
+      msp: updated,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

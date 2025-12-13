@@ -64,7 +64,7 @@ function SignIn() {
   };
 
   // OTP LOGIN STATES
-  const [isOtpLogin, setIsOtpLogin] = useState(false);
+  const [isOtpLogin, setIsOtpLogin] = useState(true);
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -158,15 +158,16 @@ function SignIn() {
           {!isOtpLogin ? (
             <>
               <div className="nav-links">
-                <span>Need an account?</span>
-                <a href="/register">Sign Up</a>
+                <p className="otp-switch cursor-pointer" onClick={() => setIsOtpLogin(true)}>
+                Login with OTP?
+              </p>
               </div>
 
               <div className="input-group">
-                <label>Username</label>
+                <label>Email Id</label>
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Enter Your Email Id"
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -174,7 +175,7 @@ function SignIn() {
                 <label>Password</label>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder="Enter Your Password"
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -206,9 +207,7 @@ function SignIn() {
                 {loading === "login" ? <CircularProgress size={20} /> : "Login"}
               </button>
 
-              <p className="otp-switch cursor-pointer" onClick={() => setIsOtpLogin(true)}>
-                Login with OTP?
-              </p>
+             
             </>
           ) : (
             <>

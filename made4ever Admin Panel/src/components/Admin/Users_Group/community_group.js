@@ -23,7 +23,6 @@ function CommunityGroup() {
   const [loading, setloading] = useState(false);
   const [Community_Group, setCommunity_Group] = useState({
     community_group: "",
-    religion_group: "",
   });
 
   const [rowCount, setRowCount] = useState(0);
@@ -78,11 +77,9 @@ function CommunityGroup() {
 
   const [lookup_id, setlookup_id] = useState(null);
   const onEdit = (row) => {
-    get_religion_group();
     setlookup_id(row._id);
     setCommunity_Group({
       community_group: row.lookup_value,
-      religion_group: row.parent_lookup_id._id,
     });
   };
 
@@ -164,14 +161,6 @@ function CommunityGroup() {
     },
     { field: "lookup_value", headerName: "Community", flex: 1 },
     {
-      field: "parent_lookup_id",
-      headerName: "Religion",
-      flex: 1,
-      renderCell: (params) => {
-        return params.row?.parent_lookup_id?.lookup_value || "";
-      },
-    },
-    {
       field: "actions",
       headerName: "Actions",
       width: 80,
@@ -218,25 +207,7 @@ function CommunityGroup() {
     ...doc,
   }));
 
-  //========================================= get religion group start ================================================
-  const [loading_religion, setloading_religion] = useState(false);
-  const [religion_group, setreligion_group] = useState([]);
-  const get_religion_group = async () => {
-    try {
-      setloading_religion(true);
-      const resp = await api.get(
-        `api/admin/LookupList?lookup_type=religion_group`
-      );
 
-      setreligion_group(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setloading_religion(false);
-    }
-  };
-
-  //================================ get religion group end==========================================
 
   const handlechange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -276,7 +247,6 @@ function CommunityGroup() {
         lookup_id: lookup_id ? lookup_id : null,
         lookup_type: "community_group",
         lookup_value: Community_Group.community_group,
-        parent_lookup_id: Community_Group.religion_group,
       });
 
       if (resp.status === 200) {
@@ -357,52 +327,7 @@ function CommunityGroup() {
                   ></TextField>
                 </FormControl>
 
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Religion Group</label>
-                  <Select
-                    name="religion_group"
-                    value={Community_Group.religion_group}
-                    onChange={handlechange}
-                    MenuProps={{
-                      disablePortal: true,
-                      disableScrollLock: true,
-                    }}
-                    onOpen={() => {
-                      if (religion_group.length === 0) {
-                        // prevent multiple calls
-                        get_religion_group();
-                      }
-                    }}
-                    displayEmpty
-                    renderValue={(selected) => {
-                      if (!selected) {
-                        return (
-                          <span style={{ color: "#9ca3af" }}>
-                            Religion Group
-                          </span>
-                        ); // grey placeholder
-                      }
-                      return religion_group.find(
-                        (item) => item._id === selected
-                      )?.lookup_value;
-                    }}
-                  >
-                    <MenuItem disabled value="">
-                      <em>Religion Group</em>
-                    </MenuItem>
-                    {loading_religion ? (
-                      <MenuItem disabled>
-                        <CircularProgress size={20} />
-                      </MenuItem>
-                    ) : (
-                      religion_group?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.lookup_value}
-                        </MenuItem>
-                      ))
-                    )}
-                  </Select>
-                </FormControl>
+             
               </div>
 
               <Button className="submit-button" onClick={add_community_group}>

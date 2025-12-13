@@ -6,9 +6,9 @@ import Footer from "../../components/layout/footer";
 
 export default function AboutPage() {
   const stats = [
-    { label: "Years of Experience", value: "22+" },
+    { label: "Years of Experience", value: "23+" },
     { label: "States Covered", value: "10" },
-    { label: "Active Members", value: "2,600+" },
+    { label: "Active Members", value: "2,700+" },
     { label: "Connected Bureaus", value: "15,000+" },
   ];
 
@@ -50,7 +50,7 @@ export default function AboutPage() {
             About <span className="text-red-600">Made4Ever</span>
           </h1>
           <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
-            For over <strong>22 years</strong>, Made4Ever has been a trusted
+            For over <strong>23 years</strong>, Made4Ever has been a trusted
             name in the matrimonial industry — uniting families, empowering
             women, and strengthening communities across India.
           </p>
@@ -88,7 +88,7 @@ export default function AboutPage() {
               In 2016, we launched our digital platform to connect thousands of
               marriage bureaus across India. Today, our network spans{" "}
               <strong>10 states</strong> and supports{" "}
-              <strong>2,600+ members</strong>, transforming how people find
+              <strong>2,700+ members</strong>, transforming how people find
               their life partners.
             </p>
             <p className="text-gray-700 leading-relaxed">
@@ -137,8 +137,8 @@ export default function AboutPage() {
           </h2>
           <div className="p-8 border rounded-2xl bg-white shadow-lg">
             <div className="flex flex-col items-center gap-4">
-              <div className="w-24 h-24 bg-gradient-to-br from-red-600 to-yellow-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-                AN
+              <div className="w-44 h-44  from-red-600 to-yellow-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                <img src="WhatsApp Image 2025-12-11 at 15.23.47.jpeg" alt=""></img>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">
                 Ashish Narang

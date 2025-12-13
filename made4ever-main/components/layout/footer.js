@@ -50,9 +50,6 @@ const Footer = () => {
                 ["Home", "/"],
                 ["About Us", "/about"],
                 ["Contact", "/contact"],
-                ["Dashboard", "/dashboard"],
-                ["Profiles", "/profiles"],
-                ["Matches", "/matches"],
                 ["Pricing", "/billing"],
                 ["Blog", "/blog"],
               ].map(([label, link]) => (
@@ -109,7 +106,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-red-400" />
                 <span className="text-gray-300 text-sm">
-                  support@made4ever.com
+                  connect@made4ever.in
                 </span>
               </div>
             </div>
@@ -118,8 +115,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Made4Ever. All rights reserved. India&apos;s Premier Marriage
-            Bureau Portal.
+            COPYRIGHT© 2025 M/S MADE 4 EVER MATRIMONIAL PRIVATE LIMITED. All rights reserved.
           </p>
         </div>
       </div>

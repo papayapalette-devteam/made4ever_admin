@@ -40,6 +40,8 @@ import PaymentDetails from "./components/Admin/PaymentDetails/payment";
 import PropertySize from "./components/Admin/Users_Group/property_size";
 import FindMatches from "./components/Admin/Matches/find_matches";
 import CommunityGroup from "./components/Admin/Users_Group/community_group";
+import Allprofiles from "./components/Admin/All_Profiles/view_all_profile";
+import Editprofile from "./components/Admin/All_Profiles/edit_profile";
 
 
 
@@ -123,6 +125,13 @@ function App() {
         <Route path="/find-matches" element={<FindMatches/>}></Route>
 
       {/*============================== matches routes end==================================== */}
+
+      {/*=============================== view all profile routes start============================ */}
+
+        <Route path="/view-profiles" element={<Allprofiles/>}></Route>
+        <Route path="/edit-profile" element={<Editprofile/>}></Route>
+
+      {/*============================== view all profile routes end==================================== */}
     </Route>
 
       </Routes>

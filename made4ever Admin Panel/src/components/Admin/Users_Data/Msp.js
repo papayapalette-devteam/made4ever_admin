@@ -38,7 +38,7 @@ function Msp() {
     password: "",
     confirm_password: "",
     mobile_number: "",
-    registered_business_name: "test",
+    registered_business_name: "",
     address: "",
     id: [],
   });
@@ -92,9 +92,10 @@ function Msp() {
     setMenuRowId(null);
   };
 
-  const onEdit = () => {
-    alert("edit");
+  const onEdit = (row) => {
+    setMsp(row)
   };
+console.log(Msp);
 
   const onDelete = () => {
     alert("delete");
@@ -164,7 +165,7 @@ function Msp() {
             >
               <MenuItem
                 onClick={() => {
-                  onEdit(params.row._id);
+                  onEdit(params.row);
                   handleCloseMenu();
                 }}
               >
@@ -254,76 +255,70 @@ function Msp() {
   //========================== post api for create msp =============================
 
   const add_msp_data = async () => {
-    try {
-        const { confirm_password, ...payload } = Msp;
-      setloading(true);
-      if (Msp.password !== Msp.confirm_password) {
-        setTimeout(() => {
-          Swal.fire({
-            icon: "error",
-            title: "Password Error",
-            text: "Password And Confirm Password Not Matched...",
-            showConfirmButton: true,
-            customClass: {
-              popup: "small-swal-popup",
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-        return;
-      }
-      const resp = await api.post("api/msp/Savemsp", payload);
+  try {
+    setloading(true);
 
-      if (resp.status === 200) {
-        setTimeout(() => {
-          Swal.fire({
-            icon: "success",
-            title: "MSP Added",
-            text: "MSP Addedd Successfully...",
-            showConfirmButton: true,
-            customClass: {
-              popup: "small-swal-popup",
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      } else {
-        console.warn("⚠️ Error:", resp.data.response.data.message);
-        setTimeout(() => {
-          Swal.fire({
-            icon: "error",
-            title: "Error Occured",
-            text: resp.data.response.data.message,
-            showConfirmButton: true,
-            customClass: {
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      }
-    } catch (error) {
-      console.error("❌ API Error:", error.response.data.message);
-      setTimeout(() => {
-        Swal.fire({
-          icon: "error",
-          title: "Error Occurred",
-          text: error.response?.data?.message || "Something went wrong",
-          showConfirmButton: true,
-          customClass: { confirmButton: "my-swal-button" },
-        }).then(() => {
-          window.location.reload(); // optional, you can remove this if not needed
-        });
-      }, 0);
-    } finally {
-      setloading(false);
+    // extract confirm_password & _id
+    const { confirm_password, _id, ...payload } = Msp;
+
+    // password check (only when adding or changing password)
+    if (!_id && Msp.password !== confirm_password) {
+      Swal.fire({
+        icon: "error",
+        title: "Password Error",
+        text: "Password And Confirm Password Not Matched...",
+        showConfirmButton: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+        },
+      });
+      return;
     }
-  };
+
+    let resp;
+
+    if (_id) {
+      // 🔄 UPDATE
+      resp = await api.put(`api/msp/update-msp/${_id}`, payload);
+    } else {
+      // ➕ ADD
+      resp = await api.post("api/msp/Savemsp", payload);
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: _id ? "MSP Updated" : "MSP Added",
+      text: _id
+        ? "MSP Updated Successfully..."
+        : "MSP Added Successfully...",
+      showConfirmButton: true,
+      customClass: {
+        popup: "small-swal-popup",
+        confirmButton: "my-swal-button",
+      },
+    }).then(() => {
+      window.location.reload(); // optional
+    });
+
+  } catch (error) {
+    console.error("❌ API Error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error Occurred",
+      text: error?.response?.data?.message || "Something went wrong",
+      showConfirmButton: true,
+      customClass: {
+        confirmButton: "my-swal-button",
+      },
+    });
+
+  } finally {
+    setloading(false);
+  }
+};
+
 
   return (
     <div>

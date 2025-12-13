@@ -75,7 +75,7 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-red-500 mt-1" />
                 <div>
                   <h3 className="font-semibold">Email</h3>
-                  <p className="text-gray-600">support@made4ever.com</p>
+                  <p className="text-gray-600">connect@made4ever.in</p>
                 </div>
               </div>
 
@@ -84,8 +84,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold">Business Hours</h3>
                   <p className="text-gray-600">
-                    Monday - Friday: 9:00 AM - 6:00 PM<br />
-                    Saturday: 10:00 AM - 4:00 PM
+                    Monday - Saturday: 10 AM - 6 PM<br />
                   </p>
                 </div>
               </div>

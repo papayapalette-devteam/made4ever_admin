@@ -9,7 +9,6 @@ const PersonalDetailsSchema = new mongoose.Schema({
   TimeOfBirth: { type: String, default: "" },
   PlaceOfBirth: { type: String, default: "" },
   Age: { type: Number, default: "" },
-  MobileNumber: { type: Number, default: "" },
   Complexion: { type: String, default: "" },
   Height: { type: String, default: "" },
   Weight: { type: String, default: "" },

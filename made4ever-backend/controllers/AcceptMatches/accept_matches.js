@@ -1,5 +1,7 @@
 const AcceptProfile = require("../../models/AcceptMatches/accept_matches");
 const UserProfile = require("../../models/AddProfile/add_new_profile");
+const MSP = require("../../models/Msp/msp");
+const axios =require('axios')
 
 // 🟩 Save accepted profile (male/female logic)
 exports.saveAcceptedProfile = async (req, res) => {
@@ -12,6 +14,21 @@ exports.saveAcceptedProfile = async (req, res) => {
 
     const candidate = await UserProfile.findById(candidateId);
     const user = await UserProfile.findById(userId);
+
+    const candidate_bureau = candidate.Bureau;
+    const user_bureau = user.Bureau;
+
+    const candidate_bureau_details = await MSP.findById(candidate_bureau);
+    const user_bureau_details = await MSP.findById(user_bureau);
+
+   // Extract bureau names + phone numbers
+const candidateBureauName = candidate_bureau_details.name;
+const candidateBureauPhone = candidate_bureau_details.mobile_number;
+
+// const userBureauName = user_bureau_details.name;
+// const userBureauPhone = user_bureau_details.mobile_number;
+
+
 
     if (!candidate || !user) {
       return res.status(404).json({ success: false, message: "User or candidate not found" });
@@ -52,6 +69,60 @@ exports.saveAcceptedProfile = async (req, res) => {
       FemaleProfile: femaleProfileId,
       MatchingPercentage
     });
+
+const profileUrl="https://made4ever.in"
+
+// Template payload generator
+const getPayload = (receiverPhone, bureauName, bureauPhone) => ({
+  to: `91${String(receiverPhone)}`,
+  phoneNoId: "820798087793506",
+  type: "template",
+  name: "match_found_utility",
+  language: "en_US",
+  bodyParams: [
+    String(user.PersonalDetails.Name || ""),
+    String(candidate.PersonalDetails.Name || ""),
+    String(bureauName || ""),
+    String(bureauPhone || "")
+  ]
+});
+
+
+
+  // const payload1=getPayload(candidateBureauPhone, candidateBureauName, candidateBureauPhone)
+  // const payload2=getPayload(userBureauPhone, userBureauName, userBureauPhone)
+  // console.log(payload1);
+  //  console.log(payload2);
+  //    console.log(candidate_bureau);
+  //  console.log(user_bureau);
+  
+
+// WhatsApp API Headers
+const headers = {
+  Authorization: `Bearer 9b758ea897b12e21785b50bd4e54a58f541ce7030d443c96cb21975b00a14e06`,
+  "Content-Type": "application/json",
+};
+   
+    
+        // 🟢 Send to candidate bureau
+const resp=await axios.post(
+  "https://app.veblika.com/api/v2/whatsapp-business/messages",
+  getPayload(candidateBureauPhone, candidateBureauName, candidateBureauPhone),
+  { headers }
+);
+// console.log(resp);
+
+
+
+// 🟡 If both bureaus are different → send message to user bureau
+
+  // await axios.post(
+  //   "https://app.veblika.com/api/v2/whatsapp-business/messages",
+  //   getPayload(userBureauPhone, userBureauName, userBureauPhone),
+  //   { headers }
+  // );
+
+
 
     return res.status(200).json({
       success: true,

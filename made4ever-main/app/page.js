@@ -169,9 +169,9 @@ export default function HomePage() {
             {[
               {
                 name: "Basic",
-                price: "₹2,999 /mo",
+                price: "₹500",
                 features: [
-                  "50 Profile Matches",
+                  "10 Profile Matches",
                   "Basic Support",
                   "Mobile App",
                   "Profile Verification",
@@ -179,9 +179,9 @@ export default function HomePage() {
               },
               {
                 name: "Premium",
-                price: "₹7,999 /3 mo",
+                price: "₹2000",
                 features: [
-                  "150 Profile Matches",
+                  "50 Profile Matches",
                   "Priority Support",
                   "Analytics Dashboard",
                   "Advanced Filters",
@@ -189,9 +189,9 @@ export default function HomePage() {
               },
               {
                 name: "Enterprise",
-                price: "₹19,999 /yr",
+                price: "₹3000",
                 features: [
-                  "500 Profile Matches",
+                  "100 Profile Matches",
                   "Custom Branding",
                   "24/7 Support",
                   "Multi-user Access",

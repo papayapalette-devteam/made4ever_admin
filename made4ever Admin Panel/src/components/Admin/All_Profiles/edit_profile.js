@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../Layout/Footer";
-import Header from "../Layout/Header";
 import api from "../../../api";
 import Swal from "sweetalert2";
 import { ClipboardPaste } from "lucide-react";
@@ -15,11 +13,13 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import Adminsidebar from "../adminsidebar";
+import Adminheader from "../adminheader";
 
-export default function NewProfileForm() {
+export default function Editprofile() {
   const [step, setStep] = useState(1);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+//   const user = JSON.parse(localStorage.getItem("user"));
 
   const location=useLocation()
   const existing_user_profile=location?.state?.id
@@ -28,7 +28,7 @@ export default function NewProfileForm() {
   //======================== state for adding a user=========================================
 
   const [user_profile, setuser_profile] = useState({
-    Bureau: user.id,
+    // Bureau: user.id,
     PersonalDetails: {
       Name: "",
       DateOfBirth: "",
@@ -743,10 +743,12 @@ useEffect(() => {
   };
 
   return (
-    <div>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div>
+        <Adminheader />
+        <div className="layout">
+          <Adminsidebar />
+      <div className="content-wrapper">
+        <div className="w-full  bg-white rounded-2xl shadow-xl overflow-hidden m-2">
           {/* Header */}
           <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
           <h1 className="text-3xl font-bold">
@@ -3580,7 +3582,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <Footer />
+    </div>
     </div>
   );
 }
