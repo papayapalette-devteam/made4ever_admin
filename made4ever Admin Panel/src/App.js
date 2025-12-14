@@ -42,6 +42,7 @@ import FindMatches from "./components/Admin/Matches/find_matches";
 import CommunityGroup from "./components/Admin/Users_Group/community_group";
 import Allprofiles from "./components/Admin/All_Profiles/view_all_profile";
 import Editprofile from "./components/Admin/All_Profiles/edit_profile";
+import AddBlog from "./components/Admin/Blog/add_blog";
 
 
 
@@ -130,6 +131,12 @@ function App() {
 
         <Route path="/view-profiles" element={<Allprofiles/>}></Route>
         <Route path="/edit-profile" element={<Editprofile/>}></Route>
+
+      {/*============================== view all profile routes end==================================== */}
+
+            {/*=============================== view all profile routes start============================ */}
+
+        <Route path="/add-blog" element={<AddBlog/>}></Route>
 
       {/*============================== view all profile routes end==================================== */}
     </Route>
