@@ -120,7 +120,9 @@ const userProfileSchema = Joi.object({
   PartnerPrefrences: partnerPrefrencesSchema.required(),
   Upload: uploadSchema.required(),
   PropertyDetails: propertyDetailsSchema.required(),
-  IsActive: Joi.boolean().default(true)
+  IsActive: Joi.boolean().default(true),
+  IsDeleted: Joi.boolean().default(false),
+  DeletedAt: Joi.date().allow(null).default(null),
 });
 
 module.exports = userProfileSchema;

@@ -27,7 +27,7 @@ import {
   MdMap,
   MdManageAccounts  ,
   MdEditNote ,
-  MdBusinessCenter 
+  MdDeleteOutline  
 } from "react-icons/md";
 
 import {
@@ -173,6 +173,7 @@ const menuItems = [
   { icon: <MdGroup size={20} />, label: "Find Matches", path: "/find-matches" },
   { icon: <MdManageAccounts   size={20} />, label: "View All Profiles", path: "/view-profiles" },
   { icon: <MdEditNote  nessCenter  size={20} />, label: "Create Blogs", path: "/add-blog" },
+  { icon: <MdDeleteOutline   nessCenter  size={20} />, label: "Recycle Bin", path: "/recycle-bin" },
   {
     icon: <MdOutlinePayments size={20} />,
     label: "Payment Details",

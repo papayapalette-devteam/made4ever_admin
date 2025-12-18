@@ -109,7 +109,9 @@ const UserProfileSchema = new mongoose.Schema(
     PartnerPrefrences: { type: PartnerPrefrencesSchema, required: true },
     Upload: { type: UploadSchema, required: true },
     PropertyDetails: { type: PropertyDetailsSchema, required: true },
-    IsActive: { type: Boolean, default: true }
+    IsActive: { type: Boolean, default: true },
+    IsDeleted: {type: Boolean,default: false},
+    DeletedAt: {type: Date,default: null}
   },
   { timestamps: true } // adds createdAt & updatedAt
 );

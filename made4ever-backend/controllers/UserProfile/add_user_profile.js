@@ -86,6 +86,7 @@ const getAllUserProfiles = async (req, res) => {
 
     // Build filter condition
     const filter = {};
+    filter.IsDeleted=false
     if (bureau) {
       filter.Bureau = bureau;
     }
@@ -153,17 +154,28 @@ const getAllUserProfiles = async (req, res) => {
 };
 
 // 🔴 Delete user profile by ID
- const deleteUserProfile = async (req, res) => {
+const deleteUserProfile = async (req, res) => {
   try {
-    const deletedUser = await UserProfile.findByIdAndDelete(req.params._id);
-    if (!deletedUser) return res.status(404).json({ error: "User profile not found" });
+    const user = await UserProfile.findById(req.params._id);
 
-    res.status(200).json({ message: "User profile deleted successfully" });
+    if (!user) {
+      return res.status(404).json({ error: "User profile not found" });
+    }
+
+    user.IsDeleted = true;
+    user.DeletedAt = new Date();
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User moved to recycle bin successfully",
+    });
   } catch (err) {
     console.error("Error in deleteUserProfile:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 const block_unblock= async (req, res) => {
   try {

@@ -43,6 +43,7 @@ import CommunityGroup from "./components/Admin/Users_Group/community_group";
 import Allprofiles from "./components/Admin/All_Profiles/view_all_profile";
 import Editprofile from "./components/Admin/All_Profiles/edit_profile";
 import AddBlog from "./components/Admin/Blog/add_blog";
+import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
 
 
 
@@ -134,11 +135,17 @@ function App() {
 
       {/*============================== view all profile routes end==================================== */}
 
-            {/*=============================== view all profile routes start============================ */}
+      {/*=============================== view all profile routes start============================ */}
 
         <Route path="/add-blog" element={<AddBlog/>}></Route>
 
-      {/*============================== view all profile routes end==================================== */}
+      {/*============================== Recycle Bin profile routes end==================================== */}
+
+            {/*=============================== view all profile routes start============================ */}
+
+        <Route path="/recycle-bin" element={<RecycleBin/>}></Route>
+
+      {/*============================== Recycle Bin profile routes end==================================== */}
     </Route>
 
       </Routes>

@@ -6,7 +6,7 @@ import {
   Edit,
   Eye,
   Blocks,
-  Heart,
+  RotateCcw ,
   MapPin,
   Briefcase,
   GraduationCap,
@@ -20,39 +20,9 @@ import api from "../../../api";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 
-// Mock data (replace with your API data)
-const mockProfiles = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    age: 28,
-    gender: "male",
-    occupation: "Software Engineer",
-    education: "B.Tech",
-    city: "Delhi",
-    state: "Delhi",
-    income: "₹10 LPA",
-    height: "5'9\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/men/1.jpg"],
-  },
-  {
-    id: 2,
-    name: "Priya Mehta",
-    age: 25,
-    gender: "female",
-    occupation: "Doctor",
-    education: "MBBS",
-    city: "Mumbai",
-    state: "Maharashtra",
-    income: "₹12 LPA",
-    height: "5'5\"",
-    isActive: false,
-    photos: ["https://randomuser.me/api/portraits/women/2.jpg"],
-  },
-];
 
-export default function Allprofiles() {
+
+export default function RecycleBin() {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -71,8 +41,10 @@ export default function Allprofiles() {
     try {
       setLoading(true);
       const resp = await api.get(
-        `api/user/get-all-profile?page=${page}&limit=${limit}`
+        `api/recycle-bin/recycle-bin-profile?page=${page}&limit=${limit}`
       );
+   
+      
       setall_profile(resp.data.data);
       setTotal(resp.data.total);
     } catch (error) {
@@ -126,7 +98,7 @@ export default function Allprofiles() {
       if (!confirmDelete.isConfirmed) return;
 
       setLoading(true);
-      const resp = await api.delete(`api/user/delete-user/${_id}`);
+      const resp = await api.delete(`api/recycle-bin/permanent-delete-profile/${_id}`);
 
       if (resp.status === 200) {
         await Swal.fire({
@@ -160,14 +132,14 @@ export default function Allprofiles() {
     }
   };
 
-  const toggle_user = async (id) => {
+   const restore_user_profile = async (_id) => {
     try {
-      const confirmUpdate = await Swal.fire({
+      const confirmDelete = await Swal.fire({
         title: "Are you sure?",
-        text: "This action will update the user profile!",
+        text: "This action will restore the user profile!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, update it!",
+        confirmButtonText: "Yes, restore it!",
         cancelButtonText: "Cancel",
         reverseButtons: true,
         customClass: {
@@ -177,23 +149,27 @@ export default function Allprofiles() {
       });
 
       // If user cancels, stop here
-      if (!confirmUpdate.isConfirmed) return;
+      if (!confirmDelete.isConfirmed) return;
 
-      const res = await api.put(`api/user/block-unblock/${id}`);
-      if (res.status === 200) {
+      setLoading(true);
+      const resp = await api.post(`api/recycle-bin/restore-profile/${_id}`);
+
+      if (resp.status === 200) {
         await Swal.fire({
           icon: "success",
-          title: "Profile Updated!",
-          text: res.data.message || "User profile updated successfully.",
+          title: "Profile Restored!",
+          text: resp.data.message || "User profile restored successfully.",
           confirmButtonText: "OK",
           customClass: {
             confirmButton: "swal-confirm-btn",
           },
         });
-        get_all_profile();
+
+        // Refresh after confirmation closes
+        window.location.reload();
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Error!",
@@ -205,6 +181,8 @@ export default function Allprofiles() {
           confirmButton: "swal-confirm-btn",
         },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -390,17 +368,6 @@ export default function Allprofiles() {
                       <div className="flex gap-2 mt-4">
                         <button
                           onClick={() =>
-                            navigate("/view-profiles", {
-                              state: { id: profile._id },
-                            })
-                          }
-                          className="border border-gray-300 rounded-md py-2 flex-1 flex items-center justify-center hover:bg-gray-50"
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          View
-                        </button>
-                        <button
-                          onClick={() =>
                             delete_user_profile(profile._id)
                           }
                           className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center"
@@ -408,28 +375,19 @@ export default function Allprofiles() {
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete
                         </button>
-                      </div>
 
-                      <div className="flex gap-2 mt-4">
-                        <button
-                          onClick={() =>
-                            navigate("/edit-profile", {
-                              state: { id: profile },
-                            })
+                              <button
+                           onClick={() =>
+                            restore_user_profile(profile._id)
                           }
                           className="border border-gray-300 rounded-md py-2 flex-1 flex items-center justify-center hover:bg-gray-50"
                         >
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => toggle_user(profile._id)}
-                          className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center"
-                        >
-                          <Blocks className="mr-2 h-4 w-4" />
-                          {profile.IsActive ? "Block" : "Unblock"}
+                          <RotateCcw  className="mr-2 h-4 w-4" />
+                          Restore
                         </button>
                       </div>
+
+                    
                     </div>
                   </div>
                 ))}
@@ -508,8 +466,8 @@ export default function Allprofiles() {
                 genderFilter === "all" &&
                 statusFilter === "all" && (
                   <a href="/profiles/new">
-                    
-                      No User Profile Found
+                  
+                      No Profile In Recycle Bin
                   
                   </a>
                 )}

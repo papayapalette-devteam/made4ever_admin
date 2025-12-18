@@ -77,8 +77,8 @@ const getPayload = (receiverPhone, bureauName, bureauPhone) => ({
   to: `91${String(receiverPhone)}`,
   phoneNoId: "820798087793506",
   type: "template",
-  name: "match_found_utility",
-  language: "en_US",
+  name: "utility_tem",
+  language: "en",
   bodyParams: [
     String(user.PersonalDetails.Name || ""),
     String(candidate.PersonalDetails.Name || ""),

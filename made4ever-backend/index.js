@@ -40,9 +40,13 @@ app.use('/api/upload',require('./routes/uploadfiles'));
 
 app.use('/api/user',require('./routes/add_user'));
 
+app.use('/api/recycle-bin',require('./routes/recycle_bin'));
+
 app.use('/api/msp/signin',require('./routes/sign_in'));
 
 app.use('/api/sub-admin',require('./routes/sub_admin'));
+
+app.use('/api/blog',require('./routes/blog'));
 
 app.use('/api/payu',require('./routes/payment'));
 
