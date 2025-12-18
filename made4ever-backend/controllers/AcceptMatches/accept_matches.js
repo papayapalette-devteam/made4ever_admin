@@ -25,8 +25,8 @@ exports.saveAcceptedProfile = async (req, res) => {
 const candidateBureauName = candidate_bureau_details.name;
 const candidateBureauPhone = candidate_bureau_details.mobile_number;
 
-// const userBureauName = user_bureau_details.name;
-// const userBureauPhone = user_bureau_details.mobile_number;
+const userBureauName = user_bureau_details.name;
+const userBureauPhone = user_bureau_details.mobile_number;
 
 
 
@@ -107,7 +107,7 @@ const headers = {
         // 🟢 Send to candidate bureau
 const resp=await axios.post(
   "https://app.veblika.com/api/v2/whatsapp-business/messages",
-  getPayload(candidateBureauPhone, candidateBureauName, candidateBureauPhone),
+  getPayload(candidateBureauPhone, userBureauName, userBureauPhone),
   { headers }
 );
 // console.log(resp);
