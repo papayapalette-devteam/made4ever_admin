@@ -19,6 +19,14 @@ import {
   Menu,
   Paper,
 } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { IconButton, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
@@ -179,6 +187,16 @@ console.log(Msp);
               >
                 Delete
               </MenuItem>
+           <MenuItem
+            onClick={() => {
+              setSelectedRow(params.row);
+              setOpenCreditModal(true);
+              handleCloseMenu();
+            }}
+          >
+            Edit Credit
+          </MenuItem>
+
             </Menu>
           )}
         </>
@@ -319,6 +337,57 @@ console.log(Msp);
   }
 };
 
+// update credit
+
+const [openCreditModal, setOpenCreditModal] = useState(false);
+const [selectedRow, setSelectedRow] = useState(null);
+const [credit, setCredit] = useState(0);
+
+useEffect(() => {
+  if (selectedRow) {
+    setCredit(selectedRow?.credits || 0);
+  }
+}, [selectedRow]);
+
+
+const handleUpdateCredit = async (BureauId, credit) => {
+  try {
+     setloading(true);
+    const resp=await api.put(`api/msp/update-credit/${BureauId}`, {
+      credit,
+    });
+
+     Swal.fire({
+      icon: "success",
+      title: "Credit Updated",
+      text: "MSP Credit Updated Successfully...",
+      showConfirmButton: true,
+      customClass: {
+        popup: "small-swal-popup",
+        confirmButton: "my-swal-button",
+      },
+    }).then(() => {
+      window.location.reload(); // optional
+    });
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error Occurred",
+      text: error?.response?.data?.message || "Something went wrong",
+      showConfirmButton: true,
+      customClass: {
+        confirmButton: "my-swal-button",
+      },
+    });
+  }
+  finally
+  {
+     setloading(false);
+  }
+};
+
+
 
   return (
     <div>
@@ -454,6 +523,79 @@ console.log(Msp);
           </div>
         </div>
       </div>
+
+  {/* modal for update credit */}
+
+  <Dialog
+  open={openCreditModal}
+  onClose={() => setOpenCreditModal(false)}
+  maxWidth="xs"
+  fullWidth
+>
+  <DialogTitle
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      fontWeight: 600
+    }}
+  >
+    Edit Bureau Credit
+    <IconButton onClick={() => setOpenCreditModal(false)}>
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+
+  <DialogContent>
+    <Typography variant="body2" color="text.secondary" mb={2}>
+      Credit can be updated in multiples of 5
+    </Typography>
+
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      gap={3}
+      mt={3}
+    >
+      <Button
+        variant="outlined"
+        onClick={() => setCredit((prev) => Math.max(0, prev - 5))}
+      >
+        − 5
+      </Button>
+
+      <Typography variant="h4" fontWeight={600}>
+        {credit}
+      </Typography>
+
+      <Button
+        variant="outlined"
+        onClick={() => setCredit((prev) => prev + 5)}
+      >
+        + 5
+      </Button>
+    </Box>
+  </DialogContent>
+
+  <DialogActions sx={{ p: 2 }}>
+    <Button onClick={() => setOpenCreditModal(false)}>
+      Cancel
+    </Button>
+
+    <Button
+      variant="contained"
+      onClick={() => {
+        handleUpdateCredit(selectedRow._id, credit);
+        setOpenCreditModal(false);
+      }}
+    >
+      Save
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
 
       {loading && (
         <div

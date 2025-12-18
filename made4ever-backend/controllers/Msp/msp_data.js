@@ -151,3 +151,54 @@ exports.update_msp = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+exports.updateMspCredit = async (req, res) => {
+  try {
+    const mspId = req.params;
+    
+    const { credit } = req.body;
+
+    if (!mspId) {
+      return res.status(400).json({ message: "MSP ID is required" });
+    }
+
+    if (credit === undefined) {
+      return res.status(400).json({ message: "Credit is required" });
+    }
+
+    if (credit % 5 !== 0) {
+      return res
+        .status(400)
+        .json({ message: "Credit must be in multiples of 5" });
+    }
+
+    if (credit < 0) {
+      return res
+        .status(400)
+        .json({ message: "Credit cannot be negative" });
+    }
+
+    const msp = await msp_data.findByIdAndUpdate(
+      mspId,
+      { credits:credit },
+      { new: true }
+    );
+
+    if (!msp) {
+      return res.status(404).json({ message: "MSP not found" });
+    }
+
+    res.status(200).json({
+      message: "MSP credit updated successfully",
+      data: {
+        _id: msp._id,
+        credits: msp.credit,
+      },
+    });
+  } catch (error) {
+    console.error("Update MSP Credit Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
