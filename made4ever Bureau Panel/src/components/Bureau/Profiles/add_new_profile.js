@@ -28,7 +28,7 @@ export default function NewProfileForm() {
   //======================== state for adding a user=========================================
 
   const [user_profile, setuser_profile] = useState({
-    Bureau: user.id,
+    Bureau: user._id,
     PersonalDetails: {
       Name: "",
       DateOfBirth: "",
