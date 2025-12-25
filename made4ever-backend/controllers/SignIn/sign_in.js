@@ -30,15 +30,17 @@ exports.loginMSP = async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        mobile_number: user.mobile_number,
-        registered_business_name: user.registered_business_name,
-        address: user.address,
-        credit:user.credits
-      },
+      // user: {
+      //   id: user._id,
+      //   name: user.name,
+      //   email: user.email,
+      //   mobile_number: user.mobile_number,
+      //   registered_business_name: user.registered_business_name,
+      //   address: user.address,
+      //   credit:user.credits,
+      //   image:user.id
+      // },
+          user: user
     });
   } catch (error) {
     console.error("Login Error:", error);

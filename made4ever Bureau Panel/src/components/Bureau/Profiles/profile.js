@@ -5,7 +5,6 @@ import {
   Filter,
   Edit,
   Eye,
-  Trash2,
   Blocks,
   Heart,
   MapPin,
@@ -71,7 +70,7 @@ export default function ProfilesPage() {
     try {
       setLoading(true);
       const resp = await api.get(
-        `api/user/get-all-profile?bureau=${user.id}&page=${page}&limit=${limit}`
+        `api/user/get-all-profile?bureau=${user._id}&page=${page}&limit=${limit}`
       );
       setall_profile(resp.data.data);
       setTotal(resp.data.total);

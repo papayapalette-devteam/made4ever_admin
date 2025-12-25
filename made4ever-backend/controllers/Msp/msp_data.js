@@ -39,7 +39,7 @@ exports.add_msp = async (req, res) => {
       id,
     });
 
-    // Save the deal to the database
+  
     const resp = await new_msp_data.save();
     res
       .status(200)
@@ -90,10 +90,7 @@ exports.get_msp = async (req, res) => {
 
 exports.update_msp = async (req, res) => {
   try {
-    // const { error } = updateMspSchema.validate(req.body);
-    // if (error) {
-    //   return res.status(400).json({ message: error.details[0].message });
-    // }
+
 
     const mspId = req.params._id;
 
@@ -122,6 +119,7 @@ exports.update_msp = async (req, res) => {
     const updateData = {
       name,
       email,
+      password,
       mobile_number,
       registered_business_name,
       address,
@@ -202,3 +200,142 @@ exports.updateMspCredit = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.delete_msp = async (req, res) => {
+  try {
+    const id = req.params;
+
+    if (!id) {
+      return res.status(400).send({
+        message: "MSP id is required",
+      });
+    }
+
+    const deletedMsp = await msp_data.findByIdAndDelete(id);
+
+    if (!deletedMsp) {
+      return res.status(404).send({
+        message: "MSP not found",
+      });
+    }
+
+    res.status(200).send({
+      message: "MSP deleted successfully",
+      msp: deletedMsp,
+    });
+  } catch (error) {
+    console.error("Error deleting MSP:", error);
+    res.status(500).send({
+      message: "Error occurred while deleting MSP",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+
+
+exports.uploadBulkMsp = async (req, res) => {
+  try {
+    const { data } = req.body;
+
+    if (!Array.isArray(data) || data.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No data provided",
+      });
+    }
+
+    const toInsert = [];
+    const failedRows = [];
+
+    for (let i = 0; i < data.length; i++) {
+      let row = data[i];
+
+      // 🔴 Skip if email or mobile missing
+      if (!row.email || row.email.toString().trim() === "" || !row.mobile_number) {
+        failedRows.push({
+          row: i + 1,
+          errors: ["Email or mobile missing"],
+        });
+        continue;
+      }
+
+       // 🔹 Check for duplicate email
+      const emailExists = await msp_data.findOne({ email: row.email });
+      if (emailExists) {
+        failedRows.push({
+          row: i + 1,
+          errors: ["Duplicate email"],
+        });
+        continue;
+      }
+
+      // 🔹 Check for duplicate mobile_number
+      const mobileExists = await msp_data.findOne({ mobile_number: row.mobile_number });
+      if (mobileExists) {
+        failedRows.push({
+          row: i + 1,
+          errors: ["Duplicate mobile number"],
+        });
+        continue;
+      }
+
+      // 🔹 Convert password to string and hash it
+      row.password = await bcrypt.hash(String(row.password), 10);
+
+      // 🔹 Validate row using Joi (after hashing password)
+      const { error, value } = mspValidationSchema.validate(row, { abortEarly: false });
+
+      if (error) {
+        failedRows.push({
+          row: i + 1,
+          errors: error.details.map((e) => e.message),
+        });
+        continue; // skip invalid row
+      }
+
+      // 🔹 Prepare row for insertion
+      toInsert.push({
+        ...value,
+        credits: row.credits || 0,
+        current_plan: row.current_plan || "",
+        subscription_valid_till: row.subscription_valid_till || null,
+      });
+    }
+
+    let result;
+    try {
+      result = await msp_data.insertMany(toInsert, { ordered: false }); // unordered allows skipping duplicates
+    } catch (err) {
+      // Handle duplicate errors
+      if (err.code === 11000 && err.writeErrors) {
+        err.writeErrors.forEach((e) => {
+          failedRows.push({
+            row: e.index + 1,
+            errors: ["Duplicate email"],
+          });
+        });
+      } else {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Server error" });
+      }
+    }
+
+    const savedCount = result ? result.length : 0;
+    const failedCount = failedRows.length;
+
+    return res.status(200).json({
+      success: true,
+      savedCount,
+      failedCount,
+      failedRows,
+    });
+  } catch (error) {
+    console.error("Bulk upload error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+

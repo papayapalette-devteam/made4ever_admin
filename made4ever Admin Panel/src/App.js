@@ -44,6 +44,7 @@ import Allprofiles from "./components/Admin/All_Profiles/view_all_profile";
 import Editprofile from "./components/Admin/All_Profiles/edit_profile";
 import AddBlog from "./components/Admin/Blog/add_blog";
 import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
+import Settings  from "./components/Admin/Settings/settings";
 
 
 
@@ -146,6 +147,12 @@ function App() {
         <Route path="/recycle-bin" element={<RecycleBin/>}></Route>
 
       {/*============================== Recycle Bin profile routes end==================================== */}
+
+      {/*=============================== settings routes start============================ */}
+
+        <Route path="/settings" element={<Settings/>}></Route>
+
+      {/*============================== settings routes end==================================== */}
     </Route>
 
       </Routes>

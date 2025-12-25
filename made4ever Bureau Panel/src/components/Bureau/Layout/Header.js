@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../images/Made4Ever New Logo (600 x 300 px) (1).png";
 import { User, LogOut, Settings, CreditCard } from "lucide-react";
 import Swal from "sweetalert2";
+import EditMspProfileModal from "./edit_profije";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -12,6 +13,7 @@ const Header = () => {
 const user = JSON.parse(localStorage.getItem('user'));
 
 const navigate=useNavigate()
+
 
 
   const navigation = [
@@ -51,6 +53,7 @@ const navigate=useNavigate()
     });
   };
 
+  const [openEdit, setOpenEdit] = useState(false);
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -117,7 +120,7 @@ const navigate=useNavigate()
                   </div>
                   <ul className="text-sm text-gray-700 space-y-1">
                     <li>
-                      <button className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-50 transition">
+                      <button onClick={()=>setOpenEdit(true)} className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-50 transition">
                         <User className="h-4 w-4 text-gray-500" />
                         <span>Profile</span>
                       </button>
@@ -213,6 +216,7 @@ const navigate=useNavigate()
           </div>
         </div>
       )}
+  <EditMspProfileModal open={openEdit} handleClose={() => setOpenEdit(false)} mspData={user}/>
     </header>
   );
 };

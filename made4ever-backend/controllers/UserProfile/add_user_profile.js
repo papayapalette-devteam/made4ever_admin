@@ -83,7 +83,6 @@ const getAllUserProfiles = async (req, res) => {
   try {
     const { bureau, page = 1, limit = 10 } = req.query;
 
-
     // Build filter condition
     const filter = {};
     filter.IsDeleted=false

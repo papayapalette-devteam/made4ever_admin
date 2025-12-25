@@ -85,8 +85,10 @@ function Msp() {
 
   useEffect(() => {
     getall_msp_data();
-  }, []);
+  }, [paginationModel]);
 
+  console.log(All_Msp_Data);
+  
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
 
@@ -103,11 +105,66 @@ function Msp() {
   const onEdit = (row) => {
     setMsp(row)
   };
-console.log(Msp);
 
-  const onDelete = () => {
-    alert("delete");
-  };
+
+const onDelete = async (_id) => {
+  if (!_id) return;
+
+  const confirm = await Swal.fire({
+    title: "Are you sure?",
+    text: "This MSP will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d",
+    confirmButtonText: "Yes, delete it!",
+    customClass: {
+      popup: "small-swal-popup",
+      confirmButton: "my-swal-button",
+      cancelButton: "my-swal-button"
+    },
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  try {
+    setloading(true);
+
+    await api.delete(`api/msp/delete-msp/${_id}`);
+
+    Swal.fire({
+      icon: "success",
+      title: "MSP Deleted",
+      text: "MSP deleted successfully",
+      showConfirmButton: true,
+      customClass: {
+        popup: "small-swal-popup",
+        confirmButton: "my-swal-button",
+        cancelButton: "my-swal-button",
+      },
+    }).then(() => {
+      window.location.reload(); // optional
+    });
+
+  } catch (error) {
+    console.error("❌ API Error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Delete Failed",
+      text: error?.response?.data?.message || "Something went wrong",
+      showConfirmButton: true,
+      customClass: {
+        confirmButton: "my-swal-button",
+      },
+    });
+
+  } finally {
+    setloading(false);
+  }
+};
+
+
 
   const columns = [
     {
@@ -117,7 +174,7 @@ console.log(Msp);
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
     {
-      field: "id",
+      field: "images",
       headerName: "Id",
       flex: 1,
       renderCell: (params) => (
@@ -141,14 +198,9 @@ console.log(Msp);
     },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
-    { field: "md5_password", headerName: "MD5 Password", flex: 2 },
     { field: "password", headerName: "MSP Password", flex: 2 },
     { field: "mobile_number", headerName: "Phone", flex: 2 },
-    {
-      field: "verification_status",
-      headerName: "Email Verification Status",
-      flex: 1.5,
-    },
+    { field: "credits", headerName: "Credits", flex: 2 },
     { field: "createdAt", headerName: "Add Date", flex: 1.5 },
     { field: "total_match", headerName: "Total Match", flex: 1.5 },
 
@@ -181,7 +233,7 @@ console.log(Msp);
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDelete(params.row._id);
+                  onDelete(params.row.id);
                   handleCloseMenu();
                 }}
               >
@@ -204,10 +256,23 @@ console.log(Msp);
     },
   ];
 
-  const rows = All_Msp_Data?.map((doc, index) => ({
-    id: doc._id || index,
-    ...doc,
-  }));
+const rows = All_Msp_Data?.map((doc) => ({
+  id: doc._id,        // DataGrid unique id
+  name: doc.name,
+  email: doc.email,
+  mobile_number: doc.mobile_number,
+  address: doc.address,
+  password:doc.password,
+  images: doc.id,     // rename your image array
+  createdAt:doc.createdAt,
+  credits: doc.credits,
+  current_plan: doc.current_plan,
+  subscription_valid_till: doc.subscription_valid_till,
+}));
+
+
+
+  
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);

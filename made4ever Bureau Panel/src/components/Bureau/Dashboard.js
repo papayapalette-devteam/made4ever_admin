@@ -65,7 +65,7 @@ const Dashboard = () => {
     {
       try {
   
-        const resp=await api.get(`api/user/get-all-profile?bureau=${user.id}`);
+        const resp=await api.get(`api/user/get-all-profile?bureau=${user._id}`);
         settotal_profile(resp.data.total)
         
       } catch (error) {

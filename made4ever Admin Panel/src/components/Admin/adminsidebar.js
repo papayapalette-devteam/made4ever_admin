@@ -27,7 +27,8 @@ import {
   MdMap,
   MdManageAccounts  ,
   MdEditNote ,
-  MdDeleteOutline  
+  MdDeleteOutline,
+  MdOutlineSettings 
 } from "react-icons/md";
 
 import {
@@ -178,6 +179,11 @@ const menuItems = [
     icon: <MdOutlinePayments size={20} />,
     label: "Payment Details",
     path: "/payment-details",
+  },
+  {
+    icon: <MdOutlineSettings size={20} />,
+    label: "Settings",
+    path: "/settings",
   },
   { icon: <MdLogout size={20} />, label: "Logout" },
 ];
