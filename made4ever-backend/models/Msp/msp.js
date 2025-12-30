@@ -8,7 +8,7 @@ const msp_data = new mongoose.Schema(
     mobile_number: { type: Number},
     registered_business_name: { type: String},
     address:{type:String},
-    id:{type:Array},
+    images:{type:Array},
 
         // ⭐ New field for credits
     credits: { type: Number, default: 0 }, 

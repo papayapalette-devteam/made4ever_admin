@@ -28,7 +28,7 @@ const mspValidationSchema = Joi.object({
     "string.empty": "Address is required",
   }),
 
-  id: Joi.array().items(
+  images: Joi.array().items(
     Joi.string().required().messages({
       "string.empty": "Image URL or path is required",
     })

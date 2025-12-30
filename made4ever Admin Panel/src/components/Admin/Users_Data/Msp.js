@@ -38,6 +38,7 @@ import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 import "../admincss/common_config.css";
 import UniqueLoader from "../loader";
+import ProfileModal from "../../other component/msp_profile_view";
 
 function Msp() {
   const [Msp, setMsp] = useState({
@@ -48,7 +49,7 @@ function Msp() {
     mobile_number: "",
     registered_business_name: "",
     address: "",
-    id: [],
+    images: [],
   });
 
   const [loading, setloading] = useState(false);
@@ -59,10 +60,12 @@ function Msp() {
     pageSize: 10,
   });
 
+  const [searchText, setSearchText] = useState("");
   const [All_Msp_Data, setAll_Msp_Data] = useState([]);
   const getall_msp_data = async (
     pageNumber = paginationModel.page,
-    limitNumber = paginationModel.pageSize
+    limitNumber = paginationModel.pageSize,
+    
   ) => {
     try {
       setloading(true);
@@ -72,7 +75,15 @@ function Msp() {
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
 
+        // 🔍 Search
+    if (searchText) {
+      params.append("search", searchText);
+    }
+
+
       const resp = await api.get(`api/msp/Getmsp?${params.toString()}`);
+      console.log(resp);
+      
 
       setAll_Msp_Data(resp.data.msp);
       setRowCount(resp.data.total);
@@ -85,7 +96,7 @@ function Msp() {
 
   useEffect(() => {
     getall_msp_data();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
   console.log(All_Msp_Data);
   
@@ -175,7 +186,7 @@ const onDelete = async (_id) => {
     },
     {
       field: "images",
-      headerName: "Id",
+      headerName: "Image",
       flex: 1,
       renderCell: (params) => (
         <a
@@ -249,6 +260,15 @@ const onDelete = async (_id) => {
             Edit Credit
           </MenuItem>
 
+               <MenuItem
+                onClick={() => {
+                  openModal(params.row);
+                  handleCloseMenu();
+                }}
+              >
+                View Profile
+              </MenuItem>
+
             </Menu>
           )}
         </>
@@ -256,18 +276,9 @@ const onDelete = async (_id) => {
     },
   ];
 
-const rows = All_Msp_Data?.map((doc) => ({
-  id: doc._id,        // DataGrid unique id
-  name: doc.name,
-  email: doc.email,
-  mobile_number: doc.mobile_number,
-  address: doc.address,
-  password:doc.password,
-  images: doc.id,     // rename your image array
-  createdAt:doc.createdAt,
-  credits: doc.credits,
-  current_plan: doc.current_plan,
-  subscription_valid_till: doc.subscription_valid_till,
+const rows = All_Msp_Data?.map((doc,index) => ({
+    id: doc._id || index,
+    ...doc,
 }));
 
 
@@ -293,10 +304,8 @@ const rows = All_Msp_Data?.map((doc) => ({
       const res = await api.post("api/upload/upload-files", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(res);
-      
 
-      setMsp({ ...Msp, id: res.data.urls });
+      setMsp({ ...Msp, images: res.data.urls });
     } catch (error) {
       console.error("Upload failed:", error);
       alert("Upload failed!");
@@ -452,7 +461,14 @@ const handleUpdateCredit = async (BureauId, credit) => {
   }
 };
 
+// profile modal
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
+  const openModal = (doc) => {
+    setSelectedUser(doc);
+    setShowModal(true);
+  };
 
   return (
     <div>
@@ -542,8 +558,7 @@ const handleUpdateCredit = async (BureauId, credit) => {
                   <label className="form-label">Upload Your Id</label>
                   <TextField
                     type="file"
-                    name="id"
-                    placeholder="Mobile Number"
+                    name="images"
                     defaultValue={Msp.id}
                     onChange={handleFileChange}
                     size="small"
@@ -566,8 +581,19 @@ const handleUpdateCredit = async (BureauId, credit) => {
               </Button>
             </Paper>
 
+  <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+<TextField
+  size="small"
+  placeholder="Search MSP (Name / Email / Mobile)"
+  value={searchText}
+  onChange={(e) => setSearchText(e.target.value)}
+  sx={{ width: 300, mb: 2 }}
+/>
+</Paper>
+
+
             {/* Table */}
-            <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 1 }}>
               <div style={{ width: "100%", overflowX: "auto" }}>
                 <DataGrid
                   className="custom-data-grid"
@@ -660,6 +686,12 @@ const handleUpdateCredit = async (BureauId, credit) => {
   </DialogActions>
 </Dialog>
 
+{/* profile modal */}
+                <ProfileModal
+                  show={showModal}
+                  onHide={() => setShowModal(false)}
+                  data={selectedUser}
+                />
 
 
       {loading && (

@@ -123,17 +123,17 @@ const sendToServer = async (excelData, chunkSize = 10) => {
         },
       }).then(() => window.location.reload());
     } 
-    // else {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Upload Failed ❌",
-    //     text: "All records failed validation or already exist.",
-    //     customClass: {
-    //       popup: "small-swal-popup",
-    //       confirmButton: "my-swal-button",
-    //     },
-    //   }).then(() => window.location.reload());
-    // }
+    else {
+      Swal.fire({
+        icon: "error",
+        title: "Upload Failed ❌",
+        text: "All records failed validation or already exist.",
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+        },
+      }).then(() => window.location.reload());
+    }
 
   } catch (err) {
     Swal.fire({

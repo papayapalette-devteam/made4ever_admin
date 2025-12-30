@@ -19,7 +19,7 @@ exports.add_msp = async (req, res) => {
       mobile_number,
       registered_business_name,
       address,
-      id,
+      images,
     } = req.body;
 
     const exitingprofile = await msp_data.findOne({ email: email });
@@ -36,7 +36,7 @@ exports.add_msp = async (req, res) => {
       mobile_number,
       registered_business_name,
       address,
-      id,
+      images,
     });
 
   
@@ -55,21 +55,43 @@ exports.add_msp = async (req, res) => {
 
 exports.get_msp = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 ,search = ""} = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     // Fetch total count for pagination
     const total = await msp_data.countDocuments();
 
+     // 🔍 Search filter
+const filter = search
+  ? {
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { registered_business_name: { $regex: search, $options: "i" } },
+
+        // 🔥 Partial mobile number search
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$mobile_number" },
+              regex: search,
+            },
+          },
+        },
+      ],
+    }
+  : {};
+
+
+
     const exitingmsp = await msp_data
-      .find()
+      .find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
 
-    res
-      .status(200)
+    res.status(200)
       .send({
         message: "Msp Profile found successfully",
         msp: exitingmsp,
@@ -101,7 +123,7 @@ exports.update_msp = async (req, res) => {
       mobile_number,
       registered_business_name,
       address,
-      id,
+      images,
     } = req.body;
 
     // email conflict check
@@ -123,7 +145,7 @@ exports.update_msp = async (req, res) => {
       mobile_number,
       registered_business_name,
       address,
-      id,
+      images,
     };
 
     if (password) {
@@ -299,7 +321,7 @@ exports.uploadBulkMsp = async (req, res) => {
 
       // 🔹 Prepare row for insertion
       toInsert.push({
-        ...value,
+        ...row,
         credits: row.credits || 0,
         current_plan: row.current_plan || "",
         subscription_valid_till: row.subscription_valid_till || null,
@@ -338,4 +360,5 @@ exports.uploadBulkMsp = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 

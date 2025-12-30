@@ -4,6 +4,8 @@ import { Modal, Button } from "react-bootstrap";
 const ProfileModal = ({ show, onHide, data }) => {
   if (!data) return null;
 
+  console.log(data);
+  
   
   return (
     <Modal show={show} onHide={onHide} centered size="lg">
@@ -20,7 +22,7 @@ const ProfileModal = ({ show, onHide, data }) => {
               {/* LEFT (IMAGE) */}
               <div className="col-md-4 text-center">
                 <img
-                  src={data.id?.[0]}
+                  src={data.images?.[0]}
                   alt="profile"
                   className="img-fluid rounded"
                 />

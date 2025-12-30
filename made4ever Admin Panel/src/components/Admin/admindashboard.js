@@ -3,15 +3,6 @@ import "../Admin/admincss/admindashboard.css";
 import "../Admin/admincss/common_config.css";
 import Adminheader from "./adminheader";
 import Adminsidebar from "./adminsidebar";
-import continenticon from "../Admin/images/continent-svgrepo-com 1 (2).png";
-import countryflagicon from "../Admin/images/country-flag-flag02-svgrepo-com 1 (2).png";
-import countryflagicon1 from "../Admin/images/country-flag-flags-svgrepo-com 1 (1).png";
-import partnerhospitalicon from "../Admin/images/building-healthy-hospital-svgrepo-com 1.png";
-import medicalcollegesicon from "../Admin/images/university-svgrepo-com 1.png";
-import docotorsicon from "../Admin/images/doctor-m-svgrepo-com 1.png";
-import medicalassociationicon from "../Admin/images/medical-kit-svgrepo-com 1.png";
-import patientreferralsicon from "../Admin/images/online-health-doctor-patient-video-consultation-medical-2-svgrepo-com 1.png";
-import deleteicon from "../Admin/images/delete-svgrepo-com 1.png";
 import api from "../../api";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import {
