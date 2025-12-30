@@ -51,15 +51,15 @@ const createUserProfile = async (req, res) => {
     }
 
     // 🧠 If no _id → Create new profile
-    const existingUser = await UserProfile.findOne({
-      "PersonalDetails.MobileNumber": mobile,
-    });
+    // const existingUser = await UserProfile.findOne({
+    //   "PersonalDetails.MobileNumber": MobileNumber,
+    // });
 
-    if (existingUser) {
-      return res.status(400).json({
-        error: `A user with mobile number ${mobile} already exists`,
-      });
-    }
+    // if (existingUser) {
+    //   return res.status(400).json({
+    //     error: `A user with mobile number ${mobile} already exists`,
+    //   });
+    // }
 
     // ✅ Create new user
     const newUser = new UserProfile(profileData);

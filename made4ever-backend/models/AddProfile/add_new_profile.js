@@ -107,7 +107,7 @@ const UserProfileSchema = new mongoose.Schema(
     EducationDetails: { type: EducationDetailsSchema, required: true },
     ContactDetails: { type: ContactDetailsSchema, required: true },
     PartnerPrefrences: { type: PartnerPrefrencesSchema, required: true },
-    Upload: { type: UploadSchema, required: true },
+    Upload: { type: UploadSchema, required: false },
     PropertyDetails: { type: PropertyDetailsSchema, required: true },
     IsActive: { type: Boolean, default: true },
     IsDeleted: {type: Boolean,default: false},

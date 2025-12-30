@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Plus,
   Search,
@@ -208,6 +208,108 @@ const toggle_user = async (id) => {
 };
 
 
+const [exportLoading, setExportLoading] = useState(false);
+
+const exportUserProfiles = async () => {
+  try {
+    setExportLoading(true);
+
+    let query = "";
+    if (user) {
+      query = `?bureauId=${user._id}`;
+    }
+
+    const response = await api.get(
+      `/api/user/export-excel${query}`,
+      {
+        responseType: "blob", // 🔴 required
+      }
+    );
+    console.log(response);
+    
+
+    const blob = new Blob([response.data], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "user-profiles.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Export failed:", error);
+    alert("Failed to export data");
+  } finally {
+    setExportLoading(false);
+  }
+};
+
+const fileInputRef = useRef(null);
+
+const [loading_import, setloading_import] = useState(false);
+
+ const importFromExcel = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setloading_import(true);
+      const response = await api.post("/api/user/bulk-upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+       Swal.fire({
+        icon: "success",
+        title: "Data Imported!",
+        text:  "Data uploaded successfully!",
+        confirmButtonText: "OK",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      }).then(()=>
+      {
+        window.location.reload()
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed");
+       Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text:  "Data Upload failed!",
+        confirmButtonText: "OK",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      }).then(()=>
+      {
+        window.location.reload()
+      });
+    } finally {
+      setloading_import(false);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    importFromExcel(file);
+  };
+
+
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -233,6 +335,37 @@ const toggle_user = async (id) => {
             </button>
           </div>
         </div>
+
+      <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full mt-4 mb-2 sm:mt-0 gap-2">
+ <button
+        onClick={handleButtonClick}
+        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center justify-center w-full sm:w-auto"
+        disabled={loading}
+      >
+        <Plus className="mr-2 h-4 w-4" />
+        {loading_import?"Uploading Data...":"Import From Excel"}
+      </button>
+
+      <input
+        type="file"
+        accept=".xlsx,.xls"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+
+      
+
+  <button
+    onClick={() => exportUserProfiles()}
+    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center justify-center w-full sm:w-auto"
+  >
+    <Plus className="mr-2 h-4 w-4" />
+    
+     {exportLoading?"Exporting Data...":"Export To Excel"}
+  </button>
+</div>
+
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">

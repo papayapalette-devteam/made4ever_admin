@@ -153,6 +153,62 @@ const sendToServer = async (excelData, chunkSize = 10) => {
 
 
 
+const [loading_import, setloading_import] = useState(false);
+
+ const importFromExcel = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setloading_import(true);
+      const response = await api.post("/api/user/bulk-upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+       Swal.fire({
+        icon: "success",
+        title: "Data Imported!",
+        text:  `${response.data.insertedCount} Data uploaded successfully!`,
+        confirmButtonText: "OK",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      }).then(()=>
+      {
+        window.location.reload()
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed");
+       Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text:  "Data Upload failed!",
+        confirmButtonText: "OK",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      }).then(()=>
+      {
+        window.location.reload()
+      });
+    } finally {
+      setloading_import(false);
+    }
+  };
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    importFromExcel(file);
+  };
+
+
+
 
   return (
     <div>
@@ -224,7 +280,7 @@ const sendToServer = async (excelData, chunkSize = 10) => {
   <input
     type="file"
     accept=".xlsx,.xls,.csv"
-    // onChange={handleFile}
+    onChange={handleFileChange}
     className="hidden"
   />
 </label>
