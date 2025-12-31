@@ -118,7 +118,7 @@ const userProfileSchema = Joi.object({
   EducationDetails: educationDetailsSchema.required(),
   ContactDetails: contactDetailsSchema.required(),
   PartnerPrefrences: partnerPrefrencesSchema.required(),
-  Upload: uploadSchema.required(),
+  Upload: uploadSchema.optional(),
   PropertyDetails: propertyDetailsSchema.required(),
   IsActive: Joi.boolean().default(true),
   IsDeleted: Joi.boolean().default(false),

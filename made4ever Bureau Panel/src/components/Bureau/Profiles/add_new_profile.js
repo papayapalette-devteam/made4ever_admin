@@ -3201,9 +3201,9 @@ useEffect(() => {
                       {loading === "ProfilePhoto" && (
                         <CircularProgress size={24} />
                       )}
-                      {user_profile.Upload.ProfilePhoto && (
+                      {user_profile?.Upload?.ProfilePhoto && (
                         <img
-                          src={user_profile.Upload.ProfilePhoto}
+                          src={user_profile?.Upload?.ProfilePhoto}
                           alt="Profile Preview"
                           className="mx-auto mt-3 w-24 h-24  object-cover "
                         />
@@ -3246,7 +3246,7 @@ useEffect(() => {
                       placeholder="Enter ID Number"
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="IdentityNumber"
-                      value={user_profile.Upload.IdentityNumber}
+                      value={user_profile?.Upload?.IdentityNumber}
                       onChange={(e) =>
                         handleChange("Upload", "IdentityNumber", e.target.value)
                       }
@@ -3277,7 +3277,7 @@ useEffect(() => {
                     )}
                     {user_profile?.Upload?.IdentityImage && (
                       <img
-                        src={user_profile.Upload.IdentityImage}
+                        src={user_profile?.Upload?.IdentityImage}
                         alt="Identity Preview"
                         className="mx-auto mt-3 w-24 h-24  object-cover "
                       />

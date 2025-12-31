@@ -207,6 +207,7 @@ const onDelete = async (_id) => {
         </a>
       ),
     },
+    { field: "_id", headerName: "Id", flex: 2 },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "password", headerName: "MSP Password", flex: 2 },

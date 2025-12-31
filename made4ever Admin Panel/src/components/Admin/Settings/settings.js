@@ -183,7 +183,6 @@ const [loading_import, setloading_import] = useState(false);
       });
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Upload failed");
        Swal.fire({
         icon: "error",
         title: "Failed!",
@@ -275,7 +274,7 @@ const [loading_import, setloading_import] = useState(false);
 
             <label className="mt-6 w-full flex cursor-pointer items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 px-5 py-3 text-white font-semibold shadow-lg hover:from-emerald-700 hover:to-green-600 transition-all duration-300">
   
-  📊 Upload Excel File
+  {loading_import ? <CircularProgress/> : " 📊 Upload Excel File"}
 
   <input
     type="file"
