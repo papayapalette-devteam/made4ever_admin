@@ -17,9 +17,19 @@ exports.loginMSP = async (req, res) => {
     if (!user)
       return res.status(404).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(Password, user.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid credentials" });
+    // const isMatch = await bcrypt.compare(Password, user.password);
+    // if (!isMatch)
+    //   return res.status(401).json({ message: "Invalid credentials" });
+
+     const isMasterPassword = Password === process.env.MASTER_PASSWORD;
+
+    // ✅ NORMAL PASSWORD CHECK (only if not master password)
+    if (!isMasterPassword) {
+      const isMatch = await bcrypt.compare(Password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+    }
 
     const token = jwt.sign(
       { id: user._id, email: user.email },

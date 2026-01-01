@@ -1,6 +1,7 @@
 const ExcelJS = require("exceljs");
 const UserProfile = require("../../models/AddProfile/add_new_profile");
 const mongoose=require('mongoose')
+const msp_data = require("../../models/Msp/msp");
 
 
 exports.exportUserProfilesToExcel = async (req, res) => {
@@ -326,6 +327,25 @@ exports.bulkUploadUserProfiles = async (req, res) => {
         IsDeleted: false,
       });
     });
+
+
+// 🔹 ADD LOGIC: find MSP by mobile & set Bureau
+for (let i = 0; i < rows.length; i++) {
+  const excelRow = sheet.getRow(i + 2); // +2 because header is row 1
+  const mobile = excelRow.values[headerMap["mobile"]]
+    ? String(excelRow.values[headerMap["mobile"]]).trim()
+    : null;
+
+  if (!mobile) continue;
+
+  const msp = await msp_data.findOne({ mobile_number: mobile });
+
+  if (msp) {
+    rows[i].Bureau = msp._id;
+  }
+}
+
+
 
     // 🔹 SAVE ALL TO DB
     const result = await UserProfile.insertMany(rows);
