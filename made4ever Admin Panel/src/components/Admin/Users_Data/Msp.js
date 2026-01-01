@@ -60,12 +60,20 @@ function Msp() {
     pageSize: 10,
   });
 
+  const pageSizeOptions = [10, 25, 50, 100];
+   const handlePageSizeChange = (event) => {
+    setPaginationModel((prev) => ({
+      ...prev,
+      pageSize: event.target.value,
+      page: 0, // reset page to 0 whenever limit changes
+    }));
+  };
+
   const [searchText, setSearchText] = useState("");
   const [All_Msp_Data, setAll_Msp_Data] = useState([]);
   const getall_msp_data = async (
     pageNumber = paginationModel.page,
-    limitNumber = paginationModel.pageSize,
-    
+    limitNumber = paginationModel.pageSize
   ) => {
     try {
       setloading(true);
@@ -75,15 +83,13 @@ function Msp() {
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
 
-        // 🔍 Search
-    if (searchText) {
-      params.append("search", searchText);
-    }
-
+      // 🔍 Search
+      if (searchText) {
+        params.append("search", searchText);
+      }
 
       const resp = await api.get(`api/msp/Getmsp?${params.toString()}`);
       console.log(resp);
-      
 
       setAll_Msp_Data(resp.data.msp);
       setRowCount(resp.data.total);
@@ -96,10 +102,10 @@ function Msp() {
 
   useEffect(() => {
     getall_msp_data();
-  }, [paginationModel,searchText]);
+  }, [paginationModel, searchText]);
 
   console.log(All_Msp_Data);
-  
+
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
 
@@ -114,68 +120,63 @@ function Msp() {
   };
 
   const onEdit = (row) => {
-    setMsp(row)
+    setMsp(row);
   };
 
+  const onDelete = async (_id) => {
+    if (!_id) return;
 
-const onDelete = async (_id) => {
-  if (!_id) return;
-
-  const confirm = await Swal.fire({
-    title: "Are you sure?",
-    text: "This MSP will be permanently deleted!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#6c757d",
-    confirmButtonText: "Yes, delete it!",
-    customClass: {
-      popup: "small-swal-popup",
-      confirmButton: "my-swal-button",
-      cancelButton: "my-swal-button"
-    },
-  });
-
-  if (!confirm.isConfirmed) return;
-
-  try {
-    setloading(true);
-
-    await api.delete(`api/msp/delete-msp/${_id}`);
-
-    Swal.fire({
-      icon: "success",
-      title: "MSP Deleted",
-      text: "MSP deleted successfully",
-      showConfirmButton: true,
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This MSP will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
       customClass: {
         popup: "small-swal-popup",
         confirmButton: "my-swal-button",
         cancelButton: "my-swal-button",
       },
-    }).then(() => {
-      window.location.reload(); // optional
     });
 
-  } catch (error) {
-    console.error("❌ API Error:", error);
+    if (!confirm.isConfirmed) return;
 
-    Swal.fire({
-      icon: "error",
-      title: "Delete Failed",
-      text: error?.response?.data?.message || "Something went wrong",
-      showConfirmButton: true,
-      customClass: {
-        confirmButton: "my-swal-button",
-      },
-    });
+    try {
+      setloading(true);
 
-  } finally {
-    setloading(false);
-  }
-};
+      await api.delete(`api/msp/delete-msp/${_id}`);
 
+      Swal.fire({
+        icon: "success",
+        title: "MSP Deleted",
+        text: "MSP deleted successfully",
+        showConfirmButton: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+          cancelButton: "my-swal-button",
+        },
+      }).then(() => {
+        window.location.reload(); // optional
+      });
+    } catch (error) {
+      console.error("❌ API Error:", error);
 
+      Swal.fire({
+        icon: "error",
+        title: "Delete Failed",
+        text: error?.response?.data?.message || "Something went wrong",
+        showConfirmButton: true,
+        customClass: {
+          confirmButton: "my-swal-button",
+        },
+      });
+    } finally {
+      setloading(false);
+    }
+  };
 
   const columns = [
     {
@@ -251,17 +252,17 @@ const onDelete = async (_id) => {
               >
                 Delete
               </MenuItem>
-           <MenuItem
-            onClick={() => {
-              setSelectedRow(params.row);
-              setOpenCreditModal(true);
-              handleCloseMenu();
-            }}
-          >
-            Edit Credit
-          </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setSelectedRow(params.row);
+                  setOpenCreditModal(true);
+                  handleCloseMenu();
+                }}
+              >
+                Edit Credit
+              </MenuItem>
 
-               <MenuItem
+              <MenuItem
                 onClick={() => {
                   openModal(params.row);
                   handleCloseMenu();
@@ -270,17 +271,14 @@ const onDelete = async (_id) => {
                 View Profile
               </MenuItem>
 
-<MenuItem
-  component="a"
-  href="https://made4ever-admin-dkjf.vercel.app/"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Go To MSP
-</MenuItem>
-
-
-
+              <MenuItem
+                component="a"
+                href="https://made4ever-admin-dkjf.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Go To MSP
+              </MenuItem>
             </Menu>
           )}
         </>
@@ -288,14 +286,10 @@ const onDelete = async (_id) => {
     },
   ];
 
-const rows = All_Msp_Data?.map((doc,index) => ({
+  const rows = All_Msp_Data?.map((doc, index) => ({
     id: doc._id || index,
     ...doc,
-}));
-
-
-
-  
+  }));
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
@@ -354,126 +348,116 @@ const rows = All_Msp_Data?.map((doc,index) => ({
     });
   };
 
- 
-  
   //========================== post api for create msp =============================
 
   const add_msp_data = async () => {
-  try {
-    setloading(true);
+    try {
+      setloading(true);
 
-    // extract confirm_password & _id
-    const { confirm_password, _id, ...payload } = Msp;
+      // extract confirm_password & _id
+      const { confirm_password, _id, ...payload } = Msp;
 
-    // password check (only when adding or changing password)
-    if (!_id && Msp.password !== confirm_password) {
+      // password check (only when adding or changing password)
+      if (!_id && Msp.password !== confirm_password) {
+        Swal.fire({
+          icon: "error",
+          title: "Password Error",
+          text: "Password And Confirm Password Not Matched...",
+          showConfirmButton: true,
+          customClass: {
+            popup: "small-swal-popup",
+            confirmButton: "my-swal-button",
+          },
+        });
+        return;
+      }
+
+      let resp;
+
+      if (_id) {
+        // 🔄 UPDATE
+        resp = await api.put(`api/msp/update-msp/${_id}`, payload);
+      } else {
+        // ➕ ADD
+        resp = await api.post("api/msp/Savemsp", payload);
+      }
+
       Swal.fire({
-        icon: "error",
-        title: "Password Error",
-        text: "Password And Confirm Password Not Matched...",
+        icon: "success",
+        title: _id ? "MSP Updated" : "MSP Added",
+        text: _id ? "MSP Updated Successfully..." : "MSP Added Successfully...",
         showConfirmButton: true,
         customClass: {
           popup: "small-swal-popup",
           confirmButton: "my-swal-button",
         },
+      }).then(() => {
+        window.location.reload(); // optional
       });
-      return;
+    } catch (error) {
+      console.error("❌ API Error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error Occurred",
+        text: error?.response?.data?.message || "Something went wrong",
+        showConfirmButton: true,
+        customClass: {
+          confirmButton: "my-swal-button",
+        },
+      });
+    } finally {
+      setloading(false);
     }
+  };
 
-    let resp;
+  // update credit
 
-    if (_id) {
-      // 🔄 UPDATE
-      resp = await api.put(`api/msp/update-msp/${_id}`, payload);
-    } else {
-      // ➕ ADD
-      resp = await api.post("api/msp/Savemsp", payload);
+  const [openCreditModal, setOpenCreditModal] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [credit, setCredit] = useState(0);
+
+  useEffect(() => {
+    if (selectedRow) {
+      setCredit(selectedRow?.credits || 0);
     }
+  }, [selectedRow]);
 
-    Swal.fire({
-      icon: "success",
-      title: _id ? "MSP Updated" : "MSP Added",
-      text: _id
-        ? "MSP Updated Successfully..."
-        : "MSP Added Successfully...",
-      showConfirmButton: true,
-      customClass: {
-        popup: "small-swal-popup",
-        confirmButton: "my-swal-button",
-      },
-    }).then(() => {
-      window.location.reload(); // optional
-    });
+  const handleUpdateCredit = async (BureauId, credit) => {
+    try {
+      setloading(true);
+      const resp = await api.put(`api/msp/update-credit/${BureauId}`, {
+        credit,
+      });
 
-  } catch (error) {
-    console.error("❌ API Error:", error);
+      Swal.fire({
+        icon: "success",
+        title: "Credit Updated",
+        text: "MSP Credit Updated Successfully...",
+        showConfirmButton: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+        },
+      }).then(() => {
+        window.location.reload(); // optional
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error Occurred",
+        text: error?.response?.data?.message || "Something went wrong",
+        showConfirmButton: true,
+        customClass: {
+          confirmButton: "my-swal-button",
+        },
+      });
+    } finally {
+      setloading(false);
+    }
+  };
 
-    Swal.fire({
-      icon: "error",
-      title: "Error Occurred",
-      text: error?.response?.data?.message || "Something went wrong",
-      showConfirmButton: true,
-      customClass: {
-        confirmButton: "my-swal-button",
-      },
-    });
-
-  } finally {
-    setloading(false);
-  }
-};
-
-// update credit
-
-const [openCreditModal, setOpenCreditModal] = useState(false);
-const [selectedRow, setSelectedRow] = useState(null);
-const [credit, setCredit] = useState(0);
-
-useEffect(() => {
-  if (selectedRow) {
-    setCredit(selectedRow?.credits || 0);
-  }
-}, [selectedRow]);
-
-
-const handleUpdateCredit = async (BureauId, credit) => {
-  try {
-     setloading(true);
-    const resp=await api.put(`api/msp/update-credit/${BureauId}`, {
-      credit,
-    });
-
-     Swal.fire({
-      icon: "success",
-      title: "Credit Updated",
-      text: "MSP Credit Updated Successfully...",
-      showConfirmButton: true,
-      customClass: {
-        popup: "small-swal-popup",
-        confirmButton: "my-swal-button",
-      },
-    }).then(() => {
-      window.location.reload(); // optional
-    });
-
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Error Occurred",
-      text: error?.response?.data?.message || "Something went wrong",
-      showConfirmButton: true,
-      customClass: {
-        confirmButton: "my-swal-button",
-      },
-    });
-  }
-  finally
-  {
-     setloading(false);
-  }
-};
-
-// profile modal
+  // profile modal
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -563,7 +547,6 @@ const handleUpdateCredit = async (BureauId, credit) => {
                     onChange={handlechange}
                     size="small"
                   />
-                   
                 </FormControl>
 
                 <FormControl fullWidth size="small">
@@ -593,19 +576,36 @@ const handleUpdateCredit = async (BureauId, credit) => {
               </Button>
             </Paper>
 
-  <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
-<TextField
-  size="small"
-  placeholder="Search MSP (Name / Email / Mobile)"
-  value={searchText}
-  onChange={(e) => setSearchText(e.target.value)}
-  sx={{ width: 300, mb: 2 }}
-/>
-</Paper>
-
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search MSP (Name / Email / Mobile)"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
 
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 1 }}>
+
+                       <div style={{ marginBottom: 16, display: "flex", alignItems: "center" }}>
+        <FormControl size="small">
+          <InputLabel>Rows per page</InputLabel>
+          <Select
+            value={paginationModel.pageSize}
+            label="Rows per page"
+            onChange={handlePageSizeChange}
+          >
+            {pageSizeOptions.map((size) => (
+              <MenuItem key={size} value={size}>
+                {size}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+
               <div style={{ width: "100%", overflowX: "auto" }}>
                 <DataGrid
                   className="custom-data-grid"
@@ -622,89 +622,88 @@ const handleUpdateCredit = async (BureauId, credit) => {
                   }}
                 />
               </div>
+      
+      
             </Paper>
           </div>
         </div>
       </div>
 
-  {/* modal for update credit */}
+      {/* modal for update credit */}
 
-  <Dialog
-  open={openCreditModal}
-  onClose={() => setOpenCreditModal(false)}
-  maxWidth="xs"
-  fullWidth
->
-  <DialogTitle
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      fontWeight: 600
-    }}
-  >
-    Edit Bureau Credit
-    <IconButton onClick={() => setOpenCreditModal(false)}>
-      <CloseIcon />
-    </IconButton>
-  </DialogTitle>
-
-  <DialogContent>
-    <Typography variant="body2" color="text.secondary" mb={2}>
-      Credit can be updated in multiples of 5
-    </Typography>
-
-    <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      gap={3}
-      mt={3}
-    >
-      <Button
-        variant="outlined"
-        onClick={() => setCredit((prev) => Math.max(0, prev - 5))}
+      <Dialog
+        open={openCreditModal}
+        onClose={() => setOpenCreditModal(false)}
+        maxWidth="xs"
+        fullWidth
       >
-        − 5
-      </Button>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            fontWeight: 600,
+          }}
+        >
+          Edit Bureau Credit
+          <IconButton onClick={() => setOpenCreditModal(false)}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
 
-      <Typography variant="h4" fontWeight={600}>
-        {credit}
-      </Typography>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" mb={2}>
+            Credit can be updated in multiples of 5
+          </Typography>
 
-      <Button
-        variant="outlined"
-        onClick={() => setCredit((prev) => prev + 5)}
-      >
-        + 5
-      </Button>
-    </Box>
-  </DialogContent>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap={3}
+            mt={3}
+          >
+            <Button
+              variant="outlined"
+              onClick={() => setCredit((prev) => Math.max(0, prev - 5))}
+            >
+              − 5
+            </Button>
 
-  <DialogActions sx={{ p: 2 }}>
-    <Button onClick={() => setOpenCreditModal(false)}>
-      Cancel
-    </Button>
+            <Typography variant="h4" fontWeight={600}>
+              {credit}
+            </Typography>
 
-    <Button
-      variant="contained"
-      onClick={() => {
-        handleUpdateCredit(selectedRow._id, credit);
-        setOpenCreditModal(false);
-      }}
-    >
-      Save
-    </Button>
-  </DialogActions>
-</Dialog>
+            <Button
+              variant="outlined"
+              onClick={() => setCredit((prev) => prev + 5)}
+            >
+              + 5
+            </Button>
+          </Box>
+        </DialogContent>
 
-{/* profile modal */}
-                <ProfileModal
-                  show={showModal}
-                  onHide={() => setShowModal(false)}
-                  data={selectedUser}
-                />
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setOpenCreditModal(false)}>Cancel</Button>
 
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleUpdateCredit(selectedRow._id, credit);
+              setOpenCreditModal(false);
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* profile modal */}
+      <ProfileModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        data={selectedUser}
+      />
 
       {loading && (
         <div
