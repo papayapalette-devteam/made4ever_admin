@@ -81,7 +81,7 @@ const createUserProfile = async (req, res) => {
 // 🟡 Get all user profiles
 const getAllUserProfiles = async (req, res) => {
   try {
-    const { bureau, page = 1, limit = 10 } = req.query;
+    const { bureau, page = 1, limit = 10, search="" } = req.query;
 
     // Build filter condition
     const filter = {};
@@ -89,6 +89,17 @@ const getAllUserProfiles = async (req, res) => {
     if (bureau) {
       filter.Bureau = bureau;
     }
+if (search) {
+  filter.$or = [
+    {
+      "PersonalDetails.Name": {
+        $regex: search,
+        $options: "i",
+      },
+    },
+  ];
+}
+
 
     // Convert pagination values to numbers
     const pageNumber = parseInt(page, 10);
@@ -102,11 +113,18 @@ const getAllUserProfiles = async (req, res) => {
       .limit(pageSize);
 
     // Count total documents (for pagination info)
-    const total = await UserProfile.countDocuments(filter);
+  const total = await UserProfile.countDocuments(filter);
+
+  filter.IsActive = "true";
+  const active = await UserProfile.find(filter);
+
+
+
 
     res.status(200).json({
       success: true,
       total,
+      active:active.length,
       page: pageNumber,
       totalPages: Math.ceil(total / pageSize),
       count: users.length,

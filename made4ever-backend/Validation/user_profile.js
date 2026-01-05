@@ -60,18 +60,18 @@ const contactDetailsSchema = Joi.object({
   Country: Joi.string().allow(""),
   State: Joi.string().allow(""),
   City: Joi.string().allow(""),
-  PostalCode: Joi.number().allow("")
+  PostalCode: Joi.number().allow(null)
 });
 
 // ✅ Partner Preferences Schema
 const partnerPrefrencesSchema = Joi.object({
   AgeRange: Joi.object({
-    MinAge: Joi.number().allow(""),
-    MaxAge: Joi.number().allow("")
+    MinAge: Joi.number().allow(null),
+    MaxAge: Joi.number().allow(null)
   }),
   HeightRange: Joi.object({
-    MinHeight: Joi.string().allow(""),
-    MaxHeight: Joi.string().allow("")
+    MinHeight: Joi.string().allow(null),
+    MaxHeight: Joi.string().allow(null)
   }),
   MaritialStatus: Joi.string().allow(""),
   NonVeg: Joi.string().allow(""),

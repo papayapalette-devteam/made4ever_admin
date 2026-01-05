@@ -28,6 +28,7 @@ function PaymentDetails() {
     pageSize: 10,
   });
 
+    const [searchText, setSearchText] = useState("");
   const [All_Payment_Details, setAll_Payment_Details] = useState([]);
   const getall_payment_details = async (
     pageNumber = paginationModel.page,
@@ -37,12 +38,16 @@ function PaymentDetails() {
       setloading(true);
       const params = new URLSearchParams();
 
+       // 🔍 Search
+      if (searchText) {
+        params.append("search", searchText);
+      }
       // Pagination
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
       const resp = await api.get(`api/payu/get-payment-details?${params.toString()}`);
-      console.log(resp);
       
+console.log(resp);
 
       setAll_Payment_Details(resp.data.data);
       setRowCount(resp.data.total);
@@ -55,7 +60,7 @@ function PaymentDetails() {
 
   useEffect(() => {
     getall_payment_details();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -148,14 +153,19 @@ function PaymentDetails() {
       flex: 0.2,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-    {
-      field: "user_id",
-      headerName: "Bureau Name",
-      flex: 1,
-      renderCell: (params) => {
-        return params.row?.user_id?.registered_business_name || "";
-      },
-    },
+{
+  field: "user_id",
+  headerName: "Bureau Name",
+  flex: 1,
+  renderCell: (params) => {
+    return (
+      params.row?.user_id?.registered_business_name ||
+      params.row?.user_id?.name ||
+      ""
+    );
+  },
+},
+
     { field: "plan_name", headerName: "Plan", flex: 1 },
     { field: "amount", headerName: "Amount", flex: 1 },
     { field: "credits", headerName: "Credit", flex: 1 },
@@ -226,8 +236,15 @@ function PaymentDetails() {
           
             </div>
 
-          
-
+          <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+             <TextField
+              size="small"
+              placeholder="Search MSP (Name / Email / Mobile)"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              sx={{ width: 300, mb: 2 }}
+            />
+                      </Paper>
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

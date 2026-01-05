@@ -162,16 +162,36 @@ const callback = async (req, res) => {
 
 const getAllTransaction = async (req, res) => {
   try {
-    const {  page = 1, limit = 10 } = req.query;
+    const {  page = 1, limit = 10, search:"" } = req.query;
 
 
+     // 🔍 Search filter
+const filter = search
+  ? {
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { registered_business_name: { $regex: search, $options: "i" } },
+
+        // 🔥 Partial mobile number search
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$mobile_number" },
+              regex: search,
+            },
+          },
+        },
+      ],
+    }
+  : {};
 
     // Convert pagination values to numbers
     const pageNumber = parseInt(page, 10);
     const pageSize = parseInt(limit, 10);
 
     // Fetch paginated data
-    const payment = await Transaction.find()
+    const payment = await Transaction.find(filter)
       .populate("user_id")
       .sort({ created_at: -1 })
       .skip((pageNumber - 1) * pageSize)

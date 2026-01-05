@@ -58,7 +58,7 @@ const ContactDetailsSchema = new mongoose.Schema({
   Country: {type: String, default: ""},
   State: {type: String, default: ""},
   City: {type: String, default: ""},
-  PostalCode: { type: Number, default: "" }
+  PostalCode: { type: Number, default: 0 }
 });
 
 const PartnerPrefrencesSchema = new mongoose.Schema({

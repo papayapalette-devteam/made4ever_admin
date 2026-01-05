@@ -104,7 +104,7 @@ function Msp() {
     getall_msp_data();
   }, [paginationModel, searchText]);
 
-  console.log(All_Msp_Data);
+ 
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

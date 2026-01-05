@@ -11,6 +11,7 @@ import {
   Briefcase,
   GraduationCap,
   Users,
+  Trash,
 } from "lucide-react";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
@@ -57,12 +58,13 @@ export default function ProfilesPage() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [genderFilter, setGenderFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  // const [genderFilter, setGenderFilter] = useState("all");
+  // const [statusFilter, setStatusFilter] = useState("all");
 
   const [page, setPage] = useState(1);
   const [limit, setlimit] = useState(6); // items per page
   const [total, setTotal] = useState(0);
+  const [active_profile, setactive_profile] = useState(0);
   const [loading, setLoading] = useState(false);
   const [all_profile, setall_profile] = useState([]);
 
@@ -70,10 +72,13 @@ export default function ProfilesPage() {
     try {
       setLoading(true);
       const resp = await api.get(
-        `api/user/get-all-profile?bureau=${user._id}&page=${page}&limit=${limit}`
+        `api/user/get-all-profile?bureau=${user._id}&page=${page}&limit=${limit}&search=${searchTerm}`
       );
+      console.log(resp);
+      
       setall_profile(resp.data.data);
       setTotal(resp.data.total);
+      setactive_profile(resp.data.active)
     } catch (error) {
       console.log(error);
     } finally {
@@ -83,7 +88,7 @@ export default function ProfilesPage() {
 
   useEffect(() => {
     get_all_profile();
-  }, [page, limit]);
+  }, [page, limit,searchTerm]);
 
   // pagination
 
@@ -308,6 +313,61 @@ const [loading_import, setloading_import] = useState(false);
     importFromExcel(file);
   };
 
+    // delete profile
+
+    const delete_user_profile = async (_id) => {
+    try {
+      const confirmDelete = await Swal.fire({
+        title: "Are you sure?",
+        text: "This action will permanently delete the user profile!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+          cancelButton: "swal-confirm-btn",
+        },
+      });
+
+      // If user cancels, stop here
+      if (!confirmDelete.isConfirmed) return;
+
+      setLoading(true);
+      const resp = await api.delete(`api/user/delete-user/${_id}`);
+
+      if (resp.status === 200) {
+        await Swal.fire({
+          icon: "success",
+          title: "Profile Deleted!",
+          text: resp.data.message || "User profile deleted successfully.",
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+        });
+
+        // Refresh after confirmation closes
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text:
+          error.response?.data?.error ||
+          "Something went wrong! Please try again.",
+        confirmButtonText: "OK",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -380,7 +440,7 @@ const [loading_import, setloading_import] = useState(false);
             />
           </div>
 
-          <select
+          {/* <select
             value={genderFilter}
             onChange={(e) => setGenderFilter(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2"
@@ -388,9 +448,9 @@ const [loading_import, setloading_import] = useState(false);
             <option value="all">All Genders</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-          </select>
+          </select> */}
 
-          <select
+          {/* <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2"
@@ -398,25 +458,25 @@ const [loading_import, setloading_import] = useState(false);
             <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
-          </select>
+          </select> */}
 
-          <button className="border border-gray-300 rounded-md px-4 py-2 flex items-center hover:bg-gray-100">
+          {/* <button className="border border-gray-300 rounded-md px-4 py-2 flex items-center hover:bg-gray-100">
             <Filter className="mr-2 h-4 w-4" />
             More Filters
-          </button>
+          </button> */}
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-2xl font-bold text-blue-600">
-              {all_profile.length}
+              {total}
             </div>
             <p className="text-sm text-gray-600">Total Profiles</p>
           </div>
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-2xl font-bold text-green-600">
-              {mockProfiles.filter((p) => p.isActive).length}
+              {active_profile}
             </div>
             <p className="text-sm text-gray-600">Active Profiles</p>
           </div>
@@ -572,6 +632,16 @@ const [loading_import, setloading_import] = useState(false);
                       {profile.IsActive ? "Block" : "Unblock"}
                     </button>
                   </div>
+                    <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => delete_user_profile(profile._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white py-2 rounded-md flex-1 flex items-center justify-center"
+                    >
+                      
+                      <Trash className="mr-2 h-4 w-4" />
+                      Delete Profile
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -640,12 +710,12 @@ const [loading_import, setloading_import] = useState(false);
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               No profiles found
             </h3>
-            <p className="text-gray-600 mb-4">
+            {/* <p className="text-gray-600 mb-4">
               {searchTerm || genderFilter !== "all" || statusFilter !== "all"
                 ? "Try adjusting your search criteria"
                 : "Get started by adding your first profile"}
-            </p>
-            {!searchTerm &&
+            </p> */}
+            {/* {!searchTerm &&
               genderFilter === "all" &&
               statusFilter === "all" && (
                 <a href="/profiles/new">
@@ -654,7 +724,7 @@ const [loading_import, setloading_import] = useState(false);
                     Add Your First Profile
                   </button>
                 </a>
-              )}
+              )} */}
           </div>
         )}
       </div>
