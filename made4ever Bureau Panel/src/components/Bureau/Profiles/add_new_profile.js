@@ -234,7 +234,7 @@ useEffect(() => {
     try {
       setselect_loading("community");
       const params = new URLSearchParams();
-      params.append("lookup_type", "religion_group");
+      params.append("lookup_type", "community_group");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Community_Group(resp.data.data);
     } catch (error) {
@@ -243,6 +243,9 @@ useEffect(() => {
       setselect_loading("");
     }
   };
+
+
+  
 
   // get religion
 
@@ -1487,7 +1490,7 @@ useEffect(() => {
                         value={user_profile?.ReligiousDetails?.Community || ""}
                       >
                         {user_profile?.ReligiousDetails?.Community ||
-                          "Select Religion"}
+                          "Select Community"}
                       </option>
                             {/* Show loader while fetching */}
                         {select_loading==="community" && (
@@ -2663,7 +2666,7 @@ useEffect(() => {
                             e.target.value
                           )
                         }
-                        onClick={() => {getall_religion_group()}}
+                        onClick={() => {getall_community_group()}}
                       >
                         <option
                           value={
@@ -2674,7 +2677,7 @@ useEffect(() => {
                             "Select Community"}
                         </option>
                           {
-                        All_Religion_Group.map((item) => (
+                        All_Community_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
@@ -2831,39 +2834,61 @@ useEffect(() => {
                     </div>
 
                       {/* Property Size */}
-                    <div>
+                             <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                         Property Size
+                        Property Size
                       </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="PropertySize"
-                        value={user_profile?.PartnerPrefrences?.PropertySize}
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "PropertySize",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_property_size()}}
-                      >
-                        <option
-                          value={
-                            user_profile?.PartnerPrefrences?.PropertySize || ""
-                          }
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="PropertySize"
+                          multiple
+                          value={user_profile?.PartnerPrefrences?.PropertySize || []}
+                          onOpen={() => {getall_property_size()}}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "PropertySize");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Property Size
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
                         >
-                          {user_profile?.PartnerPrefrences?.PropertySize ||
-                            "Select Property Size"}
-                        </option>
-                          {
-                        All_Property_Size.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
+                          {All_Property_Size.map((option) => (
+                            <MenuItem key={option._id} value={option.lookup_value}>
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.PropertySize.includes(option.lookup_value)}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </div>
 
 
@@ -3483,7 +3508,7 @@ useEffect(() => {
                     </label>
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="ResidentialType"
+                      name="PropertySize"
                       onChange={(e) =>
                       {
                         handleChange(
