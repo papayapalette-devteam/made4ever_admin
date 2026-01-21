@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../Admin/admincss/adminsidebar.css";
 import logo from "../Admin/images/Made4Ever New Logo (400 x 150 px).png";
-import usersgroup from "../Admin/images/icons8-user-group-96.png";
-import subadmin from "../Admin/images/icons8-administrator-male-100.png";
-import mspvideo from "../Admin/images/icons8-video-96.png";
-import mspdata from "../Admin/images/icons8-data-quality-100.png";
-import mspgallary from "../Admin/images/icons8-gallery-96.png";
-import mspeventimage from "../Admin/images/icons8-image-96.png";
-import headingtext from "../Admin/images/icons8-header-1-100.png";
-import mspmatch from "../Admin/images/icons8-match-100.png";
-import paymentdetails from "../Admin/images/icons8-payment-80.png";
-import dashboardicon from "../Admin/images/icons8-dashboard-96.png";
-import logout from "../Admin/images/logout.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
@@ -28,6 +17,7 @@ import {
   MdManageAccounts  ,
   MdEditNote ,
   MdDeleteOutline,
+  MdFeedback ,
   MdOutlineSettings 
 } from "react-icons/md";
 
@@ -179,6 +169,11 @@ const menuItems = [
     icon: <MdOutlinePayments size={20} />,
     label: "Payment Details",
     path: "/payment-details",
+  },
+  {
+    icon: <MdFeedback  size={20} />,
+    label: "Feedback",
+    path: "/feedback",
   },
   {
     icon: <MdOutlineSettings size={20} />,

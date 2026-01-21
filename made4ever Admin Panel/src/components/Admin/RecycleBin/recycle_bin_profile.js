@@ -41,7 +41,7 @@ export default function RecycleBin() {
     try {
       setLoading(true);
       const resp = await api.get(
-        `api/recycle-bin/recycle-bin-profile?page=${page}&limit=${limit}`
+        `api/recycle-bin/recycle-bin-profile?page=${page}&limit=${limit}&search=${searchTerm}`
       );
    
       
@@ -56,7 +56,7 @@ export default function RecycleBin() {
 
   useEffect(() => {
     get_all_profile();
-  }, [page, limit]);
+  }, [page, limit,searchTerm]);
 
   // pagination
 

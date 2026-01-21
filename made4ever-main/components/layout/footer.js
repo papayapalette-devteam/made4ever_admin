@@ -94,17 +94,17 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-red-400" />
+                <MapPin className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">
                   Pragati Tower, Rajendra Place, Delhi 110008, IN
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-red-400" />
+                <Phone className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">+91 9911126001</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-red-400" />
+                <Mail className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">
                   connect@made4ever.in
                 </span>
@@ -115,7 +115,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            COPYRIGHT© 2025 M/S MADE 4 EVER MATRIMONIAL PRIVATE LIMITED. All rights reserved.
+            COPYRIGHT© {new Date().getFullYear()} M/S MADE 4 EVER MATRIMONIAL PRIVATE LIMITED. All rights reserved.
           </p>
         </div>
       </div>

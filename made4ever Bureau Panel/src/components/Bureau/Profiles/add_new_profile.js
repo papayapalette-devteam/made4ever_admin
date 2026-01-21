@@ -43,6 +43,8 @@ export default function NewProfileForm() {
       Drinking: "",
       Smoking: "",
       Nri: "",
+      PermanentResident:"",
+      TemporaryResident:"",
       NonVeg: "",
       Manglik: "",
       Living: "",
@@ -87,9 +89,13 @@ export default function NewProfileForm() {
       AgeRange: { MinAge: "", MaxAge: "" },
       HeightRange: { MinHeight: "", MaxHeight: "" },
       MaritialStatus: "",
+      HasChildren: false,     
+      ChildrenCount: 0,
       NonVeg: "",
       Manglik: "",
       Nri: "",
+      PermanentResident:"",
+      TemporaryResident:"",
       Community: "",
       Religion: "",
       Caste: "",
@@ -745,6 +751,8 @@ useEffect(() => {
     }
   };
 
+console.log(user_profile);
+
   return (
     <div>
       <Header />
@@ -926,26 +934,7 @@ useEffect(() => {
                     />
                   </div>
 
-                  {/* Mobile */}
-                  {/* <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mobile Number
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="Enter mobile number"
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="MobileNumber"
-                      onChange={(e) =>
-                        handleChange(
-                          "PersonalDetails",
-                          "MobileNumber",
-                          e.target.value
-                        )
-                      }
-                      value={user_profile.PersonalDetails.MobileNumber}
-                    />
-                  </div> */}
+            
 
                   {/* Complexion */}
                   <div>
@@ -1157,7 +1146,8 @@ useEffect(() => {
                     (label, i) => (
                       <div key={i}>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {label}
+                      {label === "Nri" ? "NRI" : label}
+                          
                         </label>
                         <div className="flex gap-6">
                           <label className="flex items-center gap-2">
@@ -1202,6 +1192,55 @@ useEffect(() => {
                       </div>
                     )
                   )}
+
+                       {/* ✅ If user nri */}
+{user_profile?.PersonalDetails?.Nri==="Yes" && (
+  <div className="flex flex-col gap-2 ml-6">
+    <label className="text-sm text-gray-700 font-medium">
+      Resident Status
+    </label>
+
+    <label className="flex items-center gap-2 text-sm text-gray-600">
+      <input
+        type="checkbox"
+        name="PermanentResident"
+        className="w-4 h-4"
+        checked={user_profile.PersonalDetails.PermanentResident}
+        onChange={(e) =>
+          setuser_profile((prev) => ({
+            ...prev,
+            PersonalDetails: {
+              ...prev.PersonalDetails,
+              PermanentResident: e.target.checked,
+              TemporaryResident: false,
+            },
+          }))
+        }
+      />
+      Permanent Resident
+    </label>
+
+    <label className="flex items-center gap-2 text-sm text-gray-600">
+      <input
+        type="checkbox"
+        name="TemporaryResident"
+        className="w-4 h-4"
+        checked={user_profile.PersonalDetails.TemporaryResident}
+        onChange={(e) =>
+          setuser_profile((prev) => ({
+            ...prev,
+            PersonalDetails: {
+              ...prev.PersonalDetails,
+              TemporaryResident: e.target.checked,
+              PermanentResident: false,
+            },
+          }))
+        }
+      />
+      Temporary Resident
+    </label>
+  </div>
+)}
 
                   {/* Living */}
 
@@ -2481,6 +2520,50 @@ useEffect(() => {
                       </div>
                     </div>
 
+                                       {/* ✅ Show extra fields if Divorce is selected */}
+  {(user_profile.PartnerPrefrences.MaritalStatus === "Divorce" || 
+  user_profile.PartnerPrefrences.MaritalStatus === "Widow/Widower")  && (
+    <div className="mt-3 ml-4 space-y-2">
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          className="accent-red-600"
+          checked={user_profile.PartnerPrefrences.HasChildren || false}
+          onChange={(e) =>
+            handleChange(
+              "PartnerPrefrences",
+              "HasChildren",
+              e.target.checked
+            )
+          }
+        />
+        Do you have children?
+      </label>
+
+      {/* ✅ If user has children, show number input */}
+      {user_profile.PartnerPrefrences.HasChildren && (
+        <div className="flex items-center gap-2 ml-6">
+          <label className="text-sm text-gray-700">
+            How many children?
+          </label>
+          <input
+            type="number"
+            min="1"
+            className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            value={user_profile.PartnerPrefrences.ChildrenCount || 0}
+            onChange={(e) =>
+              handleChange(
+                "PartnerPrefrences",
+                "ChildrenCount",
+                e.target.value
+              )
+            }
+          />
+        </div>
+      )}
+    </div>
+  )}
+
                     {/* Food Preference */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
@@ -2574,7 +2657,7 @@ useEffect(() => {
                     {/* NRI */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                        Nri
+                        NRI
                       </label>
                       <div className="flex gap-3">
                         <label>

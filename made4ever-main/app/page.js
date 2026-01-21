@@ -33,7 +33,7 @@ export default function HomePage() {
   ];
 
   const stats = [
-    { label: "Years Experience", value: "22+" },
+    { label: "Years Experience", value: "23+" },
     { label: "Connected Bureaus", value: "15,000+" },
     { label: "States Covered", value: "10" },
     { label: "Active Members", value: "2,600+" },
@@ -44,7 +44,7 @@ export default function HomePage() {
       name: "Rajesh Sharma",
       bureau: "Perfect Match Bureau, Delhi",
       content:
-        "Made4Ever's 22+ years of experience shows. We've increased our matches by 300% since joining.",
+        "Made4Ever's 23+ years of experience shows. We've increased our matches by 300% since joining.",
       avatar:
         "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg",
     },
@@ -108,16 +108,16 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
             Grow Your Marriage Bureau with{" "}
-            <span className="text-red-600">Made4Ever</span>
+            <span className="text-[#bf5281]">Made4Ever</span>
           </h1>
           <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
             Join India&apos;s largest matrimonial network with{" "}
-            <strong>22+ years of experience</strong> and{" "}
+            <strong>23+ years of experience</strong> and{" "}
             <strong>15,000+ marriage bureaus</strong> across 10 states.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/register">
-              <button className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700">
+              <button className="bg-[#bf5281] text-white px-8 py-3 rounded-lg hover:bg-[#c93877]">
                 Start Free Trial →
               </button>
             </Link>
@@ -203,7 +203,7 @@ export default function HomePage() {
                 className="bg-white border rounded-xl p-6 hover:shadow-lg transition"
               >
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-3xl font-bold text-red-600 mb-4">
+                <p className="text-3xl font-bold text-[#bf5281] mb-4">
                   {plan.price}
                 </p>
                 <ul className="text-gray-600 mb-6 space-y-2">
@@ -211,7 +211,7 @@ export default function HomePage() {
                     <li key={j}>✔ {f}</li>
                   ))}
                 </ul>
-                <button className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700">
+                <button className="w-full bg-[#bf5281] text-white py-3 rounded-lg hover:bg-[#c93877]">
                   Choose {plan.name}
                 </button>
               </div>
@@ -270,7 +270,7 @@ export default function HomePage() {
                   </p>
                   <p className="text-gray-700 mb-4">{post.excerpt}</p>
                   <Link href={`/blog/${post.id}`}>
-                    <button className="text-red-600 font-semibold hover:underline">
+                    <button className="text-[#c93877] font-semibold hover:underline">
                       Read More →
                     </button>
                   </Link>
@@ -282,7 +282,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-red-600 text-white text-center">
+      <section className="py-20 bg-[#c93877] text-white text-center">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Join Our Mission to Empower Women Entrepreneurs
         </h2>
@@ -292,7 +292,7 @@ export default function HomePage() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link href="/register">
-            <button className="bg-white text-red-600 px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold">
+            <button className="bg-white text-[#c93877] px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold">
               Join Now →
             </button>
           </Link>

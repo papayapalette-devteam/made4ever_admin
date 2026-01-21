@@ -3,7 +3,7 @@ const UserProfile =require( "../../models/AddProfile/add_new_profile.js");
 
 const getRecycleBinUsers = async (req, res) => {
   try {
-         const { bureau, page = 1, limit = 10 } = req.query;
+         const { bureau, page = 1, limit = 10,search="" } = req.query;
      
          // Build filter condition
          const filter = {};
@@ -11,6 +11,16 @@ const getRecycleBinUsers = async (req, res) => {
          if (bureau) {
            filter.Bureau = bureau;
          }
+        if (search) {
+  filter.$or = [
+    {
+      "PersonalDetails.Name": {
+        $regex: search,
+        $options: "i",
+      },
+    },
+  ];
+}
      
          // Convert pagination values to numbers
          const pageNumber = parseInt(page, 10);

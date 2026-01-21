@@ -45,6 +45,7 @@ import Editprofile from "./components/Admin/All_Profiles/edit_profile";
 import AddBlog from "./components/Admin/Blog/add_blog";
 import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
 import Settings  from "./components/Admin/Settings/settings";
+import AddFeedback from "./components/Admin/Feedback/feedback";
 
 
 
@@ -153,6 +154,13 @@ function App() {
         <Route path="/settings" element={<Settings/>}></Route>
 
       {/*============================== settings routes end==================================== */}
+
+       {/*=============================== feedback routes start============================ */}
+
+        <Route path="/feedback" element={<AddFeedback/>}></Route>
+
+      {/*============================== feedback routes end==================================== */}
+
     </Route>
 
       </Routes>

@@ -47,7 +47,7 @@ export default function AboutPage() {
       <section className="py-20 text-center bg-gradient-to-br from-red-50 to-yellow-50">
         <div className="max-w-5xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
-            About <span className="text-red-600">Made4Ever</span>
+            About <span className="text-[#bf5281]">Made4Ever</span>
           </h1>
           <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
             For over <strong>23 years</strong>, Made4Ever has been a trusted
@@ -62,7 +62,7 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
           {stats.map((s, i) => (
             <div key={i} className="p-4 border rounded-xl hover:shadow-md transition">
-              <div className="text-3xl font-bold text-red-600 mb-1">
+              <div className="text-3xl font-bold text-[#bf5281] mb-1">
                 {s.value}
               </div>
               <div className="text-gray-600">{s.label}</div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
               <h3 className="text-2xl font-bold text-gray-900">
                 Ashish Narang
               </h3>
-              <p className="text-red-600 font-semibold mb-2">
+              <p className="text-[#bf5281] font-semibold mb-2">
                 Founder & Visionary
               </p>
               <p className="text-gray-700 leading-relaxed max-w-2xl">
@@ -159,7 +159,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-red-600 text-white text-center">
+      <section className="py-20 bg-[#bf5281] text-white text-center">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Join Our Mission to Empower 33,000 Women
         </h2>
@@ -169,7 +169,7 @@ export default function AboutPage() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link href="/register">
-            <button className="bg-white text-red-600 px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold">
+            <button className="bg-white text-[#bf5281] px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold">
               Join Now →
             </button>
           </Link>

@@ -60,11 +60,11 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'relative text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-300 group'
+                  'relative text-sm font-medium text-gray-700 hover:text-[#bf5281] transition-colors duration-300 group'
                 )}
               >
                 {item.name}
-                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-red-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#bf5281] transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </div>

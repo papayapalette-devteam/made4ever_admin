@@ -38,12 +38,22 @@ export default function ContactPage() {
       <Header/>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-16">
+        {/* <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Get in touch with our team. We&apos;re here to help you grow your marriage bureau business.
           </p>
+        </div> */}
+        <section className="py-20 text-center">
+        <div className="max-w-5xl mx-auto px-4">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
+            <span className="text-[#bf5281]">Contact Us</span>
+          </h1>
+           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Get in touch with our team. We&apos;re here to help you grow your marriage bureau business.
+          </p>
         </div>
+      </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Information */}
@@ -53,7 +63,7 @@ export default function ContactPage() {
               <p className="text-gray-600">Reach out to us through any of these channels</p>
 
               <div className="flex items-start space-x-4">
-                <MapPin className="h-6 w-6 text-red-500 mt-1" />
+                <MapPin className="h-6 w-6 text-[#bf5281] mt-1" />
                 <div>
                   <h3 className="font-semibold">Address</h3>
                   <p className="text-gray-600">
@@ -64,7 +74,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Phone className="h-6 w-6 text-red-500 mt-1" />
+                <Phone className="h-6 w-6 text-[#bf5281] mt-1" />
                 <div>
                   <h3 className="font-semibold">Phone</h3>
                   <p className="text-gray-600">+91 9911126001</p>
@@ -72,7 +82,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Mail className="h-6 w-6 text-red-500 mt-1" />
+                <Mail className="h-6 w-6 text-[#bf5281] mt-1" />
                 <div>
                   <h3 className="font-semibold">Email</h3>
                   <p className="text-gray-600">connect@made4ever.in</p>
@@ -80,7 +90,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Clock className="h-6 w-6 text-red-500 mt-1" />
+                <Clock className="h-6 w-6 text-[#bf5281] mt-1" />
                 <div>
                   <h3 className="font-semibold">Business Hours</h3>
                   <p className="text-gray-600">
@@ -172,7 +182,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded"
+                  className="w-full bg-[#bf5281] hover:bg-[#c93877] text-white font-semibold py-3 rounded"
                 >
                   {isSubmitting ? 'Sending Message...' : <><Send className="inline-block mr-2" />Send Message</>}
                 </button>

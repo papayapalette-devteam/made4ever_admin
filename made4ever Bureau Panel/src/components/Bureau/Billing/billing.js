@@ -31,24 +31,21 @@ const mockPlans = [
     id: "basic",
     name: "Basic",
     price: 500,
-    credits: 50,
-    validity: 30,
+    credits: 10,
     features: ["Access basic tools", "Email support", "Monthly updates"],
   },
   {
     id: "premium",
     name: "Premium",
     price: 2000,
-    credits: 250,
-    validity: 90,
+    credits: 50,
     features: ["Everything in Basic", "Priority support", "Advanced analytics"],
   },
   {
     id: "enterprise",
     name: "Enterprise",
     price: 3000,
-    credits: 500,
-    validity: 365,
+    credits: 100,
     features: ["Dedicated account manager", "Custom integrations", "24/7 support"],
   },
 ];
@@ -85,6 +82,9 @@ export default function BillingPage() {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
+
+  
+
   
 
 
@@ -115,7 +115,7 @@ const handlePurchase = async () => {
       credits: selected.credits,
       validity: selected.validity,
 
-      user_id: user.id,
+      user_id: user._id,
       name: user.name,
       email: user.email,
       phone: user.mobile_number,

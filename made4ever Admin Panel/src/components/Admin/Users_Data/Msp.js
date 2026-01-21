@@ -61,7 +61,7 @@ function Msp() {
   });
 
   const pageSizeOptions = [10, 25, 50, 100];
-   const handlePageSizeChange = (event) => {
+  const handlePageSizeChange = (event) => {
     setPaginationModel((prev) => ({
       ...prev,
       pageSize: event.target.value,
@@ -73,7 +73,7 @@ function Msp() {
   const [All_Msp_Data, setAll_Msp_Data] = useState([]);
   const getall_msp_data = async (
     pageNumber = paginationModel.page,
-    limitNumber = paginationModel.pageSize
+    limitNumber = paginationModel.pageSize,
   ) => {
     try {
       setloading(true);
@@ -103,8 +103,6 @@ function Msp() {
   useEffect(() => {
     getall_msp_data();
   }, [paginationModel, searchText]);
-
- 
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -588,23 +586,28 @@ function Msp() {
 
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 1 }}>
-
-                       <div style={{ marginBottom: 16, display: "flex", alignItems: "center" }}>
-        <FormControl size="small">
-          <InputLabel>Rows per page</InputLabel>
-          <Select
-            value={paginationModel.pageSize}
-            label="Rows per page"
-            onChange={handlePageSizeChange}
-          >
-            {pageSizeOptions.map((size) => (
-              <MenuItem key={size} value={size}>
-                {size}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+              <div
+                style={{
+                  marginBottom: 16,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <FormControl size="small">
+                  <InputLabel>Rows per page</InputLabel>
+                  <Select
+                    value={paginationModel.pageSize}
+                    label="Rows per page"
+                    onChange={handlePageSizeChange}
+                  >
+                    {pageSizeOptions.map((size) => (
+                      <MenuItem key={size} value={size}>
+                        {size}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
 
               <div style={{ width: "100%", overflowX: "auto" }}>
                 <DataGrid
@@ -622,8 +625,6 @@ function Msp() {
                   }}
                 />
               </div>
-      
-      
             </Paper>
           </div>
         </div>

@@ -50,6 +50,8 @@ app.use('/api/blog',require('./routes/blog'));
 
 app.use('/api/payu',require('./routes/payment'));
 
+app.use('/api/feedback',require('./routes/feedback'));
+
 
 const server=app.listen(process.env.PORT,()=>
 {
