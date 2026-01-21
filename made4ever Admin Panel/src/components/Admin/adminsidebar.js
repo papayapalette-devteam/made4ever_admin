@@ -176,6 +176,11 @@ const menuItems = [
     path: "/feedback",
   },
   {
+    icon: <MdFeedback  size={20} />,
+    label: "Contact Us",
+    path: "/contactus",
+  },
+  {
     icon: <MdOutlineSettings size={20} />,
     label: "Settings",
     path: "/settings",

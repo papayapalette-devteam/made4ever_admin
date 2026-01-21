@@ -1,8 +1,10 @@
+"use client"
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "../components/layout/header";
 import Footer from "../components/layout/footer";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const features = [
@@ -98,6 +100,8 @@ export default function HomePage() {
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
     },
   ];
+
+  const router=useRouter()
 
   return (
     <div className="min-h-screen bg-white text-gray-800">
@@ -291,8 +295,8 @@ export default function HomePage() {
           entrepreneurs across India.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/register">
-            <button className="bg-white text-[#c93877] px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold">
+          <Link href="/join-now">
+            <button  className="bg-white text-[#c93877] px-8 py-3 rounded-lg hover:bg-gray-100 font-semibold cursor-pointer">
               Join Now →
             </button>
           </Link>

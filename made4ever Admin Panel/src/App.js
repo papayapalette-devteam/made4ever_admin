@@ -46,6 +46,7 @@ import AddBlog from "./components/Admin/Blog/add_blog";
 import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
 import Settings  from "./components/Admin/Settings/settings";
 import AddFeedback from "./components/Admin/Feedback/feedback";
+import Contactus from "./components/Admin/ContactUs/contactus";
 
 
 
@@ -160,6 +161,11 @@ function App() {
         <Route path="/feedback" element={<AddFeedback/>}></Route>
 
       {/*============================== feedback routes end==================================== */}
+      {/*=============================== contact us routes start============================ */}
+
+        <Route path="/contactus" element={<Contactus/>}></Route>
+
+      {/*============================== contact us routes end==================================== */}
 
     </Route>
 

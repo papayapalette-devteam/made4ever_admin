@@ -32,6 +32,9 @@ app.get('/',(req,res)=>
     res.send("welcome to made4ever")
 })
 
+// ===============================================
+//          all routesm start
+// ===============================================
 app.use('/api/admin',require('./routes/lookup'));
 
 app.use('/api/msp',require('./routes/msp_routes'));
@@ -51,6 +54,12 @@ app.use('/api/blog',require('./routes/blog'));
 app.use('/api/payu',require('./routes/payment'));
 
 app.use('/api/feedback',require('./routes/feedback'));
+
+app.use('/api/join-now',require('./routes/join_now'));
+
+// ===============================================
+//          all routes end
+// ===============================================
 
 
 const server=app.listen(process.env.PORT,()=>
