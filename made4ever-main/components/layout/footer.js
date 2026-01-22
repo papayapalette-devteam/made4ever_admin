@@ -50,7 +50,7 @@ const Footer = () => {
                 ["Home", "/"],
                 ["About Us", "/about"],
                 ["Contact", "/contact"],
-                ["Pricing", "/billing"],
+                // ["Pricing", "/billing"],
                 ["Blog", "/blog"],
               ].map(([label, link]) => (
                 <li key={label}>
@@ -70,12 +70,12 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Support</h3>
             <ul className="space-y-2">
               {[
-                ["Support", "/support"],
-                ["Help Center", "/help-center"],
+                // ["Support", "/support"],
+                // ["Help Center", "/help-center"],
                 ["FAQ", "/faq"],
-                ["Contact Support", "/contact-support"],
-                ["Privacy Policy", "/privacy-policy"],
-                ["Terms of Service", "/terms-of-service"],
+                ["Contact Support", "/contactus"],
+                ["Privacy Policy", "/privacy"],
+                ["Terms of Service", "/terms"],
               ].map(([label, link]) => (
                 <li key={label}>
                   <Link

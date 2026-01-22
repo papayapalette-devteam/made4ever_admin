@@ -40,7 +40,7 @@ export default function HomePage() {
     { label: "Years Experience", value: "23+" },
     { label: "Connected Bureaus", value: "15,000+" },
     { label: "States Covered", value: "10" },
-    { label: "Active Members", value: "2,600+" },
+    { label: "Active Members", value: "2,700+" },
   ];
 
 

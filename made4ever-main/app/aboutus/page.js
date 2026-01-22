@@ -98,7 +98,7 @@ export default function AboutPage() {
           </div>
           <div>
             <img
-              src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg"
+              src="https://www.manyavar.com/dw/image/v2/BJZV_PRD/on/demandware.static/-/Library-Sites-ManyavarSharedLibrary/default/dw0651b7ec/Unique%20Wedding%20Ceremony%20Ideas%20in%20an%20Inter-cultural%20Indian%20Wedding_blog%201.jpg"
               alt="Our Journey"
               width={600}
               height={400}

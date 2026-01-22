@@ -15,6 +15,19 @@ export default function ContactPage() {
     message: ''
   });
 
+    const generateCaptcha = () => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({ length: 6 }, () =>
+    chars[Math.floor(Math.random() * chars.length)]
+  ).join("");
+};
+
+  const [captcha, setCaptcha] = useState(generateCaptcha());
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaError, setCaptchaError] = useState("");
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -23,6 +36,20 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+      if (captchaInput !== captcha) {
+        setCaptchaError("Incorrect CAPTCHA");
+        setCaptcha(generateCaptcha());
+        setCaptchaInput("");
+    
+        Swal.fire({
+          icon: "error",
+          title: "Invalid CAPTCHA",
+          text: "Please enter the correct CAPTCHA",
+        });
+        return;
+      }
+      
 
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -178,6 +205,32 @@ export default function ContactPage() {
                     required
                   ></textarea>
                 </div>
+
+                  {/* CAPTCHA */}
+  <div className="space-y-2">
+    <label className="block text-sm font-medium">Enter the text shown *</label>
+    <div className="flex items-center gap-4">
+      <div className="h-12 w-32 bg-gray-200 flex items-center justify-center rounded font-bold tracking-widest">
+        {captcha}
+      </div>
+      <button
+        type="button"
+        onClick={() => setCaptcha(generateCaptcha())}
+        className="text-sm text-[#bf5281]"
+      >
+        Refresh
+      </button>
+    </div>
+    <input
+      value={captchaInput}
+      onChange={(e) => setCaptchaInput(e.target.value)}
+      className="w-full border rounded px-3 py-2"
+      placeholder="Enter CAPTCHA"
+    />
+    {captchaError && (
+      <p className="text-red-500 text-sm">{captchaError}</p>
+    )}
+  </div>
 
                 <button
                   type="submit"

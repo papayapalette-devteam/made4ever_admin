@@ -109,21 +109,21 @@ export default function BlogPage() {
               <div className="flex items-center gap-3">
                 <TrendingUp className="h-5 w-5 text-green-500" />
                 <div>
-                  <div className="font-semibold">500K+</div>
+                  <div className="font-semibold">10K+</div>
                   <div className="text-sm text-gray-500">Monthly readers</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Heart className="h-5 w-5 text-red-500" />
                 <div>
-                  <div className="font-semibold">50K+</div>
+                  <div className="font-semibold">90K+</div>
                   <div className="text-sm text-gray-500">Successful matches</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Users className="h-5 w-5 text-blue-500" />
                 <div>
-                  <div className="font-semibold">10K+</div>
+                  <div className="font-semibold">3K+</div>
                   <div className="text-sm text-gray-500">Active bureaus</div>
                 </div>
               </div>
