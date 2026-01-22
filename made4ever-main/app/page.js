@@ -1,10 +1,12 @@
 "use client"
-import React from "react";
+import React, { useState ,useEffect} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "../components/layout/header";
 import Footer from "../components/layout/footer";
 import { useRouter } from "next/navigation";
+import {  ArrowRight } from 'lucide-react';
+import api from '@/api'
 
 export default function HomePage() {
   const features = [
@@ -41,65 +43,48 @@ export default function HomePage() {
     { label: "Active Members", value: "2,600+" },
   ];
 
-  const testimonials = [
-    {
-      name: "Rajesh Sharma",
-      bureau: "Perfect Match Bureau, Delhi",
-      content:
-        "Made4Ever's 23+ years of experience shows. We've increased our matches by 300% since joining.",
-      avatar:
-        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg",
-    },
-    {
-      name: "Priya Patel",
-      bureau: "Golden Hearts Matrimony, Ahmedabad",
-      content:
-        "Being part of Made4Ever's 15,000+ bureau network has opened new opportunities for our business.",
-      avatar:
-        "https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg",
-    },
-    {
-      name: "Suresh Kumar",
-      bureau: "Divine Matches, Bangalore",
-      content:
-        "Made4Ever's commitment to empowering women entrepreneurs aligns perfectly with our values.",
-      avatar:
-        "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg",
-    },
-  ];
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Top 10 Tips for a Successful Marriage Bureau",
-      author: "Riya Sharma",
-      date: "15 Sep 2024",
-      excerpt:
-        "Discover the most effective strategies to grow your marriage bureau, attract genuine clients, and build long-term success.",
-      image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 2,
-      title: "How AI is Revolutionizing Matchmaking in 2024",
-      author: "Amit Verma",
-      date: "02 Oct 2024",
-      excerpt:
-        "Artificial Intelligence is transforming how matchmaking platforms find perfect matches and improve compatibility.",
-      image:
-        "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 3,
-      title: "The Importance of Trust in Modern Relationships",
-      author: "Priya Mehta",
-      date: "01 Nov 2024",
-      excerpt:
-        "Trust is the foundation of any strong relationship. Learn how to build and maintain it in modern times.",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
-    },
-  ];
+
+   const [testimonials,settestimonials]=useState([])
+  const get_all_feedback=async()=>
+  {
+    try {
+      const resp=await api.get('api/feedback/get-feedback')
+      settestimonials(resp.data.data)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>
+  {
+    get_all_feedback()
+
+  },[])
+
+console.log(testimonials);
+
+ 
+ const [blogPosts,setblogPosts]=useState([])
+  const get_all_blogs=async()=>
+  {
+    try {
+      const resp=await api.get('api/blog/all-blogs')
+      setblogPosts(resp.data.data)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>
+  {
+    get_all_blogs()
+
+  },[])
 
   const router=useRouter()
 
@@ -237,13 +222,13 @@ export default function HomePage() {
                 className="p-6 border rounded-xl hover:shadow-lg transition"
               >
                 <img
-                  src={t.avatar}
+                  src={t.bureau.images}
                   alt={t.name}
                   className="w-16 h-16 mx-auto rounded-full mb-4"
                 />
-                <p className="italic text-gray-700 mb-4">{t.content}</p>
-                <div className="font-semibold">{t.name}</div>
-                <div className="text-sm text-gray-500">{t.bureau}</div>
+                 <p className="italic text-gray-700 mb-4">{t.feedback}</p>
+                <div className="font-semibold">{t.bureau.name}</div>
+                <div className="text-sm text-gray-500">{new Date(t.createdAt).toDateString()}</div>
               </div>
             ))}
           </div>
@@ -257,7 +242,7 @@ export default function HomePage() {
             From Our Blog
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
+            {blogPosts?.slice(0,6).map((post) => (
               <div
                 key={post.id}
                 className="bg-white border rounded-xl overflow-hidden hover:shadow-lg transition"
@@ -270,14 +255,15 @@ export default function HomePage() {
                 <div className="p-6 text-left">
                   <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    {post.author} • {post.date}
+                    {new Date(post.createdAt).toDateString()}
                   </p>
                   <p className="text-gray-700 mb-4">{post.excerpt}</p>
-                  <Link href={`/blog/${post.id}`}>
-                    <button className="text-[#c93877] font-semibold hover:underline">
-                      Read More →
-                    </button>
-                  </Link>
+                           <button
+  onClick={() => router.push(`/blog/${post._id}`)}
+  className="text-[#bf5281] font-semibold flex items-center gap-1 cursor-pointer"
+>
+  Read More <ArrowRight className="h-4 w-4" />
+</button>
                 </div>
               </div>
             ))}

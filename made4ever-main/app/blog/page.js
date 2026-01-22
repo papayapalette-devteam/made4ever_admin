@@ -6,54 +6,18 @@ import Link from 'next/link';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import api from '@/api'
+import { useRouter } from 'next/navigation';
 
-// Mock data for blog posts
-// const mockBlogPosts = [
-//   {
-//     id: 1,
-//     title: 'How Technology is Changing Matchmaking',
-//     excerpt: 'Discover how AI and digital tools are transforming traditional marriage bureaus.',
-//     image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=format&fit=crop&w=800&q=80',
-//     author: 'Riya Sharma',
-//     publishedAt: '2025-01-01',
-//     category: 'Technology',
-//     tags: ['matchmaking', 'technology']
-//   },
-//   {
-//     id: 2,
-//     title: 'Top 5 Tips for Successful Matches',
-//     excerpt: 'Learn the key strategies to create more meaningful connections for your clients.',
-//     image: 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=format&fit=crop&w=800&q=80',
-//     author: 'Amit Verma',
-//     publishedAt: '2025-02-10',
-//     category: 'Tips & Advice',
-//     tags: ['tips', 'profiles']
-//   },
-//   // Add more posts as needed
-// ];
 
-// const categories = [
-//   { name: 'Tips & Advice', count: 15 },
-//   { name: 'Industry Insights', count: 8 },
-//   { name: 'Success Stories', count: 12 },
-//   { name: 'Technology', count: 6 },
-//   { name: 'Business Growth', count: 9 }
-// ];
 
-// const popularTags = [
-//   'matchmaking', 'profiles', 'tips', 'technology', 'business',
-//   'success', 'growth', 'digital', 'matrimony', 'bureaus'
-// ];
+
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
    const [mockBlogPosts,setmockBlogPosts]=useState([])
 
-  // const filteredPosts = mockBlogPosts.filter(post =>
-  //   post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //   post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //   post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  // );
+  const router = useRouter();
+
 
  
   const get_all_blogs=async()=>
@@ -121,12 +85,13 @@ export default function BlogPage() {
                     <div className="text-sm text-gray-500 flex items-center gap-2">
                       <Calendar className="h-4 w-4" /> {new Date(post.createdAt).toDateString()}
                     </div>
-                    <Link
-                      href="#"
-                      className="text-[#bf5281] font-semibold flex items-center gap-1"
-                    >
-                      Read More <ArrowRight className="h-4 w-4" />
-                    </Link>
+             <button
+  onClick={() => router.push(`/blog/${post._id}`)}
+  className="text-[#bf5281] font-semibold flex items-center gap-1 cursor-pointer"
+>
+  Read More <ArrowRight className="h-4 w-4" />
+</button>
+
                   </div>
                 </div>
               </div>
@@ -136,33 +101,7 @@ export default function BlogPage() {
           {/* Sidebar */}
           <div className="space-y-6">
 
-            {/* Categories */}
-            {/* <div className="border rounded-lg p-6 shadow">
-              <h3 className="font-bold text-lg mb-4">Categories</h3>
-              <div className="space-y-2">
-                {categories.map(cat => (
-                  <div key={cat.name} className="flex justify-between items-center">
-                    <span>{cat.name}</span>
-                    <span className="bg-gray-100 px-2 py-0.5 rounded text-sm">{cat.count}</span>
-                  </div>
-                ))}
-              </div>
-            </div> */}
-
-            {/* Popular Tags */}
-            {/* <div className="border rounded-lg p-6 shadow">
-              <h3 className="font-bold text-lg mb-4">Popular Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {popularTags.map(tag => (
-                  <span
-                    key={tag}
-                    className="border rounded px-2 py-1 text-sm cursor-pointer hover:bg-red-50 hover:border-red-300 hover:text-red-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div> */}
+           
 
             {/* Quick Stats */}
             <div className="border rounded-lg p-6 shadow space-y-4">
@@ -195,9 +134,7 @@ export default function BlogPage() {
       </div>
 
       {/* Footer */}
-      {/* <footer className="bg-gray-100 py-6 text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Made4Ever. All rights reserved.
-      </footer> */}
+  
       <Footer/>
     </div>
   );
