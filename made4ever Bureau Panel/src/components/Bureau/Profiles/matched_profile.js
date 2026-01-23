@@ -32,6 +32,8 @@ export default function MatchingProfiles() {
 
   const navigate=useNavigate()
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const location = useLocation();
   const profileId = location.state?.profileId;
 
@@ -40,26 +42,72 @@ export default function MatchingProfiles() {
   const [loading, setLoading] = useState(false);
 
   // Fetch matching data
-  const fetchMatches = async () => {
-    try {
-      setLoading(true);
-      const resp = await api.get(`api/user/matching-profile/${profileId}`);
+const [page, setPage] = useState(1);
+const [limit] = useState(10); // fixed or changeable
+const [totalPages, setTotalPages] = useState(1);
 
-        const results = resp.data.matches;
-        setMatches(results);
-        setSelectedMatch(results[0]);
-      
-    } catch (err) {
-      console.error("Error fetching matches:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchMatches = async (pageNumber = page) => {
+  try {
+    setLoading(true);
+
+    // 🔄 Show loader
+    Swal.fire({
+      title: "Loading matches...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    const resp = await api.get(
+      `api/user/matching-profile/${profileId}`,
+      {
+        params: {
+          page: pageNumber,
+          limit: limit,
+          bureau:user._id
+        },
+      }
+    );
+
+    const results = resp.data.matches || [];
+
+    setMatches(results);
+    setSelectedMatch(results?.[0] || null);
+    setTotalPages(resp.data.totalPages);
+    setPage(pageNumber);
+
+    Swal.close(); // ✅ close loader
+
+  } catch (err) {
+    Swal.close(); // ❌ close loader on error
+
+    Swal.fire({
+      icon: "error",
+      title: "Failed to load matches",
+      text:
+        err?.response?.data?.message ||
+        "Something went wrong. Please try again.",
+      showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+    });
+
+    console.error("Error fetching matches:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
-  useEffect(() => {
-    if (profileId) fetchMatches();
-  }, [profileId]);
+useEffect(() => {
+  if (profileId) {
+    fetchMatches(1); // reset to page 1 when profile changes
+  }
+}, [profileId]);
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -144,7 +192,7 @@ const acceptProfile = async () => {
 
 
 
-  console.log(selectedMatch);
+
   
 
   return (
@@ -256,6 +304,32 @@ const acceptProfile = async () => {
                     </CardContent>
 
                 </Card>
+                {totalPages > 1 && (
+  <div className="flex items-center justify-between mt-4 border-t pt-3">
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === 1 || loading}
+      onClick={() => fetchMatches(page - 1)}
+    >
+      Prev
+    </Button>
+
+    <span className="text-sm text-gray-600">
+      Page <b>{page}</b> of <b>{totalPages}</b>
+    </span>
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === totalPages || loading}
+      onClick={() => fetchMatches(page + 1)}
+    >
+      Next
+    </Button>
+  </div>
+)}
+
               </div>
 
               {/* Match Details */}

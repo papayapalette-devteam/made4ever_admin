@@ -129,6 +129,7 @@
 
 
 const UserProfile = require("../../models/AddProfile/add_new_profile");
+const msp_data = require("../../models/Msp/msp");
 
 // Convert height "5'6" → inches
 const heightToInches = (h) => {
@@ -211,68 +212,122 @@ const calculateMatchScore = (prefs, person) => {
 const getMatches = async (req, res) => {
   try {
     const { userId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const bureau = req.query.bureau;
 
-    if (!userId)
+
+
+// Fetch MSP (Bureau)
+let msp = null;
+if (bureau) {
+  msp = await msp_data.findById(bureau);
+  
+
+  if (!msp) {
+    return res.status(404).json({
+      success: false,
+      message: "Bureau not found",
+    });
+  }
+
+  // ❌ BLOCK MATCHES IF CREDITS < 5
+  if (msp.credits < 5) {
+    return res.status(400).json({
+      success: true,
+      matches: [],
+      totalMatches: 0,
+      message: "Insufficient credits to view matches",
+      remainingCredits: msp.credits,
+    });
+  }
+}
+
+
+
+    if (!userId) {
       return res.status(400).json({ success: false, message: "User ID required" });
+    }
 
-    // Fetch current user
     const user = await UserProfile.findById(userId)
       .populate("Bureau")
       .lean();
 
-    if (!user)
+    if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
+    }
 
-    const userPrefs = user.PartnerPrefrences;
     const userGender = user.PersonalDetails?.Gender;
-
-    if (!userGender)
+    if (!userGender) {
       return res.status(400).json({ success: false, message: "User gender missing" });
+    }
+
+    //  const userGothram = user?.ReligiousDetails?.Gothram;
+    // if (!userGothram) {
+    //   return res.status(400).json({ success: false, message: "User gothram missing" });
+    // }
 
     const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
-    // Fetch candidates of opposite gender
+
+    // ✅ TOTAL COUNT (for pagination)
+    const totalCandidates = await UserProfile.countDocuments({
+      "PersonalDetails.Gender": oppositeGender,
+      IsActive: true,
+      // "ReligiousDetails.Gothram": { $ne: userGothram }
+    });
+
+    // ✅ PAGINATED QUERY
     const candidates = await UserProfile.find({
       "PersonalDetails.Gender": oppositeGender,
-      IsActive:true
+      IsActive: true,
     })
       .populate("Bureau")
+      .skip(skip)
+      .limit(limit)
       .lean();
-      
 
-    // Loop through candidates
     const matches = candidates.map((candidate) => {
-      const candidatePrefs = candidate.PartnerPrefrences || {};
-
-      // One-way match (User → Candidate)
-      const userToCandidate = calculateMatchScore(userPrefs, candidate);
-    
-      
-
-      // Opposite way match (Candidate → User)
-      const candidateToUser = calculateMatchScore(candidatePrefs, user);
-
-      // Final mutual match score
-      const mutualMatch = Math.round(
-        (userToCandidate + candidateToUser) / 2
+      const userToCandidate = calculateMatchScore(
+        user.PartnerPrefrences,
+        candidate
       );
 
-      
+      const candidateToUser = calculateMatchScore(
+        candidate.PartnerPrefrences || {},
+        user
+      );
+
       return {
         candidateId: candidate,
         userprofile: user,
-        matchFromUserSide: userToCandidate,
-        matchFromCandidateSide: candidateToUser,
-        matchPercentage:mutualMatch,
+        matchPercentage: Math.round(
+          (userToCandidate + candidateToUser) / 2
+        ),
       };
-    });
+    }) // ✅ FILTER MATCHES > 50%
+  .filter(match => match.matchPercentage > 80);
 
-    // Sort by mutual match (highest first)
+    // sort only current page
     matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+    const highMatchFound = matches.some(
+  (m) => m.matchPercentage >= 80
+);
+
+if (msp && highMatchFound) {
+  msp.credits -= 5;
+  await msp.save();
+}
+
 
     return res.status(200).json({
       success: true,
-      totalMatches: matches.length,
+      page,
+      limit,
+      totalMatches: totalCandidates,
+      totalPages: Math.ceil(totalCandidates / limit),
       matches,
     });
   } catch (err) {
@@ -280,5 +335,6 @@ const getMatches = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 module.exports = { getMatches };
