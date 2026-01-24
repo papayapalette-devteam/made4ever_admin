@@ -721,7 +721,7 @@ useEffect(() => {
       if (resp.status === 200) {
         Swal.fire({
           icon: "success",
-          title: "Profile Created!",
+          title: user_profile._id?"Profile Update":"Profile Created!",
           text: resp.data.message || "User profile created successfully",
           showConfirmButton: true,
           confirmButtonText: "OK",
@@ -751,7 +751,7 @@ useEffect(() => {
     }
   };
 
-console.log(user_profile);
+
 
   return (
     <div>
@@ -2521,8 +2521,8 @@ console.log(user_profile);
                     </div>
 
                                        {/* ✅ Show extra fields if Divorce is selected */}
-  {(user_profile.PartnerPrefrences.MaritalStatus === "Divorce" || 
-  user_profile.PartnerPrefrences.MaritalStatus === "Widow/Widower")  && (
+  {(user_profile.PartnerPrefrences.MaritialStatus === "Divorced" || 
+  user_profile.PartnerPrefrences.MaritialStatus === "Widow/Widower")  && (
     <div className="mt-3 ml-4 space-y-2">
       <label className="flex items-center gap-2">
         <input
@@ -2698,6 +2698,56 @@ console.log(user_profile);
                         </label>
                       </div>
                     </div>
+
+                       {/* ✅ If user nri */}
+{user_profile?.PartnerPrefrences?.Nri==="Yes" && (
+  <div className="flex flex-col gap-2 ml-6">
+    <label className="text-sm text-gray-700 font-medium">
+      Resident Status
+    </label>
+
+    <label className="flex items-center gap-2 text-sm text-gray-600">
+      <input
+        type="checkbox"
+        name="PermanentResident"
+        className="w-4 h-4"
+        checked={user_profile.PartnerPrefrences.PermanentResident}
+        onChange={(e) =>
+          setuser_profile((prev) => ({
+            ...prev,
+            PartnerPrefrences: {
+              ...prev.PartnerPrefrences,
+              PermanentResident: e.target.checked,
+              TemporaryResident: false,
+            },
+          }))
+        }
+      />
+      Permanent Resident
+    </label>
+
+    <label className="flex items-center gap-2 text-sm text-gray-600">
+      <input
+        type="checkbox"
+        name="TemporaryResident"
+        className="w-4 h-4"
+        checked={user_profile.PartnerPrefrences.TemporaryResident}
+        onChange={(e) =>
+          setuser_profile((prev) => ({
+            ...prev,
+            PartnerPrefrences: {
+              ...prev.PartnerPrefrences,
+              TemporaryResident: e.target.checked,
+              PermanentResident: false,
+            },
+          }))
+        }
+      />
+      Temporary Resident
+    </label>
+  </div>
+)}
+
 
              {/* Religion */}
                     <div>
