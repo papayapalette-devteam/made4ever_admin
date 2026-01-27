@@ -82,7 +82,8 @@ export default function BillingPage() {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
-
+  console.log(user);
+  
   
 
   
@@ -90,14 +91,7 @@ export default function BillingPage() {
 
   const [selectedPlan, setSelectedPlan] = useState("premium");
 
-  const currentSubscription = {
-    plan: "Premium",
-    creditsTotal: 150,
-    creditsUsed: 45,
-    creditsRemaining: 105,
-    expiryDate: "2024-06-01",
-    daysLeft: 120,
-  };
+ 
 
 const handlePurchase = async () => {
   try {
@@ -108,10 +102,15 @@ const handlePurchase = async () => {
       return;
     }
 
+      // 💰 Price calculations
+    const basePrice = selected.price;
+    const gstAmount = Math.round(basePrice * 0.18);
+    const totalPrice = basePrice + gstAmount;
+
     const payload = {
       plan_id: selected.id,
       plan_name: selected.name,
-      price: selected.price,
+      price: totalPrice,
       credits: selected.credits,
       validity: selected.validity,
 
@@ -158,19 +157,19 @@ const handlePurchase = async () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <StatsCard
             title="Current Plan"
-            value={currentSubscription.plan}
+            value={user?.current_plan}
             description="Active subscription"
             icon={<Star className="h-4 w-4 text-gray-500" />}
           />
           <StatsCard
             title="Credits Remaining"
-            value={currentSubscription.creditsRemaining}
-            description={`of ${currentSubscription.creditsTotal} credits`}
+            value={user?.credits}
+            description={`remaining credits`}
             icon={<Wallet className="h-4 w-4 text-gray-500" />}
           />
           <StatsCard
             title="Days Left"
-            value={currentSubscription.daysLeft}
+            value={ 0}
             description="Until renewal"
             icon={<Clock className="h-4 w-4 text-gray-500" />}
           />
@@ -179,7 +178,7 @@ const handlePurchase = async () => {
             value="45"
             description="Credits used"
             icon={<TrendingUp className="h-4 w-4 text-gray-500" />}
-            trend={{ value: 12, isPositive: true }}
+            trend={{ value: 0, isPositive: true }}
           />
         </div>
 
@@ -197,11 +196,11 @@ const handlePurchase = async () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold text-lg">
-                        {currentSubscription.plan} Plan
+                        {user?.current_plan} Plan
                       </h3>
                       <p className="text-sm text-gray-600">
                         Expires on{" "}
-                        {new Date(currentSubscription.expiryDate).toLocaleDateString()}
+                        {/* {new Date(currentSubscription.expiryDate).toLocaleDateString()} */}
                       </p>
                     </div>
                     <Badge className="bg-green-100 text-green-700">Active</Badge>
@@ -211,13 +210,13 @@ const handlePurchase = async () => {
                     <div className="flex justify-between text-sm">
                       <span>Credits Used</span>
                       <span>
-                        {currentSubscription.creditsUsed}/{currentSubscription.creditsTotal}
+                        {/* {currentSubscription.creditsUsed}/{currentSubscription.creditsTotal} */}
                       </span>
                     </div>
                     <Progress
                       value={
-                        (currentSubscription.creditsUsed /
-                          currentSubscription.creditsTotal) *
+                        (user?.creditsUsed /
+                          user?.creditsTotal) *
                         100
                       }
                       className="h-2"
@@ -320,19 +319,25 @@ const handlePurchase = async () => {
                       {mockPlans.find((p) => p.id === selectedPlan)?.credits}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Validity:</span>
-                    <span className="font-medium">
-                      {mockPlans.find((p) => p.id === selectedPlan)?.validity} days
-                    </span>
-                  </div>
+   <div className="flex justify-between">
+  <span>GST (18%):</span>
+  <span className="font-medium">
+    ₹{Math.round(
+      (mockPlans.find((p) => p.id === selectedPlan)?.price || 0) * 0.18
+    ).toLocaleString()}
+  </span>
+</div>
+
                   <hr />
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total:</span>
-                    <span>
-                      ₹{mockPlans.find((p) => p.id === selectedPlan)?.price.toLocaleString()}
-                    </span>
-                  </div>
+        <div className="flex justify-between text-lg font-bold">
+  <span>Total:</span>
+  <span>
+    ₹{Math.round(
+      (mockPlans.find((p) => p.id === selectedPlan)?.price || 0) * 1.18
+    ).toLocaleString()}
+  </span>
+</div>
+
                   <Button onClick={handlePurchase} className="w-full bg-red-600 hover:bg-red-700">
                     <CreditCard className="h-4 w-4 mr-2" />
                     Purchase Plan

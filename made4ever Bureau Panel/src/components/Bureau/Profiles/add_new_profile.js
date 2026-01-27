@@ -768,7 +768,7 @@ useEffect(() => {
               Step {step} of 8 — Complete your details to get the best matches!
             </p>
           </div>
-
+<label className="md:hidden">Paste WhatsApp Data</label>
           <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}

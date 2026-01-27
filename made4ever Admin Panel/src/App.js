@@ -47,6 +47,8 @@ import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
 import Settings  from "./components/Admin/Settings/settings";
 import AddFeedback from "./components/Admin/Feedback/feedback";
 import Contactus from "./components/Admin/ContactUs/contactus";
+import MspProfiles from "./components/Admin/Users_Data/msp_profiles";
+import UserProfile from "./components/Admin/Users_Data/user_profile";
 
 
 
@@ -101,6 +103,8 @@ function App() {
       {/*===================== users data section route start ===========================*/}
 
        <Route path="/msp" element={<Msp/>}></Route>
+       <Route path="/msp-profiles" element={<MspProfiles/>}></Route>
+       <Route path="/user-profile" element={<UserProfile/>}></Route>
 
       {/*===================== users data section route end ===========================*/}
 

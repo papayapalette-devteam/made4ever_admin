@@ -109,7 +109,7 @@ export default function BlogPage() {
               <div className="flex items-center gap-3">
                 <TrendingUp className="h-5 w-5 text-green-500" />
                 <div>
-                  <div className="font-semibold">10K+</div>
+                  <div className="font-semibold">5K+</div>
                   <div className="text-sm text-gray-500">Monthly readers</div>
                 </div>
               </div>

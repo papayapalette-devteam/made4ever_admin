@@ -173,7 +173,7 @@ export default function AboutPage() {
               Join Now →
             </button>
           </Link>
-          <button className="bg-transparent border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-red-600 font-semibold">
+          <button className="bg-transparent border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-[#c93877] font-semibold">
             Learn More
           </button>
         </div>

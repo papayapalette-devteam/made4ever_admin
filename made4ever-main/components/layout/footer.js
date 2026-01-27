@@ -48,10 +48,11 @@ const Footer = () => {
             <ul className="space-y-2">
               {[
                 ["Home", "/"],
-                ["About Us", "/about"],
-                ["Contact", "/contact"],
+                ["About Us", "/aboutus"],
+                ["Contact", "/contactus"],
                 // ["Pricing", "/billing"],
                 ["Blog", "/blog"],
+                ["Gallary", "/gallary"],
               ].map(([label, link]) => (
                 <li key={label}>
                   <Link
@@ -106,7 +107,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">
-                  connect@made4ever.in
+                  info@made4ever.in
                 </span>
               </div>
             </div>

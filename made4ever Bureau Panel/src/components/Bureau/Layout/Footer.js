@@ -29,9 +29,6 @@ export default function Footer() {
               <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
               <li><a href="/about" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
               <li><a href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
-              <li><a href="/dashboard" className="text-gray-300 hover:text-white transition-colors">Dashboard</a></li>
-              <li><a href="/profiles" className="text-gray-300 hover:text-white transition-colors">Profiles</a></li>
-              <li><a href="/matches" className="text-gray-300 hover:text-white transition-colors">Matches</a></li>
               <li><a href="/billing" className="text-gray-300 hover:text-white transition-colors">Pricing</a></li>
               <li><a href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
             </ul>
@@ -66,7 +63,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-red-400" />
-                <span className="text-gray-300 text-sm">support@made4ever.com</span>
+                <span className="text-gray-300 text-sm">info@made4ever.in</span>
               </div>
             </div>
           </div>
@@ -74,7 +71,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Made4Ever. All rights reserved. India's Premier Marriage Bureau Portal.
+            COPYRIGHT© {new Date().getFullYear()} M/S MADE 4 EVER MATRIMONIAL PRIVATE LIMITED. All rights reserved.
           </p>
         </div>
       </div>

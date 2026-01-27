@@ -112,7 +112,7 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-[#bf5281] mt-1" />
                 <div>
                   <h3 className="font-semibold">Email</h3>
-                  <p className="text-gray-600">connect@made4ever.in</p>
+                  <p className="text-gray-600">info@made4ever.in</p>
                 </div>
               </div>
 

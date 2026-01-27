@@ -105,8 +105,8 @@ console.log(testimonials);
             <strong>15,000+ marriage bureaus</strong> across 10 states.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/register">
-              <button className="bg-[#bf5281] text-white px-8 py-3 rounded-lg hover:bg-[#c93877]">
+            <Link href="/join-now">
+              <button className="bg-[#bf5281] text-white px-8 py-3 rounded-lg hover:bg-[#c93877] cursor-pointer">
                 Start Free Trial →
               </button>
             </Link>
@@ -286,7 +286,7 @@ console.log(testimonials);
               Join Now →
             </button>
           </Link>
-          <button className="bg-transparent border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-red-600 font-semibold">
+          <button className="bg-transparent border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-[#c93877] font-semibold">
             Learn More
           </button>
         </div>

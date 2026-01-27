@@ -39,21 +39,13 @@ import Adminheader from "../adminheader";
 import "../admincss/common_config.css";
 import UniqueLoader from "../loader";
 import ProfileModal from "../../other component/msp_profile_view";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function Msp() {
-  const navigate=useNavigate()
-  
-  const [Msp, setMsp] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-    mobile_number: "",
-    registered_business_name: "",
-    address: "",
-    images: [],
-  });
+function MspProfiles() {
+    const location=useLocation()
+    const navigate=useNavigate()
+    const id=location.state.id
+
 
   const [loading, setloading] = useState(false);
 
@@ -73,8 +65,8 @@ function Msp() {
   };
 
   const [searchText, setSearchText] = useState("");
-  const [All_Msp_Data, setAll_Msp_Data] = useState([]);
-  const getall_msp_data = async (
+  const [All_Msp_Profiles, setAll_Msp_Profiles] = useState([]);
+  const getall_msp_profiles = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize,
   ) => {
@@ -91,10 +83,14 @@ function Msp() {
         params.append("search", searchText);
       }
 
-      const resp = await api.get(`api/msp/Getmsp?${params.toString()}`);
+      if (id) {
+        params.append("bureau", id);
+      }
 
+      const resp = await api.get(`api/user/get-all-profile?${params.toString()}`);
+      console.log(resp);
 
-      setAll_Msp_Data(resp.data.msp);
+      setAll_Msp_Profiles(resp.data.data);
       setRowCount(resp.data.total);
     } catch (error) {
       console.log(error);
@@ -104,7 +100,7 @@ function Msp() {
   };
 
   useEffect(() => {
-    getall_msp_data();
+    getall_msp_profiles();
   }, [paginationModel, searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -121,7 +117,7 @@ function Msp() {
   };
 
   const onEdit = (row) => {
-    setMsp(row);
+    // setMsp(row);
   };
 
   const onDelete = async (_id) => {
@@ -129,7 +125,7 @@ function Msp() {
 
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "This MSP will be permanently deleted!",
+      text: "This Profile will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -147,12 +143,12 @@ function Msp() {
     try {
       setloading(true);
 
-      await api.delete(`api/msp/delete-msp/${_id}`);
+      await api.delete(`api/user/delete-user/${_id}`);
 
       Swal.fire({
         icon: "success",
-        title: "MSP Deleted",
-        text: "MSP deleted successfully",
+        title: "Profile Deleted",
+        text: "Profile deleted successfully",
         showConfirmButton: true,
         customClass: {
           popup: "small-swal-popup",
@@ -186,38 +182,14 @@ function Msp() {
       flex: 0.6,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-    {
-      field: "images",
-      headerName: "Image",
-      flex: 1,
-      renderCell: (params) => (
-        <a
-          href={params.value} // full image URL
-          target="_blank" // open in new tab
-          rel="noopener noreferrer" // security best practice
-        >
-          <img
-            src={params.value}
-            alt="User"
-            style={{
-              width: 40,
-              height: 40,
-              objectFit: "cover",
-              cursor: "pointer",
-            }}
-          />
-        </a>
-      ),
-    },
-    { field: "_id", headerName: "Id", flex: 2 },
-    { field: "name", headerName: "Name", flex: 2 },
-    { field: "email", headerName: "Email", flex: 2 },
-    { field: "password", headerName: "MSP Password", flex: 2 },
-    { field: "mobile_number", headerName: "Phone", flex: 2 },
-    { field: "credits", headerName: "Credits", flex: 2 },
-    { field: "createdAt", headerName: "Add Date", flex: 1.5 },
-    { field: "total_match", headerName: "Total Match", flex: 1.5 },
-
+    { field: "name", headerName: "Name", flex: 2,renderCell: (params) => params?.row?.PersonalDetails?.Name},
+    { field: "age", headerName: "Age", flex: 2,renderCell: (params) => params?.row?.PersonalDetails?.Age},
+    { field: "dob", headerName: "DOB", flex: 2,renderCell: (params) => params?.row?.PersonalDetails?.DateOfBirth},
+    { field: "height", headerName: "Height", flex: 2,renderCell: (params) => params?.row?.PersonalDetails?.Height},
+    { field: "community", headerName: "Community", flex: 2,renderCell: (params) => params?.row?.ReligiousDetails?.Community},
+    { field: "religion", headerName: "Religion", flex: 2,renderCell: (params) => params?.row?.ReligiousDetails?.Religion},
+    { field: "fathername", headerName: "Father Name", flex: 2,renderCell: (params) => params?.row?.FamilyDetails?.FatherName},
+    { field: "addon", headerName: "Add On", flex: 2,renderCell: (params) => new Date(params?.row?.createdAt).toLocaleString()},
     {
       field: "actions",
       headerName: "Actions",
@@ -253,29 +225,11 @@ function Msp() {
               >
                 Delete
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  setSelectedRow(params.row);
-                  setOpenCreditModal(true);
-                  handleCloseMenu();
-                }}
-              >
-                Edit Credit
-              </MenuItem>
 
               <MenuItem
-                onClick={() => {
-                  openModal(params.row);
-                  handleCloseMenu();
-                }}
+                onClick={()=>navigate('/user-profile',{state:{id:params.row._id}})}
               >
-                View MSP Profile
-              </MenuItem>
-
-              <MenuItem
-                onClick={()=>navigate('/msp-profiles',{state:{id:params.row._id}})}
-              >
-                View All Profiles
+                View
               </MenuItem>
             </Menu>
           )}
@@ -284,130 +238,19 @@ function Msp() {
     },
   ];
 
-  const rows = All_Msp_Data?.map((doc, index) => ({
+  const rows = All_Msp_Profiles?.map((doc, index) => ({
     id: doc._id || index,
     ...doc,
   }));
 
-  const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
 
-    // Auto upload when files selected
-    await uploadFiles(files);
-  };
 
-  // Upload to backend API
-  const uploadFiles = async (files) => {
-    if (!files.length) return;
-    setloading(true);
+ 
 
-    const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
-
-    try {
-      const res = await api.post("api/upload/upload-files", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      setMsp({ ...Msp, images: res.data.urls });
-    } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Upload failed!");
-    } finally {
-      setloading(false);
-    }
-  };
-
-  const handlechange = (e) => {
-    const { name, value, checked, type } = e.target;
-
-    setMsp((prev) => {
-      // Handle boolean radios (true/false as string)
-      const booleanFields = ["IsEmailVerified", "IsPhoneVerified"];
-      if (booleanFields.includes(name)) {
-        return { ...prev, [name]: value === "true" };
-      }
-
-      // Handle checkboxes (single boolean)
-      if (type === "checkbox" && !Array.isArray(prev[name])) {
-        return { ...prev, [name]: checked };
-      }
-
-      // Handle checkboxes (array)
-      if (type === "checkbox" && Array.isArray(prev[name])) {
-        const updated = checked
-          ? [...prev[name], value]
-          : prev[name].filter((item) => item !== value);
-        return { ...prev, [name]: updated };
-      }
-
-      // Normal single-value field
-      return { ...prev, [name]: value };
-    });
-  };
-
+ 
   //========================== post api for create msp =============================
 
-  const add_msp_data = async () => {
-    try {
-      setloading(true);
 
-      // extract confirm_password & _id
-      const { confirm_password, _id, ...payload } = Msp;
-
-      // password check (only when adding or changing password)
-      if (!_id && Msp.password !== confirm_password) {
-        Swal.fire({
-          icon: "error",
-          title: "Password Error",
-          text: "Password And Confirm Password Not Matched...",
-          showConfirmButton: true,
-          customClass: {
-            popup: "small-swal-popup",
-            confirmButton: "my-swal-button",
-          },
-        });
-        return;
-      }
-
-      let resp;
-
-      if (_id) {
-        // 🔄 UPDATE
-        resp = await api.put(`api/msp/update-msp/${_id}`, payload);
-      } else {
-        // ➕ ADD
-        resp = await api.post("api/msp/Savemsp", payload);
-      }
-
-      Swal.fire({
-        icon: "success",
-        title: _id ? "MSP Updated" : "MSP Added",
-        text: _id ? "MSP Updated Successfully..." : "MSP Added Successfully...",
-        showConfirmButton: true,
-        customClass: {
-          popup: "small-swal-popup",
-          confirmButton: "my-swal-button",
-        },
-      }).then(() => {
-        window.location.reload(); // optional
-      });
-    } catch (error) {
-      console.error("❌ API Error:", error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error Occurred",
-        text: error?.response?.data?.message || "Something went wrong",
-        showConfirmButton: true,
-        customClass: {
-          confirmButton: "my-swal-button",
-        },
-      });
-    } finally {
-      setloading(false);
-    }
-  };
 
   // update credit
 
@@ -455,14 +298,8 @@ function Msp() {
     }
   };
 
-  // profile modal
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
 
-  const openModal = (doc) => {
-    setSelectedUser(doc);
-    setShowModal(true);
-  };
+
 
   return (
     <div>
@@ -473,106 +310,14 @@ function Msp() {
         <div className="content-wrapper">
           <div className="main-content">
             <div className="profile-header">
-              <h3>Enter Details for Msp</h3>
+              <h3>Msp Profiles</h3>
               <p>
-                Add or update the required details for the msp to keep records
+                Delete or update the required details for the msp's profiles to keep records
                 accurate and complete.
               </p>
             </div>
 
-            {/* Form */}
-            <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
-              <div className="form-grid">
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Name</label>
-                  <TextField
-                    name="name"
-                    placeholder="Name"
-                    defaultValue={Msp.name}
-                    onChange={handlechange}
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Email</label>
-                  <TextField
-                    name="email"
-                    placeholder="Email"
-                    defaultValue={Msp.email}
-                    onChange={handlechange}
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Password</label>
-                  <TextField
-                    name="password"
-                    placeholder="Password"
-                    defaultValue={Msp.password}
-                    onChange={handlechange}
-                    size="small"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Confirm Password</label>
-                  <TextField
-                    name="confirm_password"
-                    placeholder="Confirm Password"
-                    defaultValue={Msp.confirm_password}
-                    onChange={handlechange}
-                    size="small"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Mobile Number</label>
-                  <TextField
-                    name="mobile_number"
-                    placeholder="Mobile Number"
-                    defaultValue={Msp.mobile_number}
-                    onChange={handlechange}
-                    size="small"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Registered Business Name</label>
-                  <TextField
-                    name="registered_business_name"
-                    placeholder="Registered Business Name"
-                    defaultValue={Msp.registered_business_name}
-                    onChange={handlechange}
-                    size="small"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Upload Your Id</label>
-                  <TextField
-                    type="file"
-                    name="images"
-                    defaultValue={Msp.id}
-                    onChange={handleFileChange}
-                    size="small"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Address</label>
-                  <TextField
-                    name="address"
-                    defaultValue={Msp.address}
-                    onChange={handlechange}
-                    placeholder="Address"
-                  ></TextField>
-                </FormControl>
-              </div>
-
-              <Button className="submit-button" onClick={add_msp_data}>
-                Submit
-              </Button>
-            </Paper>
+       
 
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <TextField
@@ -699,12 +444,7 @@ function Msp() {
         </DialogActions>
       </Dialog>
 
-      {/* profile modal */}
-      <ProfileModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        data={selectedUser}
-      />
+ 
 
       {loading && (
         <div
@@ -725,4 +465,4 @@ function Msp() {
   );
 }
 
-export default Msp;
+export default MspProfiles;

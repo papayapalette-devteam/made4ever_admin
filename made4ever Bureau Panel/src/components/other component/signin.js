@@ -243,7 +243,7 @@ function SignIn() {
 
                   <button
                     type="button"
-                    className="login-btn"
+                    className="ltnogin-b"
                     onClick={verifyOtp}
                   >
                     {loading === "verify-otp" ? (
