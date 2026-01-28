@@ -8,6 +8,7 @@ import "./signin.css";
 import logo from "../images/Made4Ever New Logo (600 x 300 px) (1).png";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👁️ eye icons
 import CircularProgress from "@mui/material/CircularProgress";
+import ForgotPasswordModal from "./forgot_password";
 
 function SignIn() {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -18,6 +19,8 @@ function SignIn() {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
+
 
   const login = async (e) => {
     e.preventDefault();
@@ -200,7 +203,7 @@ function SignIn() {
                   />
                   Remember me
                 </label>
-                <a href="/forgot">Forgot Password?</a>
+                <a onClick={() => setShowForgotModal(true)}>Forgot Password?</a>
               </div>
 
               <button className="login-btn" onClick={login}>
@@ -261,6 +264,12 @@ function SignIn() {
             </>
           )}
         </form>
+
+        {showForgotModal && (
+  <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+)}
+
+
       </div>
     </div>
   );

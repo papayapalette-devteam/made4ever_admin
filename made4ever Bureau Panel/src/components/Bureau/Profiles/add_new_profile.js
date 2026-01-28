@@ -43,8 +43,8 @@ export default function NewProfileForm() {
       Drinking: "",
       Smoking: "",
       Nri: "",
-      PermanentResident:"",
-      TemporaryResident:"",
+      PermanentResident:false,
+      TemporaryResident:false,
       NonVeg: "",
       Manglik: "",
       Living: "",
@@ -83,19 +83,19 @@ export default function NewProfileForm() {
       Country: "",
       State: "",
       City: "",
-      PostalCode: "",
+      // PostalCode: "",
     },
     PartnerPrefrences: {
-      AgeRange: { MinAge: "", MaxAge: "" },
-      HeightRange: { MinHeight: "", MaxHeight: "" },
+      AgeRange: { MinAge: null, MaxAge: null },
+      HeightRange: { MinHeight: null, MaxHeight: null },
       MaritialStatus: "",
       HasChildren: false,     
       ChildrenCount: 0,
       NonVeg: "",
       Manglik: "",
       Nri: "",
-      PermanentResident:"",
-      TemporaryResident:"",
+      PermanentResident:false,
+      TemporaryResident:false,
       Community: "",
       Religion: "",
       Caste: "",
@@ -2231,7 +2231,7 @@ useEffect(() => {
                   </div>
 
                   {/* Postal Code */}
-                  <div>
+                  {/* <div>
                     <label className="block text-gray-700 font-medium mb-1">
                       Postal Code
                     </label>
@@ -2249,7 +2249,7 @@ useEffect(() => {
                         )
                       }
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}
