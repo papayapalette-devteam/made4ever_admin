@@ -18,6 +18,13 @@ const feedbackValidationSchema = Joi.object({
       "string.min": "Feedback must be at least 5 characters",
       "string.max": "Feedback must be less than 1000 characters",
     }),
+
+      image: Joi.string()
+        .allow("")
+        .optional()
+        .messages({
+          "string.base": "Image must be a string",
+        }),
 });
 
 module.exports = {

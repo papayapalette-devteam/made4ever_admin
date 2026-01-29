@@ -28,6 +28,7 @@ function AddFeedback() {
   const [feedback, setfeedback] = useState({
     bureau: "",
     feedback: "",
+    image:""
   });
 
   const [rowCount, setRowCount] = useState(0);
@@ -221,7 +222,29 @@ function AddFeedback() {
     ...doc,
   }));
 
+  /* ==============================
+     Image Upload
+  ============================== */
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    setLoading("image-upload");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await api.post("api/upload/upload-files", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setfeedback({ ...feedback, image: res.data.urls[0] });
+    } catch {
+      Swal.fire("Error", "Image upload failed", "error");
+    } finally {
+      setLoading("");
+    }
+  };
 
   /* ==============================
      Save Feedback
@@ -364,6 +387,22 @@ const fetchBureaus = async (query) => {
       }
     />
   </FormControl>
+
+        <FormControl fullWidth sx={{ mt: 2 }}>
+                  <label className="form-label">Image</label>
+                  <input type="file" onChange={handleImageUpload} />
+                  {loading === "image-upload" ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    feedback.image && (
+                      <img
+                        src={feedback.image}
+                        alt="preview"
+                        style={{ width: 120, marginTop: 10 }}
+                      />
+                    )
+                  )}
+                </FormControl>
 
   {/* Submit Button */}
   <Button

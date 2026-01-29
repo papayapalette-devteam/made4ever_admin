@@ -7,11 +7,17 @@ import {
   Mail,
   Phone,
   MapPin,
+} from "lucide-react";
+import {
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
+  Youtube,
+  Globe
 } from "lucide-react";
+
+
 
 const Footer = () => {
   return (
@@ -34,12 +40,58 @@ const Footer = () => {
               India&apos;s #1 income-generating and matchmaking web portal for
               marriage bureaus. Connecting hearts, building futures.
             </p>
-            <div className="flex space-x-4">
-              <Facebook className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-              <Twitter className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-              <Instagram className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-              <Linkedin className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
-            </div>
+      <div className="flex space-x-4">
+  <a
+    href="https://www.facebook.com/people/Made4ever-Matrimonial/61552581722726/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Facebook className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://twitter.com/ashish_narang1"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Twitter className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://www.instagram.com/made4ever_app/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Instagram className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://www.linkedin.com/in/ashish-narang-5149aa238/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Linkedin className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  {/* YouTube */}
+  <a
+    href="https://www.youtube.com/channel/UCN6SSrH1jP9UkkCdZvjzUQg/videos"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Youtube className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  {/* WordPress */}
+  <a
+    href="https://made4evermatrimonial.wordpress.com"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Globe className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+</div>
+
           </div>
 
           {/* Quick Links */}
@@ -107,7 +159,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">
-                  info@made4ever.in
+                  support@made4ever.in
                 </span>
               </div>
             </div>

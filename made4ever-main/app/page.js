@@ -222,7 +222,7 @@ console.log(testimonials);
                 className="p-6 border rounded-xl hover:shadow-lg transition"
               >
                 <img
-                  src={t.bureau.images}
+                  src={t.image || ""}
                   alt={t.name}
                   className="w-16 h-16 mx-auto rounded-full mb-4"
                 />

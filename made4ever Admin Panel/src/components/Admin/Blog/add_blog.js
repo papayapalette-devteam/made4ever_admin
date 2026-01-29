@@ -307,6 +307,17 @@ function AddBlog() {
       });
     }
 
+      // 🔄 Show Loader
+  Swal.fire({
+    title: "Publishing blog...",
+    text: "Please wait",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
     try {
       setLoading("save-blog");
       const resp = await api.post("api/blog/add-blog", blog);

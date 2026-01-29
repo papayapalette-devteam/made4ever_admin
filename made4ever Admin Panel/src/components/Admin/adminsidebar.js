@@ -18,7 +18,9 @@ import {
   MdEditNote ,
   MdDeleteOutline,
   MdFeedback ,
-  MdOutlineSettings 
+  MdOutlineSettings,
+  MdPersonAdd ,
+  MdContactMail 
 } from "react-icons/md";
 
 import {
@@ -175,10 +177,15 @@ const menuItems = [
     label: "Feedback",
     path: "/feedback",
   },
-  {
-    icon: <MdFeedback  size={20} />,
+    {
+    icon: <MdContactMail   size={20} />,
     label: "Contact Us",
     path: "/contactus",
+  },
+  {
+    icon: <MdPersonAdd   size={20} />,
+    label: "Join Now",
+    path: "/join-now",
   },
   {
     icon: <MdOutlineSettings size={20} />,

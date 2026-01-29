@@ -10,22 +10,7 @@ import {
   Menu,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import PaletteIcon from "@mui/icons-material/Palette";
-import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
-import StrikethroughSIcon from "@mui/icons-material/StrikethroughS";
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
-import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
-import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
-import LinkIcon from "@mui/icons-material/Link";
-import ClearIcon from "@mui/icons-material/Clear";
-import UndoIcon from "@mui/icons-material/Undo";
-import RedoIcon from "@mui/icons-material/Redo";
-import FormatItalicIcon from "@mui/icons-material/FormatItalic";
-import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import FormatBoldIcon from "@mui/icons-material/FormatItalic";
+
 
 import api from "../../../api";
 import Swal from "sweetalert2";
@@ -34,7 +19,7 @@ import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-function Contactus() {
+function Joinnow() {
   const [loading, setLoading] = useState("");
 
 
@@ -225,8 +210,8 @@ function Contactus() {
         <div className="content-wrapper">
           <div className="main-content">
             <div className="profile-header">
-              <h3>Contact Us</h3>
-              <p>Manage all contacts us and join now enquiry.</p>
+              <h3>Join Now</h3>
+              <p>Manage all new members and join now enquiry.</p>
             </div>
 
      
@@ -257,4 +242,4 @@ function Contactus() {
   );
 }
 
-export default Contactus;
+export default Joinnow;

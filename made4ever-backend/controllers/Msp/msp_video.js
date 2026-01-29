@@ -69,3 +69,14 @@ exports.get_msp_video = async (req, res) => {
     });
   }
 };
+
+
+exports.delete_msp_video = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await MspVideo.findByIdAndDelete(id);
+    res.status(200).json({ message: "Deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

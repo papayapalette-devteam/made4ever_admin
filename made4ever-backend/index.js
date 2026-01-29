@@ -57,6 +57,8 @@ app.use('/api/feedback',require('./routes/feedback'));
 
 app.use('/api/join-now',require('./routes/join_now'));
 
+app.use('/api/contact-us',require('./routes/contactus'));
+
 // ===============================================
 //          all routes end
 // ===============================================

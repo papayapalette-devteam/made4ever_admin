@@ -3,9 +3,13 @@ const blogValidationSchema = require("../../Validation/blog");
 
 const addBlog = async (req, res) => {
   try {
-    // 🔍 Joi Validation
-    const { error, value } = blogValidationSchema.validate(req.body, {
+    // ✂️ Remove _id before Joi validation
+    const { _id, ...payload } = req.body;
+
+    // 🔍 Joi Validation (no _id inside)
+    const { error, value } = blogValidationSchema.validate(payload, {
       abortEarly: false,
+      stripUnknown: true,
     });
 
     if (error) {
@@ -15,25 +19,40 @@ const addBlog = async (req, res) => {
       });
     }
 
-    const { title, content, image } = req.body;
+    // ✏️ UPDATE
+    if (_id) {
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        _id,
+        value, // validated data only
+        { new: true, runValidators: true }
+      );
 
-    // 📝 Create Blog
-    const blog = new Blog({
-      title,
-      content,
-      image,
-    });
+      if (!updatedBlog) {
+        return res.status(404).json({
+          success: false,
+          message: "Blog not found",
+        });
+      }
 
+      return res.status(200).json({
+        success: true,
+        message: "Blog updated successfully",
+        data: updatedBlog,
+      });
+    }
+
+    // ➕ ADD
+    const blog = new Blog(value);
     await blog.save();
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "Blog added successfully",
       data: blog,
     });
 
   } catch (err) {
-    console.error("Add Blog Error:", err);
+    console.error("Add/Update Blog Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -41,6 +60,7 @@ const addBlog = async (req, res) => {
     });
   }
 };
+
 
 const getAllBlogs = async (req, res) => {
   try {

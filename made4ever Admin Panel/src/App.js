@@ -46,9 +46,10 @@ import AddBlog from "./components/Admin/Blog/add_blog";
 import RecycleBin from "./components/Admin/RecycleBin/recycle_bin_profile";
 import Settings  from "./components/Admin/Settings/settings";
 import AddFeedback from "./components/Admin/Feedback/feedback";
-import Contactus from "./components/Admin/ContactUs/contactus";
 import MspProfiles from "./components/Admin/Users_Data/msp_profiles";
 import UserProfile from "./components/Admin/Users_Data/user_profile";
+import Joinnow from "./components/Admin/Join_Now/join_now";
+import ContactUs from "./components/Admin/ContactUs/contact_us";
 
 
 
@@ -166,8 +167,9 @@ function App() {
 
       {/*============================== feedback routes end==================================== */}
       {/*=============================== contact us routes start============================ */}
+        <Route path="/contactus" element={<ContactUs/>}></Route>
 
-        <Route path="/contactus" element={<Contactus/>}></Route>
+        <Route path="/join-now" element={<Joinnow/>}></Route>
 
       {/*============================== contact us routes end==================================== */}
 

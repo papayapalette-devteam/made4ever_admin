@@ -12,12 +12,13 @@ const createFeedback = async (req, res) => {
       });
     }
 
-    const { bureau, feedback } = value;
+    const { bureau, feedback,image } = value;
 
     // ✅ Save to DB
     const newFeedback = await Feedback.create({
       bureau,
       feedback,
+      image
     });
 
     return res.status(200).json({
@@ -74,7 +75,7 @@ const updateFeedback = async (req, res) => {
         message: error.details[0].message,
       });
     }
-        console.log(req.params);
+       
         const id=req.params.id
 
     const feedback = await Feedback.findByIdAndUpdate(

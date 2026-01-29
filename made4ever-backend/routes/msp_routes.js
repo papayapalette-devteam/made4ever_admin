@@ -2,7 +2,7 @@ const express = require("express");
 const { add_msp, get_msp, update_msp, updateMspCredit, uploadBulkMsp, delete_msp } = require("../controllers/Msp/msp_data");
 const { add_msp_event_image, get_msp_event_image } = require("../controllers/Msp/msp_event_image");
 const { add_msp_gallary, get_msp_gallary } = require("../controllers/Msp/msp_gallary");
-const { add_msp_video, get_msp_video } = require("../controllers/Msp/msp_video");
+const { add_msp_video, get_msp_video, delete_msp_video } = require("../controllers/Msp/msp_video");
 const router = express.Router();
 
 
@@ -25,6 +25,8 @@ router.get("/Getmsp-gallary",  get_msp_gallary);
 router.post("/Savemsp-video",  add_msp_video);
 
 router.get("/Getmsp-video",  get_msp_video);
+
+router.delete("/Deletemsp-video/:id",  delete_msp_video);
 
 router.put("/update-credit/:_id",  updateMspCredit);
 
