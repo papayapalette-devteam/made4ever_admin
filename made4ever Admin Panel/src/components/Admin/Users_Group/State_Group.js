@@ -65,7 +65,7 @@ function StateGroup() {
 
   useEffect(() => {
     getall_state_group();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

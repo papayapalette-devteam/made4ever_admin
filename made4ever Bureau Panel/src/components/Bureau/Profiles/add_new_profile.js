@@ -21,9 +21,8 @@ export default function NewProfileForm() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const location=useLocation()
-  const existing_user_profile=location?.state?.id
-
+  const location = useLocation();
+  const existing_user_profile = location?.state?.id;
 
   //======================== state for adding a user=========================================
 
@@ -43,16 +42,15 @@ export default function NewProfileForm() {
       Drinking: "",
       Smoking: "",
       Nri: "",
-      PermanentResident:false,
-      TemporaryResident:false,
+      PermanentResident: false,
+      TemporaryResident: false,
       NonVeg: "",
       Manglik: "",
       Living: "",
       AnyDisability: "",
       MaritalStatus: "",
-      HasChildren: false,     
-      ChildrenCount: 0, 
-
+      HasChildren: false,
+      ChildrenCount: 0,
     },
     ReligiousDetails: {
       Community: "",
@@ -89,20 +87,20 @@ export default function NewProfileForm() {
       AgeRange: { MinAge: null, MaxAge: null },
       HeightRange: { MinHeight: null, MaxHeight: null },
       MaritialStatus: "",
-      HasChildren: false,     
+      HasChildren: false,
       ChildrenCount: 0,
       NonVeg: "",
       Manglik: "",
       Nri: "",
-      PermanentResident:false,
-      TemporaryResident:false,
+      PermanentResident: false,
+      TemporaryResident: false,
       Community: "",
       Religion: "",
-      Caste: "",
-      MotherTongue: "",
+      Caste: [],
+      MotherTongue: [],
       AnnualFamilyIncome: "",
       PersonalIncome: "",
-      PropertySize:"",
+      PropertySize: [],
       HeighstEducation: [],
       Occupation: [],
       Country: [],
@@ -125,53 +123,50 @@ export default function NewProfileForm() {
     },
   });
 
+  useEffect(() => {
+    if (existing_user_profile) {
+      // Clone the existing profile
+      const updatedProfile = { ...existing_user_profile };
 
+      // Convert Bureau object to its string ID
+      if (updatedProfile.Bureau && typeof updatedProfile.Bureau === "object") {
+        updatedProfile.Bureau =
+          updatedProfile.Bureau._id || updatedProfile.Bureau.id || "";
+      }
 
-useEffect(() => {
-  if (existing_user_profile) {
-    // Clone the existing profile
-    const updatedProfile = { ...existing_user_profile };
+      // Remove top-level createdAt & updatedAt
+      delete updatedProfile.createdAt;
+      delete updatedProfile.updatedAt;
+      delete updatedProfile.__v;
 
-    // Convert Bureau object to its string ID
-    if (updatedProfile.Bureau && typeof updatedProfile.Bureau === "object") {
-      updatedProfile.Bureau = updatedProfile.Bureau._id || updatedProfile.Bureau.id || "";
-    }
-
-    // Remove top-level createdAt & updatedAt
-    delete updatedProfile.createdAt;
-    delete updatedProfile.updatedAt;
-    delete updatedProfile.__v;
-
-    // Recursive cleaner for nested objects
-    const cleanObject = (obj) => {
-      if (Array.isArray(obj)) {
-        return obj.map(cleanObject);
-      } else if (obj && typeof obj === "object") {
-        const cleaned = {};
-        for (const key in obj) {
-          // Remove unwanted fields
-          if (["_id", "createdAt", "updatedAt", "__v"].includes(key)) continue;
-          cleaned[key] = cleanObject(obj[key]);
+      // Recursive cleaner for nested objects
+      const cleanObject = (obj) => {
+        if (Array.isArray(obj)) {
+          return obj.map(cleanObject);
+        } else if (obj && typeof obj === "object") {
+          const cleaned = {};
+          for (const key in obj) {
+            // Remove unwanted fields
+            if (["_id", "createdAt", "updatedAt", "__v"].includes(key))
+              continue;
+            cleaned[key] = cleanObject(obj[key]);
+          }
+          return cleaned;
         }
-        return cleaned;
-      }
-      return obj;
-    };
+        return obj;
+      };
 
-    // Clean nested objects but keep top-level _id
-    for (const key in updatedProfile) {
-      if (key !== "_id" && key !== "Bureau") {
-        updatedProfile[key] = cleanObject(updatedProfile[key]);
+      // Clean nested objects but keep top-level _id
+      for (const key in updatedProfile) {
+        if (key !== "_id" && key !== "Bureau") {
+          updatedProfile[key] = cleanObject(updatedProfile[key]);
+        }
       }
+
+      // ✅ Set the cleaned profile to state
+      setuser_profile(updatedProfile);
     }
-
-    // ✅ Set the cleaned profile to state
-    setuser_profile(updatedProfile);
-
-  }
-}, [existing_user_profile]);
-
-
+  }, [existing_user_profile]);
 
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
@@ -212,12 +207,11 @@ useEffect(() => {
     }
   }, [user_profile.PersonalDetails.DateOfBirth]);
 
-
   // get mother tongue
 
-  const[select_loading,setselect_loading]=useState("")
+  const [select_loading, setselect_loading] = useState("");
 
-   const [All_Mother_Tongue, setAll_Mother_Tongue] = useState([]);
+  const [All_Mother_Tongue, setAll_Mother_Tongue] = useState([]);
   const getall_mother_tongue = async () => {
     try {
       setselect_loading("mother_tongue");
@@ -232,7 +226,7 @@ useEffect(() => {
     }
   };
 
-// get community
+  // get community
 
   const [All_Community_Group, setAll_Community_Group] = useState([]);
 
@@ -250,12 +244,9 @@ useEffect(() => {
     }
   };
 
-
-  
-
   // get religion
 
-   const [All_Religion_Group, setAll_Religion_Group] = useState([]);
+  const [All_Religion_Group, setAll_Religion_Group] = useState([]);
 
   const getall_religion_group = async () => {
     try {
@@ -273,7 +264,7 @@ useEffect(() => {
 
   // get cast
 
-   const [All_Cast_Group, setAll_Cast_Group] = useState([]);
+  const [All_Cast_Group, setAll_Cast_Group] = useState([]);
   const getall_cast_group = async () => {
     try {
       setselect_loading("cast");
@@ -290,7 +281,7 @@ useEffect(() => {
 
   // get gotra
 
-   const [All_Gothra_Group, setAll_Gothra_Group] = useState([]);
+  const [All_Gothra_Group, setAll_Gothra_Group] = useState([]);
   const getall_gothra_group = async () => {
     try {
       setselect_loading("gotra");
@@ -305,9 +296,9 @@ useEffect(() => {
     }
   };
 
-  // get occupation 
+  // get occupation
 
-    const [All_Occupation, setAll_Occupation] = useState([]);
+  const [All_Occupation, setAll_Occupation] = useState([]);
   const getall_occupation = async () => {
     try {
       setselect_loading("occupation");
@@ -331,7 +322,7 @@ useEffect(() => {
       const params = new URLSearchParams();
       params.append("lookup_type", "education_group");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Education_Group(resp.data.data)
+      setAll_Education_Group(resp.data.data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -344,10 +335,10 @@ useEffect(() => {
   //   getAll_Education_Group()
   // },[])
 
-
   // get education specialization
 
-  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
+  const [All_Education_Specialization, setAll_Education_Specialization] =
+    useState([]);
   const getall_education_specialization = async () => {
     try {
       setselect_loading("education_specialization");
@@ -364,7 +355,6 @@ useEffect(() => {
 
   // get income
 
-  
   const [All_Income_Group, setAll_Income_Group] = useState([]);
   const getall_income_group = async () => {
     try {
@@ -373,7 +363,6 @@ useEffect(() => {
       params.append("lookup_type", "income_group");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Income_Group(resp.data.data);
-  
     } catch (error) {
       console.log(error);
     } finally {
@@ -383,7 +372,7 @@ useEffect(() => {
 
   // get country
 
-    const [All_Country_Group, setAll_Country_Group] = useState([]);
+  const [All_Country_Group, setAll_Country_Group] = useState([]);
   const getall_country_group = async () => {
     try {
       setselect_loading("country");
@@ -400,7 +389,7 @@ useEffect(() => {
 
   // get state
 
-   const [All_State_Group, setAll_State_Group] = useState([]);
+  const [All_State_Group, setAll_State_Group] = useState([]);
   const getall_state_group = async (selectedId) => {
     try {
       setselect_loading("state");
@@ -418,7 +407,7 @@ useEffect(() => {
 
   // get city
 
-    const [All_City_Group, setAll_City_Group] = useState([]);
+  const [All_City_Group, setAll_City_Group] = useState([]);
   const getall_city_group = async (selectedId) => {
     try {
       setselect_loading("city");
@@ -436,7 +425,7 @@ useEffect(() => {
 
   // get property type
 
-   const [All_Property_Type, setAll_Property_Type] = useState([]);
+  const [All_Property_Type, setAll_Property_Type] = useState([]);
 
   const getall_property_type = async () => {
     try {
@@ -452,9 +441,9 @@ useEffect(() => {
     }
   };
 
-   // get property size
+  // get property size
 
-   const [All_Property_Size, setAll_Property_Size] = useState([]);
+  const [All_Property_Size, setAll_Property_Size] = useState([]);
 
   const getall_property_size = async () => {
     try {
@@ -479,7 +468,7 @@ useEffect(() => {
       const params = new URLSearchParams();
       params.append("lookup_type", "residence_type");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Residence_Type(resp.data.data)
+      setAll_Residence_Type(resp.data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -563,7 +552,6 @@ useEffect(() => {
 
   //============================== multiple value onchange =================================
 
- 
   const [selectedState, setselectedState] = useState([]);
   const [selectedCity, setselectedCity] = useState([]);
 
@@ -581,147 +569,166 @@ useEffect(() => {
     }));
   };
 
-
-
   //=============================== paste function=========================================
 
- const handlePaste = async () => {
-  try {
-    const text = await navigator.clipboard.readText();
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
 
-    // ✅ 1. Personal Details extraction
-    const personal = {
-      Name:
-        text.match(
-          /(Full Name|Name|Candidate Name|Bride Name|Groom Name|Boy Name|Girl Name|Person Name|Applicant Name|Member Name|User Name|Register Name)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+      // ✅ 1. Personal Details extraction
+      const personal = {
+        Name:
+          text
+            .match(
+              /(Full Name|Name|Candidate Name|Bride Name|Groom Name|Boy Name|Girl Name|Person Name|Applicant Name|Member Name|User Name|Register Name)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      // DateOfBirth:
-      //   text.match(
-      //     /(Date of Birth|DOB|Birth Date|Born On|Birthday|D\.O\.B|Born Date|Birth Day|Date of Birth \(DD\/MM\/YYYY\)|Date of Birth \(MM\-DD\-YYYY\))\s*[:\-]?\s*([0-9\/\-\.\s]+)/i
-      //   )?.[2]?.trim() || "",
+        // DateOfBirth:
+        //   text.match(
+        //     /(Date of Birth|DOB|Birth Date|Born On|Birthday|D\.O\.B|Born Date|Birth Day|Date of Birth \(DD\/MM\/YYYY\)|Date of Birth \(MM\-DD\-YYYY\))\s*[:\-]?\s*([0-9\/\-\.\s]+)/i
+        //   )?.[2]?.trim() || "",
 
-      // TimeOfBirth:
-      //   text.match(
-      //     /(Time of Birth|Time|Birth Time|TOB|T\.O\.B|Born At \(Time\)|Birth Timing|Exact Birth Time|Time of Birth \(HH:MM\)|Birth Hour)\s*[:\-]?\s*(.*)/i
-      //   )?.[2]?.trim() || "",
+        // TimeOfBirth:
+        //   text.match(
+        //     /(Time of Birth|Time|Birth Time|TOB|T\.O\.B|Born At \(Time\)|Birth Timing|Exact Birth Time|Time of Birth \(HH:MM\)|Birth Hour)\s*[:\-]?\s*(.*)/i
+        //   )?.[2]?.trim() || "",
 
-      PlaceOfBirth:
-        text.match(
-          /(Place of Birth|Birth Place|POB|P\.O\.B|Birthplace|Born At \(Place\)|Birth Location|Native Place|Birth City|Birth Town)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+        PlaceOfBirth:
+          text
+            .match(
+              /(Place of Birth|Birth Place|POB|P\.O\.B|Birthplace|Born At \(Place\)|Birth Location|Native Place|Birth City|Birth Town)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      Age:
-        text.match(
-          /(Age|Current Age|Years|Years Old|Present Age|Age \(Years\)|Age in Years)\s*[:\-]?\s*(\d+)/i
-        )?.[2]?.trim() || "",
+        Age:
+          text
+            .match(
+              /(Age|Current Age|Years|Years Old|Present Age|Age \(Years\)|Age in Years)\s*[:\-]?\s*(\d+)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      Height:
-        text.match(
-          /(Height|Height \(cm\)|Height \(feet\)|Height in cm|Height in feet|Height \(ft\/inches\)|Body Height|Physical Height|Ht\.)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+        Height:
+          text
+            .match(
+              /(Height|Height \(cm\)|Height \(feet\)|Height in cm|Height in feet|Height \(ft\/inches\)|Body Height|Physical Height|Ht\.)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      Complexion:
-        text.match(
-          /(Complexion|Skin Tone|Skin Color|Skin Complexion|Color|Appearance|Fair\/Wheatish\/Dark|Body Complexion|Complexion Type)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+        Complexion:
+          text
+            .match(
+              /(Complexion|Skin Tone|Skin Color|Skin Complexion|Color|Appearance|Fair\/Wheatish\/Dark|Body Complexion|Complexion Type)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      MobileNumber:
-        text.match(
-          /(Mobile|Contact|Phone|WhatsApp|Cell)\s*(Number|No|#)?\s*[:\-]?\s*(\d{10,})/i
-        )?.[3]?.trim() || "",
+        MobileNumber:
+          text
+            .match(
+              /(Mobile|Contact|Phone|WhatsApp|Cell)\s*(Number|No|#)?\s*[:\-]?\s*(\d{10,})/i,
+            )?.[3]
+            ?.trim() || "",
 
-      Manglik: text.match(/(non\s*mangalik|not\s*manglik)/i)
-        ? "No"
-        : text.match(
-            /(manglik|mangal dosha|chevvai dosham|mars effect|mangal|mangalik dosha)/i
-          )
-        ? "Yes"
-        : "",
-    };
+        Manglik: text.match(/(non\s*mangalik|not\s*manglik)/i)
+          ? "No"
+          : text.match(
+                /(manglik|mangal dosha|chevvai dosham|mars effect|mangal|mangalik dosha)/i,
+              )
+            ? "Yes"
+            : "",
+      };
 
-    // ✅ 2. Religious Details
-    const religion = {
-      Religion:
-        text.match(/(Religion)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
-      Community:
-        text.match(/(Community)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
-      Caste:
-        text.match(
-          /(Caste|Sub-Caste|Subcaste|Caste\/Sub-Caste|Sect|Varna|Ethnic Group|Religion & Caste)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
-      Gothram:
-        text.match(/(Gotra|Gothra|Gothram)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
-    };
+      // ✅ 2. Religious Details
+      const religion = {
+        Religion: text.match(/(Religion)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
+        Community:
+          text.match(/(Community)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
+        Caste:
+          text
+            .match(
+              /(Caste|Sub-Caste|Subcaste|Caste\/Sub-Caste|Sect|Varna|Ethnic Group|Religion & Caste)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
+        Gothram:
+          text.match(/(Gotra|Gothra|Gothram)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() ||
+          "",
+      };
 
-    // ✅ 3. Family Details
-    const family = {
-      FatherName:
-        text.match(
-          /(Father Name|Father's Full Name|Father|Dad's Name|Parent Name \(Father\)|Paternal Name)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+      // ✅ 3. Family Details
+      const family = {
+        FatherName:
+          text
+            .match(
+              /(Father Name|Father's Full Name|Father|Dad's Name|Parent Name \(Father\)|Paternal Name)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      FatherOccupation:
-        text.match(
-          /(Father's Occupation|Father's Job|Father Work|Father's Business|Dad's Profession|Father's Employment|Father Occupation Details|Father's Career)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+        FatherOccupation:
+          text
+            .match(
+              /(Father's Occupation|Father's Job|Father Work|Father's Business|Dad's Profession|Father's Employment|Father Occupation Details|Father's Career)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      MotherName:
-        text.match(
-          /(Mother Name|Mother's Full Name|Mother|Mom's Name|Parent Name \(Mother\)|Maternal Name)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
+        MotherName:
+          text
+            .match(
+              /(Mother Name|Mother's Full Name|Mother|Mom's Name|Parent Name \(Mother\)|Maternal Name)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
 
-      MotherOccupation:
-        text.match(
-          /(Mother's Occupation|Mother's Job|Mother Work|Mother's Business|Mom's Profession|Mother's Employment|Mother Occupation Details|Mother's Career)\s*[:\-]?\s*(.*)/i
-        )?.[2]?.trim() || "",
-    };
+        MotherOccupation:
+          text
+            .match(
+              /(Mother's Occupation|Mother's Job|Mother Work|Mother's Business|Mom's Profession|Mother's Employment|Mother Occupation Details|Mother's Career)\s*[:\-]?\s*(.*)/i,
+            )?.[2]
+            ?.trim() || "",
+      };
 
-    // ✅ Update the entire user_profile state
-    setuser_profile((prev) => ({
-      ...prev,
-      PersonalDetails: {
-        ...prev.PersonalDetails,
-        ...personal,
-      },
-      ReligiousDetails: {
-        ...prev.ReligiousDetails,
-        ...religion,
-      },
-      FamilyDetails: {
-        ...prev.FamilyDetails,
-        ...family,
-      },
-    }));
+      // ✅ Update the entire user_profile state
+      setuser_profile((prev) => ({
+        ...prev,
+        PersonalDetails: {
+          ...prev.PersonalDetails,
+          ...personal,
+        },
+        ReligiousDetails: {
+          ...prev.ReligiousDetails,
+          ...religion,
+        },
+        FamilyDetails: {
+          ...prev.FamilyDetails,
+          ...family,
+        },
+      }));
 
-    Swal.fire({
-      icon: "success",
-      title: "Data Pasted Successfully!",
-      text: "WhatsApp message parsed and added to all sections.",
-      timer: 2000,
-      showConfirmButton: true,
-    });
-  } catch (err) {
-    console.error("Error parsing data:", err);
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Data Format",
-      text: "Please copy a valid WhatsApp message format.",
-    });
-  }
-};
-
+      Swal.fire({
+        icon: "success",
+        title: "Data Pasted Successfully!",
+        text: "WhatsApp message parsed and added to all sections.",
+        timer: 2000,
+        showConfirmButton: true,
+      });
+    } catch (err) {
+      console.error("Error parsing data:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Data Format",
+        text: "Please copy a valid WhatsApp message format.",
+      });
+    }
+  };
 
   //========================= post method for adding new profile===============================
 
   const add_new_profile = async () => {
     try {
       const resp = await api.post("api/user/add-new-profile", user_profile);
-     
+
       if (resp.status === 200) {
         Swal.fire({
           icon: "success",
-          title: user_profile._id?"Profile Update":"Profile Created!",
+          title: user_profile._id ? "Profile Update" : "Profile Created!",
           text: resp.data.message || "User profile created successfully",
           showConfirmButton: true,
           confirmButtonText: "OK",
@@ -751,8 +758,6 @@ useEffect(() => {
     }
   };
 
-
-
   return (
     <div>
       <Header />
@@ -760,15 +765,17 @@ useEffect(() => {
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
-          <h1 className="text-3xl font-bold">
-              {existing_user_profile ? "Update New Profile" : "Create New Profile"}
+            <h1 className="text-3xl font-bold">
+              {existing_user_profile
+                ? "Update New Profile"
+                : "Create New Profile"}
             </h1>
 
             <p className="text-sm opacity-90 mt-1">
               Step {step} of 8 — Complete your details to get the best matches!
             </p>
           </div>
-<label className="md:hidden">Paste WhatsApp Data</label>
+          <label className="md:hidden">Paste WhatsApp Data</label>
           <OverlayTrigger
             placement="top"
             overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}
@@ -805,12 +812,13 @@ useEffect(() => {
                   className="flex flex-col items-center min-w-[80px]"
                 >
                   <div
-                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold ${
+                  onClick={() => setStep(num)}
+                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold cursor-pointer ${
                       step === num
                         ? "bg-red-600 text-white"
                         : step > num
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-300 text-gray-700"
+                          ? "bg-green-500 text-white"
+                          : "bg-gray-300 text-gray-700"
                     }`}
                   >
                     {num}
@@ -824,6 +832,25 @@ useEffect(() => {
           </div>
 
           {/* Form Body */}
+          {/* ================= STEP NAVIGATION ================= */}
+{/* <div className="flex flex-wrap gap-2 mb-6">
+  {[1,2,3,4,5,6,7,8].map((s) => (
+    <button
+      key={s}
+      type="button"
+      onClick={() => setStep(s)}
+      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
+        ${
+          step === s
+            ? "bg-red-600 text-white"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
+    >
+      Step {s}
+    </button>
+  ))}
+</div> */}
+
           <div className="p-6 sm:p-8 space-y-6">
             {/* STEP 1 - Personal Details */}
             {step === 1 && (
@@ -869,7 +896,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "DateOfBirth",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -888,7 +915,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "TimeOfBirth",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       value={user_profile.PersonalDetails.TimeOfBirth}
@@ -909,7 +936,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "PlaceOfBirth",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       value={user_profile.PersonalDetails.PlaceOfBirth}
@@ -934,8 +961,6 @@ useEffect(() => {
                     />
                   </div>
 
-            
-
                   {/* Complexion */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -948,7 +973,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "Complexion",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -976,7 +1001,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "Height",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -988,30 +1013,30 @@ useEffect(() => {
                       </option>
 
                       {/* <option value="">Select height</option> */}
-                    <option>4'8"</option>
-                    <option>4'9"</option>
-                    <option>4'10"</option>
-                    <option>4'11"</option>
+                      <option>4'8"</option>
+                      <option>4'9"</option>
+                      <option>4'10"</option>
+                      <option>4'11"</option>
 
-                    <option>5'0"</option>
-                    <option>5'1"</option>
-                    <option>5'2"</option>
-                    <option>5'3"</option>
-                    <option>5'4"</option>
-                    <option>5'5"</option>
-                    <option>5'6"</option>
-                    <option>5'7"</option>
-                    <option>5'8"</option>
-                    <option>5'9"</option>
-                    <option>5'10"</option>
-                    <option>5'11"</option>
+                      <option>5'0"</option>
+                      <option>5'1"</option>
+                      <option>5'2"</option>
+                      <option>5'3"</option>
+                      <option>5'4"</option>
+                      <option>5'5"</option>
+                      <option>5'6"</option>
+                      <option>5'7"</option>
+                      <option>5'8"</option>
+                      <option>5'9"</option>
+                      <option>5'10"</option>
+                      <option>5'11"</option>
 
-                    <option>6'0"</option>
-                    <option>6'1"</option>
-                    <option>6'2"</option>
-                    <option>6'3"</option>
-                    <option>6'4"</option>
-                    <option>6'5"</option>
+                      <option>6'0"</option>
+                      <option>6'1"</option>
+                      <option>6'2"</option>
+                      <option>6'3"</option>
+                      <option>6'4"</option>
+                      <option>6'5"</option>
                     </select>
                   </div>
 
@@ -1029,7 +1054,7 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "Weight",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       value={user_profile.PersonalDetails.Weight}
@@ -1048,12 +1073,13 @@ useEffect(() => {
                         handleChange(
                           "PersonalDetails",
                           "MotherTongue",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                       onClick={() => {
-                          if (All_Mother_Tongue.length === 0) getall_mother_tongue(); 
-                        }}
+                      onClick={() => {
+                        if (All_Mother_Tongue.length === 0)
+                          getall_mother_tongue();
+                      }}
                     >
                       <option
                         value={
@@ -1064,9 +1090,9 @@ useEffect(() => {
                           "Select Mother Tongue"}
                       </option>
                       {/* Show loader while fetching */}
-                        {select_loading==="mother_tongue" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {select_loading === "mother_tongue" && (
+                        <option disabled>Loading...</option>
+                      )}
                       {All_Mother_Tongue.map((item) => (
                         <option key={item._id} value={item.lookup_value}>
                           {item.lookup_value}
@@ -1094,7 +1120,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "Gender",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1113,7 +1139,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "Gender",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1132,7 +1158,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "Gender",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1146,8 +1172,7 @@ useEffect(() => {
                     (label, i) => (
                       <div key={i}>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {label === "Nri" ? "NRI" : label}
-                          
+                          {label === "Nri" ? "NRI" : label}
                         </label>
                         <div className="flex gap-6">
                           <label className="flex items-center gap-2">
@@ -1163,7 +1188,7 @@ useEffect(() => {
                                 handleChange(
                                   "PersonalDetails",
                                   label,
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             />
@@ -1182,7 +1207,7 @@ useEffect(() => {
                                 handleChange(
                                   "PersonalDetails",
                                   label,
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             />
@@ -1190,57 +1215,61 @@ useEffect(() => {
                           </label>
                         </div>
                       </div>
-                    )
+                    ),
                   )}
 
-                       {/* ✅ If user nri */}
-{user_profile?.PersonalDetails?.Nri==="Yes" && (
-  <div className="flex flex-col gap-2 ml-6">
-    <label className="text-sm text-gray-700 font-medium">
-      Resident Status
-    </label>
+                  {/* ✅ If user nri */}
+                  {user_profile?.PersonalDetails?.Nri === "Yes" && (
+                    <div className="flex flex-col gap-2 ml-6">
+                      <label className="text-sm text-gray-700 font-medium">
+                        Resident Status
+                      </label>
 
-    <label className="flex items-center gap-2 text-sm text-gray-600">
-      <input
-        type="checkbox"
-        name="PermanentResident"
-        className="w-4 h-4"
-        checked={user_profile.PersonalDetails.PermanentResident}
-        onChange={(e) =>
-          setuser_profile((prev) => ({
-            ...prev,
-            PersonalDetails: {
-              ...prev.PersonalDetails,
-              PermanentResident: e.target.checked,
-              TemporaryResident: false,
-            },
-          }))
-        }
-      />
-      Permanent Resident
-    </label>
+                      <label className="flex items-center gap-2 text-sm text-gray-600">
+                        <input
+                          type="checkbox"
+                          name="PermanentResident"
+                          className="w-4 h-4"
+                          checked={
+                            user_profile.PersonalDetails.PermanentResident
+                          }
+                          onChange={(e) =>
+                            setuser_profile((prev) => ({
+                              ...prev,
+                              PersonalDetails: {
+                                ...prev.PersonalDetails,
+                                PermanentResident: e.target.checked,
+                                TemporaryResident: false,
+                              },
+                            }))
+                          }
+                        />
+                        Permanent Resident
+                      </label>
 
-    <label className="flex items-center gap-2 text-sm text-gray-600">
-      <input
-        type="checkbox"
-        name="TemporaryResident"
-        className="w-4 h-4"
-        checked={user_profile.PersonalDetails.TemporaryResident}
-        onChange={(e) =>
-          setuser_profile((prev) => ({
-            ...prev,
-            PersonalDetails: {
-              ...prev.PersonalDetails,
-              TemporaryResident: e.target.checked,
-              PermanentResident: false,
-            },
-          }))
-        }
-      />
-      Temporary Resident
-    </label>
-  </div>
-)}
+                      <label className="flex items-center gap-2 text-sm text-gray-600">
+                        <input
+                          type="checkbox"
+                          name="TemporaryResident"
+                          className="w-4 h-4"
+                          checked={
+                            user_profile.PersonalDetails.TemporaryResident
+                          }
+                          onChange={(e) =>
+                            setuser_profile((prev) => ({
+                              ...prev,
+                              PersonalDetails: {
+                                ...prev.PersonalDetails,
+                                TemporaryResident: e.target.checked,
+                                PermanentResident: false,
+                              },
+                            }))
+                          }
+                        />
+                        Temporary Resident
+                      </label>
+                    </div>
+                  )}
 
                   {/* Living */}
 
@@ -1262,7 +1291,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "Living",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1282,7 +1311,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "Living",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1311,7 +1340,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "AnyDisability",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1331,7 +1360,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "AnyDisability",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1361,7 +1390,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "MaritalStatus",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1381,7 +1410,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "MaritalStatus",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1401,7 +1430,7 @@ useEffect(() => {
                             handleChange(
                               "PersonalDetails",
                               "MaritalStatus",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                         />
@@ -1410,51 +1439,54 @@ useEffect(() => {
                     </div>
                   </div>
 
-                   {/* ✅ Show extra fields if Divorce is selected */}
-  {(user_profile.PersonalDetails.MaritalStatus === "Divorce" || 
-  user_profile.PersonalDetails.MaritalStatus === "Widow/Widower")  && (
-    <div className="mt-3 ml-4 space-y-2">
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          className="accent-red-600"
-          checked={user_profile.PersonalDetails.HasChildren || false}
-          onChange={(e) =>
-            handleChange(
-              "PersonalDetails",
-              "HasChildren",
-              e.target.checked
-            )
-          }
-        />
-        Do you have children?
-      </label>
+                  {/* ✅ Show extra fields if Divorce is selected */}
+                  {(user_profile.PersonalDetails.MaritalStatus === "Divorce" ||
+                    user_profile.PersonalDetails.MaritalStatus ===
+                      "Widow/Widower") && (
+                    <div className="mt-3 ml-4 space-y-2">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="accent-red-600"
+                          checked={
+                            user_profile.PersonalDetails.HasChildren || false
+                          }
+                          onChange={(e) =>
+                            handleChange(
+                              "PersonalDetails",
+                              "HasChildren",
+                              e.target.checked,
+                            )
+                          }
+                        />
+                        Do you have children?
+                      </label>
 
-      {/* ✅ If user has children, show number input */}
-      {user_profile.PersonalDetails.HasChildren && (
-        <div className="flex items-center gap-2 ml-6">
-          <label className="text-sm text-gray-700">
-            How many children?
-          </label>
-          <input
-            type="number"
-            min="1"
-            className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
-            value={user_profile.PersonalDetails.ChildrenCount || 0}
-            onChange={(e) =>
-              handleChange(
-                "PersonalDetails",
-                "ChildrenCount",
-                e.target.value
-              )
-            }
-          />
-        </div>
-      )}
-    </div>
-  )}
-
-
+                      {/* ✅ If user has children, show number input */}
+                      {user_profile.PersonalDetails.HasChildren && (
+                        <div className="flex items-center gap-2 ml-6">
+                          <label className="text-sm text-gray-700">
+                            How many children?
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                            value={
+                              user_profile.PersonalDetails.ChildrenCount || 0
+                            }
+                            onChange={(e) =>
+                              handleChange(
+                                "PersonalDetails",
+                                "ChildrenCount",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -1466,8 +1498,7 @@ useEffect(() => {
                   Religious Details
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                                 {/* Religion */}
+                  {/* Religion */}
                   <div>
                     <label className="block text-gray-700 font-medium mb-1">
                       Religion
@@ -1478,13 +1509,13 @@ useEffect(() => {
                         handleChange(
                           "ReligiousDetails",
                           "Religion",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                        onClick={() => {
-                            if (All_Religion_Group.length === 0) getall_religion_group();
-                          }
-                        }
+                      onClick={() => {
+                        if (All_Religion_Group.length === 0)
+                          getall_religion_group();
+                      }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Religion || ""}
@@ -1492,18 +1523,16 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Religion ||
                           "Select Religion"}
                       </option>
-                      {select_loading==="religion" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {select_loading === "religion" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Religion_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Religion_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1518,12 +1547,13 @@ useEffect(() => {
                         handleChange(
                           "ReligiousDetails",
                           "Community",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                          onClick={() => {
-                            if (All_Community_Group.length === 0) getall_community_group();
-                          }}
+                      onClick={() => {
+                        if (All_Community_Group.length === 0)
+                          getall_community_group();
+                      }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Community || ""}
@@ -1531,19 +1561,17 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Community ||
                           "Select Community"}
                       </option>
-                            {/* Show loader while fetching */}
-                        {select_loading==="community" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {/* Show loader while fetching */}
+                      {select_loading === "community" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Community_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Community_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1559,7 +1587,7 @@ useEffect(() => {
                         handleChange(
                           "ReligiousDetails",
                           "Caste",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       onClick={() => {
@@ -1572,22 +1600,18 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Caste ||
                           "Select Caste"}
                       </option>
-                      {select_loading==="cast" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {select_loading === "cast" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Cast_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Cast_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
-
-   
 
                   {/* Gothram */}
                   <div>
@@ -1600,11 +1624,12 @@ useEffect(() => {
                         handleChange(
                           "ReligiousDetails",
                           "Gothram",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       onClick={() => {
-                        if (All_Gothra_Group.length === 0) getall_gothra_group();
+                        if (All_Gothra_Group.length === 0)
+                          getall_gothra_group();
                       }}
                     >
                       <option
@@ -1613,18 +1638,16 @@ useEffect(() => {
                         {user_profile?.ReligiousDetails?.Gothram ||
                           "Select Gotra"}
                       </option>
-                      {select_loading==="gotra" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {select_loading === "gotra" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Gothra_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Gothra_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -1654,7 +1677,7 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "FatherName",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -1675,7 +1698,7 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "MotherName",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -1693,12 +1716,12 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "FatherOccupation",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                       onClick={() => {
-                          if (All_Occupation.length === 0) getall_occupation();
-                        }}
+                      onClick={() => {
+                        if (All_Occupation.length === 0) getall_occupation();
+                      }}
                     >
                       <option
                         value={
@@ -1708,18 +1731,16 @@ useEffect(() => {
                         {user_profile?.FamilyDetails?.FatherOccupation ||
                           "Select Occupation"}
                       </option>
-                      {loading==="occupation" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {loading === "occupation" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Occupation.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Occupation.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1735,7 +1756,7 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "MotherOccupation",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -1747,13 +1768,11 @@ useEffect(() => {
                         {user_profile?.FamilyDetails?.MotherOccupation ||
                           "Select Occupation"}
                       </option>
-                        {
-                          All_Occupation.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {All_Occupation.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1772,7 +1791,7 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "NoOfSiblings",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -1790,7 +1809,7 @@ useEffect(() => {
                         handleChange(
                           "FamilyDetails",
                           "FamilyType",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -1821,7 +1840,7 @@ useEffect(() => {
                       handleChange(
                         "FamilyDetails",
                         "FamilyDescription",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   ></textarea>
@@ -1838,9 +1857,8 @@ useEffect(() => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Highest Education */}
-              
 
-                   <div>
+                  <div>
                     <label className="block text-gray-700 font-medium mb-1">
                       Highest Education
                     </label>
@@ -1851,37 +1869,34 @@ useEffect(() => {
                         handleChange(
                           "EducationDetails",
                           "HighestEducation",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       onClick={() => {
-                        if (All_Education_Group.length === 0) getAll_Education_Group();
+                        if (All_Education_Group.length === 0)
+                          getAll_Education_Group();
                       }}
                     >
                       <option
                         value={
-                          user_profile?.EducationDetails
-                            ?.HighestEducation || ""
+                          user_profile?.EducationDetails?.HighestEducation || ""
                         }
                       >
-                        {user_profile?.EducationDetails
-                          ?.HighestEducation || "Select Education"}
+                        {user_profile?.EducationDetails?.HighestEducation ||
+                          "Select Education"}
                       </option>
-                      {loading==="education" && (
+                      {loading === "education" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_Education_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Education_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
-
 
                   {/* Education Specialization */}
                   <div>
@@ -1895,11 +1910,12 @@ useEffect(() => {
                         handleChange(
                           "EducationDetails",
                           "EducationSpecialization",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       onClick={() => {
-                        if (All_Education_Specialization.length === 0) getall_education_specialization();
+                        if (All_Education_Specialization.length === 0)
+                          getall_education_specialization();
                       }}
                     >
                       <option
@@ -1911,18 +1927,16 @@ useEffect(() => {
                         {user_profile?.EducationDetails
                           ?.EducationSpecialization || "Select Specialization"}
                       </option>
-                      {loading==="education_specialization" && (
+                      {loading === "education_specialization" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_Education_Specialization.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Education_Specialization.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1938,7 +1952,7 @@ useEffect(() => {
                         handleChange(
                           "EducationDetails",
                           "Occupation",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     >
@@ -1948,13 +1962,11 @@ useEffect(() => {
                         {user_profile?.EducationDetails?.Occupation ||
                           "Select Occupation"}
                       </option>
-                      {
-                        All_Occupation.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Occupation.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1970,11 +1982,12 @@ useEffect(() => {
                         handleChange(
                           "EducationDetails",
                           "AnnualFamilyIncome",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                       onClick={() => {
-                        if (All_Income_Group.length === 0) getall_income_group();
+                      onClick={() => {
+                        if (All_Income_Group.length === 0)
+                          getall_income_group();
                       }}
                     >
                       <option
@@ -1986,18 +1999,16 @@ useEffect(() => {
                         {user_profile?.EducationDetails?.AnnualFamilyIncome ||
                           "Select Annual Family Income"}
                       </option>
-                        {loading==="income" && (
+                      {loading === "income" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_Income_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Income_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -2013,38 +2024,34 @@ useEffect(() => {
                         handleChange(
                           "EducationDetails",
                           "PersonalIncome",
-                          e.target.value
+                          e.target.value,
                         )
                       }
-                       onClick={() => {
-                        if (All_Income_Group.length === 0) getall_income_group();
+                      onClick={() => {
+                        if (All_Income_Group.length === 0)
+                          getall_income_group();
                       }}
                     >
                       <option
                         value={
-                          user_profile?.EducationDetails?.PersonalIncome ||
-                          ""
+                          user_profile?.EducationDetails?.PersonalIncome || ""
                         }
                       >
                         {user_profile?.EducationDetails?.PersonalIncome ||
                           "Select Personal Income"}
                       </option>
-                        {loading==="income" && (
+                      {loading === "income" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_Income_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Income_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
-
-
                 </div>
 
                 {/* Education Details */}
@@ -2062,7 +2069,7 @@ useEffect(() => {
                       handleChange(
                         "EducationDetails",
                         "EducationDetails",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   ></textarea>
@@ -2083,7 +2090,7 @@ useEffect(() => {
                       handleChange(
                         "EducationDetails",
                         "OccupationDetails",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   ></textarea>
@@ -2114,7 +2121,7 @@ useEffect(() => {
                         handleChange(
                           "ContactDetails",
                           "ParmanentAddress",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     ></textarea>
@@ -2128,19 +2135,19 @@ useEffect(() => {
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="Country"
-                      onChange={(e) =>
-                      {
-                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id");
+                      onChange={(e) => {
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute("data-id");
                         handleChange(
                           "ContactDetails",
                           "Country",
-                          e.target.value
-                        )
-                         getall_state_group(selectedId);
-                      }
-                      }
-                       onClick={() => {
-                        if (All_Country_Group.length === 0) getall_country_group();
+                          e.target.value,
+                        );
+                        getall_state_group(selectedId);
+                      }}
+                      onClick={() => {
+                        if (All_Country_Group.length === 0)
+                          getall_country_group();
                       }}
                     >
                       <option
@@ -2149,18 +2156,20 @@ useEffect(() => {
                         {user_profile?.ContactDetails?.Country ||
                           "Select Country"}
                       </option>
-                     {loading==="country" && (
+                      {loading === "country" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_Country_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_Country_Group.map((item) => (
+                        <option
+                          key={item._id}
+                          value={item.lookup_value}
+                          data-id={item._id}
+                        >
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -2172,30 +2181,30 @@ useEffect(() => {
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="State"
-                      onChange={(e) =>
-                      {
-                        const selectedId =e.target.selectedOptions[0].getAttribute("data-id")
-                        handleChange("ContactDetails", "State", e.target.value)
+                      onChange={(e) => {
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute("data-id");
+                        handleChange("ContactDetails", "State", e.target.value);
                         getall_city_group(selectedId);
-                      }
-                      }
-                    
+                      }}
                     >
                       <option value={user_profile?.ContactDetails?.State || ""}>
                         {user_profile?.ContactDetails?.State || "Select State"}
                       </option>
-                      {loading==="state" && (
+                      {loading === "state" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_State_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_State_Group.map((item) => (
+                        <option
+                          key={item._id}
+                          value={item.lookup_value}
+                          data-id={item._id}
+                        >
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -2210,23 +2219,20 @@ useEffect(() => {
                       onChange={(e) =>
                         handleChange("ContactDetails", "City", e.target.value)
                       }
-                    
                     >
                       <option value={user_profile?.ContactDetails?.City || ""}>
                         {user_profile?.ContactDetails?.City || "Select City"}
                       </option>
-                       {loading==="city" && (
+                      {loading === "city" && (
                         <option disabled>Loading...</option>
                       )}
 
                       {/* Show fetched values */}
-                      {
-                        All_City_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
+                      {All_City_Group.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -2367,35 +2373,34 @@ useEffect(() => {
                             {user_profile?.PartnerPrefrences?.HeightRange
                               .MinHeight || "Min Height"}
                           </option>
-                         {[
-                          "4'8\"",
-                          "4'9\"",
-                          "4'10\"",
-                          "4'11\"",
-                          "5'0\"",
-                          "5'1\"",
-                          "5'2\"",
-                          "5'3\"",
-                          "5'4\"",
-                          "5'5\"",
-                          "5'6\"",
-                          "5'7\"",
-                          "5'8\"",
-                          "5'9\"",
-                          "5'10\"",
-                          "5'11\"",
-                          "6'0\"",
-                          "6'1\"",
-                          "6'2\"",
-                          "6'3\"",
-                          "6'4\"",
-                          "6'5\"",
-                        ].map(h => (
-                          <option key={h} value={h}>
-                            {h}
-                          </option>
-                        ))}
-
+                          {[
+                            "4'8\"",
+                            "4'9\"",
+                            "4'10\"",
+                            "4'11\"",
+                            "5'0\"",
+                            "5'1\"",
+                            "5'2\"",
+                            "5'3\"",
+                            "5'4\"",
+                            "5'5\"",
+                            "5'6\"",
+                            "5'7\"",
+                            "5'8\"",
+                            "5'9\"",
+                            "5'10\"",
+                            "5'11\"",
+                            "6'0\"",
+                            "6'1\"",
+                            "6'2\"",
+                            "6'3\"",
+                            "6'4\"",
+                            "6'5\"",
+                          ].map((h) => (
+                            <option key={h} value={h}>
+                              {h}
+                            </option>
+                          ))}
                         </select>
                         <select
                           className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -2423,28 +2428,28 @@ useEffect(() => {
                               .MaxHeight || "Max Height"}
                           </option>
                           {[
-                              "4'8\"",
-                              "4'9\"",
-                              "4'10\"",
-                              "4'11\"",
-                              "5'0\"",
-                              "5'1\"",
-                              "5'2\"",
-                              "5'3\"",
-                              "5'4\"",
-                              "5'5\"",
-                              "5'6\"",
-                              "5'7\"",
-                              "5'8\"",
-                              "5'9\"",
-                              "5'10\"",
-                              "5'11\"",
-                              "6'0\"",
-                              "6'1\"",
-                              "6'2\"",
-                              "6'3\"",
-                              "6'4\"",
-                              "6'5\"",
+                            "4'8\"",
+                            "4'9\"",
+                            "4'10\"",
+                            "4'11\"",
+                            "5'0\"",
+                            "5'1\"",
+                            "5'2\"",
+                            "5'3\"",
+                            "5'4\"",
+                            "5'5\"",
+                            "5'6\"",
+                            "5'7\"",
+                            "5'8\"",
+                            "5'9\"",
+                            "5'10\"",
+                            "5'11\"",
+                            "6'0\"",
+                            "6'1\"",
+                            "6'2\"",
+                            "6'3\"",
+                            "6'4\"",
+                            "6'5\"",
                           ].map((h) => (
                             <option key={h} value={h}>
                               {h}
@@ -2473,7 +2478,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -2492,7 +2497,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -2511,7 +2516,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -2520,49 +2525,57 @@ useEffect(() => {
                       </div>
                     </div>
 
-                                       {/* ✅ Show extra fields if Divorce is selected */}
-  {(user_profile.PartnerPrefrences.MaritialStatus === "Divorced" || 
-  user_profile.PartnerPrefrences.MaritialStatus === "Widow/Widower")  && (
-    <div className="mt-3 ml-4 space-y-2">
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          className="accent-red-600"
-          checked={user_profile.PartnerPrefrences.HasChildren || false}
-          onChange={(e) =>
-            handleChange(
-              "PartnerPrefrences",
-              "HasChildren",
-              e.target.checked
-            )
-          }
-        />
-        Do you have children?
-      </label>
+                    {/* ✅ Show extra fields if Divorce is selected */}
+                    {(user_profile.PartnerPrefrences.MaritialStatus ===
+                      "Divorced" ||
+                      user_profile.PartnerPrefrences.MaritialStatus ===
+                        "Widow/Widower") && (
+                      <div className="mt-3 ml-4 space-y-2">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            className="accent-red-600"
+                            checked={
+                              user_profile.PartnerPrefrences.HasChildren ||
+                              false
+                            }
+                            onChange={(e) =>
+                              handleChange(
+                                "PartnerPrefrences",
+                                "HasChildren",
+                                e.target.checked,
+                              )
+                            }
+                          />
+                          Do you have children?
+                        </label>
 
-      {/* ✅ If user has children, show number input */}
-      {user_profile.PartnerPrefrences.HasChildren && (
-        <div className="flex items-center gap-2 ml-6">
-          <label className="text-sm text-gray-700">
-            How many children?
-          </label>
-          <input
-            type="number"
-            min="1"
-            className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
-            value={user_profile.PartnerPrefrences.ChildrenCount || 0}
-            onChange={(e) =>
-              handleChange(
-                "PartnerPrefrences",
-                "ChildrenCount",
-                e.target.value
-              )
-            }
-          />
-        </div>
-      )}
-    </div>
-  )}
+                        {/* ✅ If user has children, show number input */}
+                        {user_profile.PartnerPrefrences.HasChildren && (
+                          <div className="flex items-center gap-2 ml-6">
+                            <label className="text-sm text-gray-700">
+                              How many children?
+                            </label>
+                            <input
+                              type="number"
+                              min="1"
+                              className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                              value={
+                                user_profile.PartnerPrefrences.ChildrenCount ||
+                                0
+                              }
+                              onChange={(e) =>
+                                handleChange(
+                                  "PartnerPrefrences",
+                                  "ChildrenCount",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Food Preference */}
                     <div>
@@ -2582,7 +2595,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "NonVeg",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -2600,7 +2613,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "NonVeg",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -2627,7 +2640,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Manglik",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -2645,7 +2658,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Manglik",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -2672,7 +2685,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Nri",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -2690,7 +2703,7 @@ useEffect(() => {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Nri",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -2699,57 +2712,60 @@ useEffect(() => {
                       </div>
                     </div>
 
-                       {/* ✅ If user nri */}
-{user_profile?.PartnerPrefrences?.Nri==="Yes" && (
-  <div className="flex flex-col gap-2 ml-6">
-    <label className="text-sm text-gray-700 font-medium">
-      Resident Status
-    </label>
+                    {/* ✅ If user nri */}
+                    {user_profile?.PartnerPrefrences?.Nri === "Yes" && (
+                      <div className="flex flex-col gap-2 ml-6">
+                        <label className="text-sm text-gray-700 font-medium">
+                          Resident Status
+                        </label>
 
-    <label className="flex items-center gap-2 text-sm text-gray-600">
-      <input
-        type="checkbox"
-        name="PermanentResident"
-        className="w-4 h-4"
-        checked={user_profile.PartnerPrefrences.PermanentResident}
-        onChange={(e) =>
-          setuser_profile((prev) => ({
-            ...prev,
-            PartnerPrefrences: {
-              ...prev.PartnerPrefrences,
-              PermanentResident: e.target.checked,
-              TemporaryResident: false,
-            },
-          }))
-        }
-      />
-      Permanent Resident
-    </label>
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input
+                            type="checkbox"
+                            name="PermanentResident"
+                            className="w-4 h-4"
+                            checked={
+                              user_profile.PartnerPrefrences.PermanentResident
+                            }
+                            onChange={(e) =>
+                              setuser_profile((prev) => ({
+                                ...prev,
+                                PartnerPrefrences: {
+                                  ...prev.PartnerPrefrences,
+                                  PermanentResident: e.target.checked,
+                                  TemporaryResident: false,
+                                },
+                              }))
+                            }
+                          />
+                          Permanent Resident
+                        </label>
 
-    <label className="flex items-center gap-2 text-sm text-gray-600">
-      <input
-        type="checkbox"
-        name="TemporaryResident"
-        className="w-4 h-4"
-        checked={user_profile.PartnerPrefrences.TemporaryResident}
-        onChange={(e) =>
-          setuser_profile((prev) => ({
-            ...prev,
-            PartnerPrefrences: {
-              ...prev.PartnerPrefrences,
-              TemporaryResident: e.target.checked,
-              PermanentResident: false,
-            },
-          }))
-        }
-      />
-      Temporary Resident
-    </label>
-  </div>
-)}
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input
+                            type="checkbox"
+                            name="TemporaryResident"
+                            className="w-4 h-4"
+                            checked={
+                              user_profile.PartnerPrefrences.TemporaryResident
+                            }
+                            onChange={(e) =>
+                              setuser_profile((prev) => ({
+                                ...prev,
+                                PartnerPrefrences: {
+                                  ...prev.PartnerPrefrences,
+                                  TemporaryResident: e.target.checked,
+                                  PermanentResident: false,
+                                },
+                              }))
+                            }
+                          />
+                          Temporary Resident
+                        </label>
+                      </div>
+                    )}
 
-
-             {/* Religion */}
+                    {/* Religion */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
                         Religion
@@ -2761,10 +2777,12 @@ useEffect(() => {
                           handleChange(
                             "PartnerPrefrences",
                             "Religion",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_religion_group()}}
+                        onClick={() => {
+                          getall_religion_group();
+                        }}
                       >
                         <option
                           value={
@@ -2774,13 +2792,11 @@ useEffect(() => {
                           {user_profile?.PartnerPrefrences?.Religion ||
                             "Select Religion"}
                         </option>
-                          {
-                        All_Religion_Group.map((item) => (
+                        {All_Religion_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
@@ -2796,10 +2812,12 @@ useEffect(() => {
                           handleChange(
                             "PartnerPrefrences",
                             "Community",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_community_group()}}
+                        onClick={() => {
+                          getall_community_group();
+                        }}
                       >
                         <option
                           value={
@@ -2809,91 +2827,146 @@ useEffect(() => {
                           {user_profile?.PartnerPrefrences?.Community ||
                             "Select Community"}
                         </option>
-                          {
-                        All_Community_Group.map((item) => (
+                        {All_Community_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-       
+                    {/* Caste */}
 
-               {/* Caste */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Caste
+                      </label>
 
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1">
-                      Caste
-                    </label>
-                    <select
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      onChange={(e) =>
-                        handleChange(
-                          "PartnerPrefrences",
-                          "Caste",
-                          e.target.value
-                        )
-                      }
-                      onClick={() => {
-                        if (All_Cast_Group.length === 0) getall_cast_group();
-                      }}
-                    >
-                      <option
-                        value={user_profile?.PartnerPrefrences?.Caste || ""}
-                      >
-                        {user_profile?.PartnerPrefrences?.Caste ||
-                          "Select Caste"}
-                      </option>
-                      {select_loading==="cast" && (
-                          <option disabled>Loading...</option>
-                        )}
-
-                        {/* Show fetched values */}
-                        {
-                          All_Cast_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
-                    </select>
-                  </div>
+                      <FormControl fullWidth>
+                        <Select
+                          name="Caste"
+                          multiple
+                          value={user_profile?.PartnerPrefrences?.Caste || []}
+                          onOpen={() => {
+                            getall_cast_group();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "Caste");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Caste
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
+                        >
+                          {All_Cast_Group.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.Caste.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
 
                     {/* Mother Tongue */}
+
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
                         Mother Tongue
                       </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="MotherTongue"
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "MotherTongue",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_mother_tongue()}}
-                      >
-                        <option
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="MotherTongue"
+                          multiple
                           value={
-                            user_profile?.PartnerPrefrences?.MotherTongue || ""
+                            user_profile?.PartnerPrefrences?.MotherTongue || []
                           }
+                          onOpen={() => {
+                            getall_mother_tongue();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "MotherTongue");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Caste
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
                         >
-                          {user_profile?.PartnerPrefrences?.MotherTongue ||
-                            "Select Mother Tongue"}
-                        </option>
-                          {
-                        All_Mother_Tongue.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
+                          {All_Mother_Tongue.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.MotherTongue.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </div>
 
                     {/* Annual Family Income */}
@@ -2908,33 +2981,35 @@ useEffect(() => {
                           handleChange(
                             "PartnerPrefrences",
                             "AnnualFamilyIncome",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_income_group()}}
+                        onClick={() => {
+                          getall_income_group();
+                        }}
                       >
                         <option
                           value={
-                            user_profile?.PartnerPrefrences?.AnnualFamilyIncome || ""
+                            user_profile?.PartnerPrefrences
+                              ?.AnnualFamilyIncome || ""
                           }
                         >
-                          {user_profile?.PartnerPrefrences?.AnnualFamilyIncome ||
+                          {user_profile?.PartnerPrefrences
+                            ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
-                          {
-                        All_Income_Group.map((item) => (
+                        {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-                {/* Personal Income */}
+                    {/* Personal Income */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                         Personal Income
+                        Personal Income
                       </label>
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -2943,31 +3018,32 @@ useEffect(() => {
                           handleChange(
                             "PartnerPrefrences",
                             "PersonalIncome",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_income_group()}}
+                        onClick={() => {
+                          getall_income_group();
+                        }}
                       >
                         <option
                           value={
-                            user_profile?.PartnerPrefrences?.PersonalIncome || ""
+                            user_profile?.PartnerPrefrences?.PersonalIncome ||
+                            ""
                           }
                         >
                           {user_profile?.PartnerPrefrences?.PersonalIncome ||
                             "Select Personal Income"}
                         </option>
-                          {
-                        All_Income_Group.map((item) => (
+                        {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-                      {/* Property Size */}
-                             <div>
+                    {/* Property Size */}
+                    <div>
                       <label className="block text-gray-700 font-medium mb-1">
                         Property Size
                       </label>
@@ -2976,8 +3052,12 @@ useEffect(() => {
                         <Select
                           name="PropertySize"
                           multiple
-                          value={user_profile?.PartnerPrefrences?.PropertySize || []}
-                          onOpen={() => {getall_property_size()}}
+                          value={
+                            user_profile?.PartnerPrefrences?.PropertySize || []
+                          }
+                          onOpen={() => {
+                            getall_property_size();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "PropertySize");
                           }}
@@ -3012,9 +3092,14 @@ useEffect(() => {
                           }}
                         >
                           {All_Property_Size.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.PropertySize.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.PropertySize.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3023,8 +3108,6 @@ useEffect(() => {
                         </Select>
                       </FormControl>
                     </div>
-
-
 
                     {/* Education */}
                     <div>
@@ -3036,8 +3119,13 @@ useEffect(() => {
                         <Select
                           name="HeighstEducation"
                           multiple
-                          value={user_profile?.PartnerPrefrences?.HeighstEducation || []}
-                          onOpen={() => {getAll_Education_Group()}}
+                          value={
+                            user_profile?.PartnerPrefrences?.HeighstEducation ||
+                            []
+                          }
+                          onOpen={() => {
+                            getAll_Education_Group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "HeighstEducation");
                           }}
@@ -3072,9 +3160,14 @@ useEffect(() => {
                           }}
                         >
                           {All_Education_Group.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.HeighstEducation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.HeighstEducation.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3093,8 +3186,12 @@ useEffect(() => {
                         <Select
                           name="Occupation"
                           multiple
-                          value={user_profile?.PartnerPrefrences?.Occupation || []}
-                          onOpen={() => {getall_occupation()}}
+                          value={
+                            user_profile?.PartnerPrefrences?.Occupation || []
+                          }
+                          onOpen={() => {
+                            getall_occupation();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Occupation");
                           }}
@@ -3129,9 +3226,14 @@ useEffect(() => {
                           }}
                         >
                           {All_Occupation.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.Occupation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Occupation.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3151,10 +3253,11 @@ useEffect(() => {
                           name="Country"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Country || []}
-                          onOpen={() => {getall_country_group()}}
+                          onOpen={() => {
+                            getall_country_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Country");
-                       
                           }}
                           displayEmpty
                           renderValue={(selected) => {
@@ -3188,12 +3291,15 @@ useEffect(() => {
                         >
                           {All_Country_Group.map((option) => (
                             <MenuItem
-                             key={option._id}
+                              key={option._id}
                               value={option.lookup_value}
                               data-id={option._id}
-                              onClick={() => getall_state_group(option._id)}>
+                              onClick={() => getall_state_group(option._id)}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.Country.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Country.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3213,8 +3319,9 @@ useEffect(() => {
                           name="State"
                           multiple
                           value={user_profile?.PartnerPrefrences?.State || []}
-                          onOpen={() => {getall_state_group()}}
-                          
+                          onOpen={() => {
+                            getall_state_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "State");
                           }}
@@ -3250,13 +3357,15 @@ useEffect(() => {
                         >
                           {All_State_Group.map((option) => (
                             <MenuItem
-                             key={option._id}
+                              key={option._id}
                               value={option.lookup_value}
                               data-id={option._id}
                               onClick={() => getall_city_group(option._id)}
-                              >
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.State.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.State.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3276,7 +3385,9 @@ useEffect(() => {
                           name="City"
                           multiple
                           value={user_profile?.PartnerPrefrences?.City || []}
-                          onOpen={() => {getall_city_group()}}
+                          onOpen={() => {
+                            getall_city_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "City");
                           }}
@@ -3312,11 +3423,13 @@ useEffect(() => {
                         >
                           {All_City_Group.map((option) => (
                             <MenuItem
-                             key={option._id} 
-                             value={option.lookup_value}
-                             >
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.City.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.City.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -3512,7 +3625,7 @@ useEffect(() => {
                       onChange={(e) => handleFileChange(e, "Gallary")}
                     />
                   </div>
-                 <div className="w-full min-h-28 flex flex-wrap gap-3 items-center justify-start text-gray-400 text-sm">
+                  <div className="w-full min-h-28 flex flex-wrap gap-3 items-center justify-start text-gray-400 text-sm">
                     {loading === "Gallary" && (
                       <div className="flex justify-center items-center w-full">
                         <CircularProgress size={24} />
@@ -3529,7 +3642,6 @@ useEffect(() => {
                         />
                       ))}
                   </div>
-
                 </div>
               </div>
             )}
@@ -3551,20 +3663,17 @@ useEffect(() => {
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="PropertyType"
-                      onChange={(e) =>
-                      {
-                 
+                      onChange={(e) => {
                         handleChange(
                           "PropertyDetails",
                           "PropertyType",
-                          e.target.value
-                        )
-                       
-                      }
-                      }
-                       onClick={() => {
-                          if (All_Property_Type.length === 0) getall_property_type();
-                        }}
+                          e.target.value,
+                        );
+                      }}
+                      onClick={() => {
+                        if (All_Property_Type.length === 0)
+                          getall_property_type();
+                      }}
                     >
                       <option
                         value={
@@ -3574,18 +3683,20 @@ useEffect(() => {
                         {user_profile?.PropertyDetails?.PropertyType ||
                           "Select Property Type"}
                       </option>
-                       {loading==="property_type" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {loading === "property_type" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Property_Type.map((item) => (
-                            <option key={item._id} value={item.lookup_value} data-id={item._id} >
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Property_Type.map((item) => (
+                        <option
+                          key={item._id}
+                          value={item.lookup_value}
+                          data-id={item._id}
+                        >
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -3597,19 +3708,17 @@ useEffect(() => {
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="ResidentialType"
-                      onChange={(e) =>
-                      {
+                      onChange={(e) => {
                         handleChange(
                           "PropertyDetails",
                           "ResidentialType",
-                          e.target.value
-                        )
-                      }
-                      }
+                          e.target.value,
+                        );
+                      }}
                       onClick={() => {
-                          if (All_Residence_Type.length === 0) getall_residence_type();
-                        }}
-                     
+                        if (All_Residence_Type.length === 0)
+                          getall_residence_type();
+                      }}
                     >
                       <option
                         value={
@@ -3619,22 +3728,20 @@ useEffect(() => {
                         {user_profile?.PropertyDetails?.ResidentialType ||
                           "Select Residential Type"}
                       </option>
-                      {loading==="residence_type" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {loading === "residence_type" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Residence_Type.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Residence_Type.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
-                     {/* Property Size */}
+                  {/* Property Size */}
                   <div>
                     <label className="block text-gray-700 font-medium mb-1">
                       Property Size
@@ -3642,18 +3749,17 @@ useEffect(() => {
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                       name="PropertySize"
-                      onChange={(e) =>
-                      {
+                      onChange={(e) => {
                         handleChange(
                           "PropertyDetails",
                           "PropertySize",
-                          e.target.value
-                        )
-                      }
-                      }
+                          e.target.value,
+                        );
+                      }}
                       onClick={() => {
-                          if (All_Property_Size.length === 0) getall_property_size();
-                        }}
+                        if (All_Property_Size.length === 0)
+                          getall_property_size();
+                      }}
                     >
                       <option
                         value={
@@ -3663,22 +3769,18 @@ useEffect(() => {
                         {user_profile?.PropertyDetails?.PropertySize ||
                           "Select Property Size"}
                       </option>
-                      {loading==="residence_type" && (
-                          <option disabled>Loading...</option>
-                        )}
+                      {loading === "residence_type" && (
+                        <option disabled>Loading...</option>
+                      )}
 
-                        {/* Show fetched values */}
-                        {
-                          All_Property_Size.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
+                      {/* Show fetched values */}
+                      {All_Property_Size.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
                     </select>
                   </div>
-
-
                 </div>
 
                 {/* Property Description */}
@@ -3695,7 +3797,7 @@ useEffect(() => {
                       handleChange(
                         "PropertyDetails",
                         "PropertyDescription",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     value={user_profile.PropertyDetails.PropertyDescription}

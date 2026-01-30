@@ -27,6 +27,9 @@ export default function BlogDetailsPage() {
     if (id) getBlogDetails();
   }, [id]);
 
+
+  
+
   if (loading) {
     return <div className="text-center py-20">Loading...</div>;
   }
@@ -57,12 +60,14 @@ export default function BlogDetailsPage() {
           />
         )}
 
-     <div
+<div
   className="prose max-w-none"
   dangerouslySetInnerHTML={{
-    __html: blog.content || blog.description,
+    __html: (blog.content || blog.description)
+      ?.replace(/<span[^>]*class="[^"]*visually-hidden[^"]*"[^>]*>.*?<\/span>/gi, ""),
   }}
 />
+
 
       </div>
 
