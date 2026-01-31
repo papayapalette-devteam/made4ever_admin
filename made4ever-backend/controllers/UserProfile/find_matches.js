@@ -40,11 +40,9 @@ const calculateMatchScore = (prefs, person) => {
     ["Nri", "PersonalDetails.Nri"],
     ["Community", "ReligiousDetails.Community"],
     ["Religion", "ReligiousDetails.Religion"],
-    ["Caste", "ReligiousDetails.Caste"],
-    ["MotherTongue", "PersonalDetails.MotherTongue"],
     ["AnnualFamilyIncome", "EducationDetails.AnnualFamilyIncome"],
     ["PersonalIncome", "EducationDetails.PersonalIncome"],
-    ["PropertySize", "PropertyDetails.PropertySize"],
+    
   ];
 
   stringMatches.forEach(([prefField, path]) => {
@@ -62,6 +60,9 @@ const calculateMatchScore = (prefs, person) => {
     ["Country", "ContactDetails.Country"],
     ["State", "ContactDetails.State"],
     ["City", "ContactDetails.City"],
+    ["PropertySize", "PropertyDetails.PropertySize"],
+    ["Caste", "ReligiousDetails.Caste"],
+    ["MotherTongue", "PersonalDetails.MotherTongue"],
   ];
 
   arrayMatches.forEach(([prefField, path]) => {

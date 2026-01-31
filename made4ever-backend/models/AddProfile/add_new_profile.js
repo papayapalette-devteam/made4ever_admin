@@ -8,7 +8,7 @@ const PersonalDetailsSchema = new mongoose.Schema({
   DateOfBirth: { type: String, default: "" },
   TimeOfBirth: { type: String, default: "" },
   PlaceOfBirth: { type: String, default: "" },
-  Age: { type: Number, default: "" },
+  Age: { type: Number, default: 0 },
   Complexion: { type: String, default: "" },
   Height: { type: String, default: "" },
   Weight: { type: String, default: "" },
@@ -91,7 +91,7 @@ const PartnerPrefrencesSchema = new mongoose.Schema({
 const UploadSchema = new mongoose.Schema({
   ProfilePhoto: { type: Array, default: [] },
   IdentityType: { type: String, default: "" },
-  IdentityNumber: { type: Number, default: "" },
+  IdentityNumber: { type: Number, default: 0 },
   IdentityImage: { type: Array, default: [] },
   AudioVideo: { type: Array, default: [] },
   Gallary: { type: Array, default: [] }

@@ -62,7 +62,7 @@ const contactDetailsSchema = Joi.object({
   Country: Joi.string().allow(""),
   State: Joi.string().allow(""),
   City: Joi.string().allow(""),
-  // PostalCode: Joi.number().allow(null)
+  PostalCode: Joi.number().allow(null)
 });
 
 // ✅ Partner Preferences Schema
@@ -101,7 +101,7 @@ const partnerPrefrencesSchema = Joi.object({
 const uploadSchema = Joi.object({
   ProfilePhoto: Joi.array().items(Joi.string().allow("")),
   IdentityType: Joi.string().allow(""),
-  IdentityNumber: Joi.number().allow(""),
+  IdentityNumber: Joi.number().allow(null),
   IdentityImage: Joi.array().items(Joi.string().allow("")),
   AudioVideo: Joi.array().items(Joi.string().allow("")),
   Gallary: Joi.array().items(Joi.string().allow(""))

@@ -164,7 +164,7 @@ const acceptProfile = async () => {
           },
       }).then(()=>
       (
-        window.location.reload()
+        navigate('/matches')
       ));
     } else {
       Swal.fire({
