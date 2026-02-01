@@ -26,28 +26,32 @@ export default function FindMatches() {
   //======================== state for adding a user=========================================
 
   const [user_profile, setuser_profile] = useState({
-    PartnerPrefrences: {
+   PartnerPrefrences: {
       Gender:"",
-      Gothra:"",
-      AgeRange: { MinAge: "", MaxAge: "" },
-      HeightRange: { MinHeight: "", MaxHeight: "" },
+      AgeRange: { MinAge: null, MaxAge: null },
+      HeightRange: { MinHeight: null, MaxHeight: null },
       MaritialStatus: "",
+      HasChildren: false,
+      ChildrenCount: 0,
       NonVeg: "",
       Manglik: "",
       Nri: "",
+      PermanentResident: false,
+      TemporaryResident: false,
       Community: "",
       Religion: "",
-      Caste: "",
-      MotherTongue: "",
+      Caste: [],
+      Gothram:[],
+      MotherTongue: [],
       AnnualFamilyIncome: "",
       PersonalIncome: "",
-      PropertySize:"",
+      PropertySize: [],
       HeighstEducation: [],
       Occupation: [],
       Country: [],
       State: [],
       City: [],
-    }
+    },
   });
 
 
@@ -160,6 +164,23 @@ export default function FindMatches() {
   };
 
 
+   // get community
+
+  const [All_Community_Group, setAll_Community_Group] = useState([]);
+
+  const getall_community_group = async () => {
+    try {
+      setselect_loading("community");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "community_group");
+      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+      setAll_Community_Group(resp.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
 
 
   
@@ -323,6 +344,18 @@ export default function FindMatches() {
 
   const find_matches = async () => {
     try {
+
+          // 🔵 Show Loader
+    Swal.fire({
+      title: "Finding Matches...",
+      text: "Please wait while we search best matches for you.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    
       const resp = await api.post("api/user/find-matches", user_profile);
       setmatches(resp.data.matches)
   
@@ -359,7 +392,7 @@ export default function FindMatches() {
     }
   };
 
-  console.log(matches);
+
   
   return (
     <div>
@@ -386,18 +419,15 @@ export default function FindMatches() {
           <div className="p-6 sm:p-8 space-y-6">
             {/*================================ STEP 6 - Partner Preferences========================= */}
          
-              <div className="space-y-5">
+             <div className="space-y-5">
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   Partner Preferences
                 </h2>
-
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                    Personal Details
+                    Preferred Partner Details
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                    {/* Gender */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
                         Gender
@@ -428,51 +458,7 @@ export default function FindMatches() {
                       </select>
                     </div>
 
-                       {/* Gothra */}
-                    <div>
-                      <label className="block text-gray-700 font-medium mb-1">
-                        Gothra
-                      </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="Gothra"
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "Gothra",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_gothra_group()}}
-                      >
-                        <option
-                          value={
-                            user_profile?.PartnerPrefrences?.Gothra || ""
-                          }
-                        >
-                          {user_profile?.PartnerPrefrences?.Gothra ||
-                            "Select Gothra"}
-                        </option>
-                          {
-                        All_Gothra_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
-                    </div>
-
-                  </div>
-              </div>
-                    
-                <div className="space-y-5">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                    Preferred Partner Details
-                  </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-
                     {/* Preferred Age Range */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
@@ -576,15 +562,28 @@ export default function FindMatches() {
                               .MinHeight || "Min Height"}
                           </option>
                           {[
-                            "4'5",
-                            "4'8",
-                            "5'0",
-                            "5'2",
-                            "5'5",
-                            "5'8",
-                            "6'0",
-                            "6'2",
-                            "6'5",
+                            "4'8\"",
+                            "4'9\"",
+                            "4'10\"",
+                            "4'11\"",
+                            "5'0\"",
+                            "5'1\"",
+                            "5'2\"",
+                            "5'3\"",
+                            "5'4\"",
+                            "5'5\"",
+                            "5'6\"",
+                            "5'7\"",
+                            "5'8\"",
+                            "5'9\"",
+                            "5'10\"",
+                            "5'11\"",
+                            "6'0\"",
+                            "6'1\"",
+                            "6'2\"",
+                            "6'3\"",
+                            "6'4\"",
+                            "6'5\"",
                           ].map((h) => (
                             <option key={h} value={h}>
                               {h}
@@ -617,15 +616,28 @@ export default function FindMatches() {
                               .MaxHeight || "Max Height"}
                           </option>
                           {[
-                            "4'5",
-                            "4'8",
-                            "5'0",
-                            "5'2",
-                            "5'5",
-                            "5'8",
-                            "6'0",
-                            "6'2",
-                            "6'5",
+                            "4'8\"",
+                            "4'9\"",
+                            "4'10\"",
+                            "4'11\"",
+                            "5'0\"",
+                            "5'1\"",
+                            "5'2\"",
+                            "5'3\"",
+                            "5'4\"",
+                            "5'5\"",
+                            "5'6\"",
+                            "5'7\"",
+                            "5'8\"",
+                            "5'9\"",
+                            "5'10\"",
+                            "5'11\"",
+                            "6'0\"",
+                            "6'1\"",
+                            "6'2\"",
+                            "6'3\"",
+                            "6'4\"",
+                            "6'5\"",
                           ].map((h) => (
                             <option key={h} value={h}>
                               {h}
@@ -654,7 +666,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -673,7 +685,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -692,7 +704,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "MaritialStatus",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -700,6 +712,58 @@ export default function FindMatches() {
                         </label>
                       </div>
                     </div>
+
+                    {/* ✅ Show extra fields if Divorce is selected */}
+                    {(user_profile.PartnerPrefrences.MaritialStatus ===
+                      "Divorced" ||
+                      user_profile.PartnerPrefrences.MaritialStatus ===
+                        "Widow/Widower") && (
+                      <div className="mt-3 ml-4 space-y-2">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            className="accent-red-600"
+                            checked={
+                              user_profile.PartnerPrefrences.HasChildren ||
+                              false
+                            }
+                            onChange={(e) =>
+                              handleChange(
+                                "PartnerPrefrences",
+                                "HasChildren",
+                                e.target.checked,
+                              )
+                            }
+                          />
+                          Do you have children?
+                        </label>
+
+                        {/* ✅ If user has children, show number input */}
+                        {user_profile.PartnerPrefrences.HasChildren && (
+                          <div className="flex items-center gap-2 ml-6">
+                            <label className="text-sm text-gray-700">
+                              How many children?
+                            </label>
+                            <input
+                              type="number"
+                              min="1"
+                              className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                              value={
+                                user_profile.PartnerPrefrences.ChildrenCount ||
+                                0
+                              }
+                              onChange={(e) =>
+                                handleChange(
+                                  "PartnerPrefrences",
+                                  "ChildrenCount",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Food Preference */}
                     <div>
@@ -719,7 +783,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "NonVeg",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -737,7 +801,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "NonVeg",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -764,7 +828,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Manglik",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -782,7 +846,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Manglik",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />
@@ -794,7 +858,7 @@ export default function FindMatches() {
                     {/* NRI */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                        Nri
+                        NRI
                       </label>
                       <div className="flex gap-3">
                         <label>
@@ -809,7 +873,7 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Nri",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
@@ -827,13 +891,101 @@ export default function FindMatches() {
                               handleChange(
                                 "PartnerPrefrences",
                                 "Nri",
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           />{" "}
                           No
                         </label>
                       </div>
+                    </div>
+
+                    {/* ✅ If user nri */}
+                    {user_profile?.PartnerPrefrences?.Nri === "Yes" && (
+                      <div className="flex flex-col gap-2 ml-6">
+                        <label className="text-sm text-gray-700 font-medium">
+                          Resident Status
+                        </label>
+
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input
+                            type="checkbox"
+                            name="PermanentResident"
+                            className="w-4 h-4"
+                            checked={
+                              user_profile.PartnerPrefrences.PermanentResident
+                            }
+                            onChange={(e) =>
+                              setuser_profile((prev) => ({
+                                ...prev,
+                                PartnerPrefrences: {
+                                  ...prev.PartnerPrefrences,
+                                  PermanentResident: e.target.checked,
+                                  TemporaryResident: false,
+                                },
+                              }))
+                            }
+                          />
+                          Permanent Resident
+                        </label>
+
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input
+                            type="checkbox"
+                            name="TemporaryResident"
+                            className="w-4 h-4"
+                            checked={
+                              user_profile.PartnerPrefrences.TemporaryResident
+                            }
+                            onChange={(e) =>
+                              setuser_profile((prev) => ({
+                                ...prev,
+                                PartnerPrefrences: {
+                                  ...prev.PartnerPrefrences,
+                                  TemporaryResident: e.target.checked,
+                                  PermanentResident: false,
+                                },
+                              }))
+                            }
+                          />
+                          Temporary Resident
+                        </label>
+                      </div>
+                    )}
+
+                    {/* Religion */}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Religion
+                      </label>
+                      <select
+                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                        name="Religion"
+                        onChange={(e) =>
+                          handleChange(
+                            "PartnerPrefrences",
+                            "Religion",
+                            e.target.value,
+                          )
+                        }
+                        onClick={() => {
+                          getall_religion_group();
+                        }}
+                      >
+                        <option
+                          value={
+                            user_profile?.PartnerPrefrences?.Religion || ""
+                          }
+                        >
+                          {user_profile?.PartnerPrefrences?.Religion ||
+                            "Select Religion"}
+                        </option>
+                        {All_Religion_Group.map((item) => (
+                          <option key={item._id} value={item.lookup_value}>
+                            {item.lookup_value}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     {/* Community */}
@@ -848,10 +1000,12 @@ export default function FindMatches() {
                           handleChange(
                             "PartnerPrefrences",
                             "Community",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_religion_group()}}
+                        onClick={() => {
+                          getall_community_group();
+                        }}
                       >
                         <option
                           value={
@@ -861,124 +1015,212 @@ export default function FindMatches() {
                           {user_profile?.PartnerPrefrences?.Community ||
                             "Select Community"}
                         </option>
-                          {
-                        All_Religion_Group.map((item) => (
+                        {All_Community_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-                    {/* Religion */}
+                    {/* Caste */}
+
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                        Religion
+                        Caste
                       </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="Religion"
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "Religion",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_religion_group()}}
-                      >
-                        <option
-                          value={
-                            user_profile?.PartnerPrefrences?.Religion || ""
-                          }
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="Caste"
+                          multiple
+                          value={user_profile?.PartnerPrefrences?.Caste || []}
+                          onOpen={() => {
+                            getall_cast_group();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "Caste");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Caste
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
                         >
-                          {user_profile?.PartnerPrefrences?.Religion ||
-                            "Select Religion"}
-                        </option>
-                          {
-                        All_Religion_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
+                          {All_Cast_Group.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.Caste.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </div>
 
-               {/* Caste */}
+                           {/* Gothram */}
 
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1">
-                      Caste
-                    </label>
-                    <select
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      onChange={(e) =>
-                        handleChange(
-                          "PartnerPrefrences",
-                          "Caste",
-                          e.target.value
-                        )
-                      }
-                      onClick={() => {
-                        if (All_Cast_Group.length === 0) getall_cast_group();
-                      }}
-                    >
-                      <option
-                        value={user_profile?.PartnerPrefrences?.Caste || ""}
-                      >
-                        {user_profile?.PartnerPrefrences?.Caste ||
-                          "Select Caste"}
-                      </option>
-                      {select_loading==="cast" && (
-                          <option disabled>Loading...</option>
-                        )}
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Gothram
+                      </label>
 
-                        {/* Show fetched values */}
-                        {
-                          All_Cast_Group.map((item) => (
-                            <option key={item._id} value={item.lookup_value}>
-                              {item.lookup_value}
-                            </option>
-                          ))
-                        }
-                    </select>
-                  </div>
+                      <FormControl fullWidth>
+                        <Select
+                          name="Caste"
+                          multiple
+                          value={user_profile?.PartnerPrefrences?.Gothram || []}
+                          onOpen={() => {
+                            getall_gothra_group();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "Gothram");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Gothram
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
+                        >
+                          {All_Gothra_Group.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.Gothram.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
 
                     {/* Mother Tongue */}
+
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
                         Mother Tongue
                       </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="MotherTongue"
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "MotherTongue",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_mother_tongue()}}
-                      >
-                        <option
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="MotherTongue"
+                          multiple
                           value={
-                            user_profile?.PartnerPrefrences?.MotherTongue || ""
+                            user_profile?.PartnerPrefrences?.MotherTongue || []
                           }
+                          onOpen={() => {
+                            getall_mother_tongue();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "MotherTongue");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Caste
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
                         >
-                          {user_profile?.PartnerPrefrences?.MotherTongue ||
-                            "Select Mother Tongue"}
-                        </option>
-                          {
-                        All_Mother_Tongue.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
+                          {All_Mother_Tongue.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.MotherTongue.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </div>
 
                     {/* Annual Family Income */}
@@ -993,33 +1235,35 @@ export default function FindMatches() {
                           handleChange(
                             "PartnerPrefrences",
                             "AnnualFamilyIncome",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_income_group()}}
+                        onClick={() => {
+                          getall_income_group();
+                        }}
                       >
                         <option
                           value={
-                            user_profile?.PartnerPrefrences?.AnnualFamilyIncome || ""
+                            user_profile?.PartnerPrefrences
+                              ?.AnnualFamilyIncome || ""
                           }
                         >
-                          {user_profile?.PartnerPrefrences?.AnnualFamilyIncome ||
+                          {user_profile?.PartnerPrefrences
+                            ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
-                          {
-                        All_Income_Group.map((item) => (
+                        {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-                {/* Personal Income */}
+                    {/* Personal Income */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                         Personal Income
+                        Personal Income
                       </label>
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -1028,66 +1272,96 @@ export default function FindMatches() {
                           handleChange(
                             "PartnerPrefrences",
                             "PersonalIncome",
-                            e.target.value
+                            e.target.value,
                           )
                         }
-                        onClick={() => {getall_income_group()}}
+                        onClick={() => {
+                          getall_income_group();
+                        }}
                       >
                         <option
                           value={
-                            user_profile?.PartnerPrefrences?.PersonalIncome || ""
+                            user_profile?.PartnerPrefrences?.PersonalIncome ||
+                            ""
                           }
                         >
                           {user_profile?.PartnerPrefrences?.PersonalIncome ||
                             "Select Personal Income"}
                         </option>
-                          {
-                        All_Income_Group.map((item) => (
+                        {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
                           </option>
-                        ))
-                      }
+                        ))}
                       </select>
                     </div>
 
-                      {/* Property Size */}
+                    {/* Property Size */}
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                         Property Size
+                        Property Size
                       </label>
-                      <select
-                        className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                        name="PropertySize"
-                        value={user_profile?.PartnerPrefrences?.PropertySize}
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
-                            "PropertySize",
-                            e.target.value
-                          )
-                        }
-                        onClick={() => {getall_property_size()}}
-                      >
-                        <option
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="PropertySize"
+                          multiple
                           value={
-                            user_profile?.PartnerPrefrences?.PropertySize || ""
+                            user_profile?.PartnerPrefrences?.PropertySize || []
                           }
+                          onOpen={() => {
+                            getall_property_size();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "PropertySize");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Property Size
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
                         >
-                          {user_profile?.PartnerPrefrences?.PropertySize ||
-                            "Select Property Size"}
-                        </option>
-                          {
-                        All_Property_Size.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
-                            {item.lookup_value}
-                          </option>
-                        ))
-                      }
-                      </select>
+                          {All_Property_Size.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.PropertySize.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </div>
-
-
 
                     {/* Education */}
                     <div>
@@ -1099,8 +1373,13 @@ export default function FindMatches() {
                         <Select
                           name="HeighstEducation"
                           multiple
-                          value={user_profile?.PartnerPrefrences?.HeighstEducation || []}
-                          onOpen={() => {getAll_Education_Group()}}
+                          value={
+                            user_profile?.PartnerPrefrences?.HeighstEducation ||
+                            []
+                          }
+                          onOpen={() => {
+                            getAll_Education_Group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "HeighstEducation");
                           }}
@@ -1135,9 +1414,14 @@ export default function FindMatches() {
                           }}
                         >
                           {All_Education_Group.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.HeighstEducation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.HeighstEducation.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -1156,8 +1440,12 @@ export default function FindMatches() {
                         <Select
                           name="Occupation"
                           multiple
-                          value={user_profile?.PartnerPrefrences?.Occupation || []}
-                          onOpen={() => {getall_occupation()}}
+                          value={
+                            user_profile?.PartnerPrefrences?.Occupation || []
+                          }
+                          onOpen={() => {
+                            getall_occupation();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Occupation");
                           }}
@@ -1192,9 +1480,14 @@ export default function FindMatches() {
                           }}
                         >
                           {All_Occupation.map((option) => (
-                            <MenuItem key={option._id} value={option.lookup_value}>
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.Occupation.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Occupation.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -1214,10 +1507,11 @@ export default function FindMatches() {
                           name="Country"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Country || []}
-                          onOpen={() => {getall_country_group()}}
+                          onOpen={() => {
+                            getall_country_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Country");
-                       
                           }}
                           displayEmpty
                           renderValue={(selected) => {
@@ -1251,12 +1545,15 @@ export default function FindMatches() {
                         >
                           {All_Country_Group.map((option) => (
                             <MenuItem
-                             key={option._id}
+                              key={option._id}
                               value={option.lookup_value}
                               data-id={option._id}
-                              onClick={() => getall_state_group(option._id)}>
+                              onClick={() => getall_state_group(option._id)}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.Country.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.Country.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -1276,8 +1573,9 @@ export default function FindMatches() {
                           name="State"
                           multiple
                           value={user_profile?.PartnerPrefrences?.State || []}
-                          onOpen={() => {getall_state_group()}}
-                          
+                          onOpen={() => {
+                            getall_state_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "State");
                           }}
@@ -1313,13 +1611,15 @@ export default function FindMatches() {
                         >
                           {All_State_Group.map((option) => (
                             <MenuItem
-                             key={option._id}
+                              key={option._id}
                               value={option.lookup_value}
                               data-id={option._id}
                               onClick={() => getall_city_group(option._id)}
-                              >
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.State.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.State.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}
@@ -1339,7 +1639,9 @@ export default function FindMatches() {
                           name="City"
                           multiple
                           value={user_profile?.PartnerPrefrences?.City || []}
-                          onOpen={() => {getall_city_group()}}
+                          onOpen={() => {
+                            getall_city_group();
+                          }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "City");
                           }}
@@ -1375,11 +1677,13 @@ export default function FindMatches() {
                         >
                           {All_City_Group.map((option) => (
                             <MenuItem
-                             key={option._id} 
-                             value={option.lookup_value}
-                             >
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
                               <Checkbox
-                                checked={user_profile?.PartnerPrefrences?.City.includes(option.lookup_value)}
+                                checked={user_profile?.PartnerPrefrences?.City.includes(
+                                  option.lookup_value,
+                                )}
                                 color="primary"
                               />
                               {option.lookup_value}

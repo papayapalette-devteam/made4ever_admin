@@ -152,16 +152,16 @@ const menuItems = [
     label: "MSP Gallery",
     path: "/msp-gallary",
   },
-  {
-    icon: <FaUsers size={20} />,
-    label: "MSP Event Image",
-    path: "/msp-event-image",
-  },
-  {
-    icon: <TbTextCaption size={20} />,
-    label: "MSP Header Text",
-    path: "/msp-header-text",
-  },
+  // {
+  //   icon: <FaUsers size={20} />,
+  //   label: "MSP Event Image",
+  //   path: "/msp-event-image",
+  // },
+  // {
+  //   icon: <TbTextCaption size={20} />,
+  //   label: "MSP Header Text",
+  //   path: "/msp-header-text",
+  // },
   { icon: <FaUsers size={20} />, label: "Matches", path: "/event-master" },
   { icon: <MdGroup size={20} />, label: "Find Matches", path: "/find-matches" },
   { icon: <MdManageAccounts   size={20} />, label: "View All Profiles", path: "/view-profiles" },

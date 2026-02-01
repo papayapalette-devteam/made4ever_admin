@@ -86,6 +86,7 @@ const partnerPrefrencesSchema = Joi.object({
   Community: Joi.string().allow(""),
   Religion: Joi.string().allow(""),
   Caste: Joi.array().items(Joi.string().allow("")),
+  Gothram: Joi.array().items(Joi.string().allow("")),
   MotherTongue: Joi.array().items(Joi.string().allow("")),
   AnnualFamilyIncome: Joi.string().allow(""),
   PersonalIncome: Joi.string().allow(""),
@@ -101,7 +102,7 @@ const partnerPrefrencesSchema = Joi.object({
 const uploadSchema = Joi.object({
   ProfilePhoto: Joi.array().items(Joi.string().allow("")),
   IdentityType: Joi.string().allow(""),
-  IdentityNumber: Joi.number().allow(null),
+  IdentityNumber: Joi.number().allow(null,"").optional(),
   IdentityImage: Joi.array().items(Joi.string().allow("")),
   AudioVideo: Joi.array().items(Joi.string().allow("")),
   Gallary: Joi.array().items(Joi.string().allow(""))
@@ -112,7 +113,8 @@ const propertyDetailsSchema = Joi.object({
   PropertyType: Joi.string().allow(""),
   ResidentialType: Joi.string().allow(""),
   PropertySize: Joi.string().allow(""),
-  PropertyDescription: Joi.string().allow("")
+  PropertyDescription: Joi.string().allow(""),
+  AcceptTerms: Joi.boolean().default(false),
 });
 
 // ✅ Full User Profile Schema

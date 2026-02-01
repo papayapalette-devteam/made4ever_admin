@@ -12,6 +12,7 @@ import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
 import MatchingProfiles from "./components/Bureau/Profiles/matched_profile";
 import MatchDetailsPage from "./components/Bureau/Profiles/full_view_matched_profile";
+import TermsAndConditions from "./components/Bureau/Profiles/terms";
 
 
 
@@ -34,6 +35,7 @@ function App() {
          <Route path="/matched-profile" element={<MatchingProfiles/>}></Route>
          <Route path="/match-details" element={<MatchDetailsPage/>}></Route>
          <Route path="/add-new-profile" element={<NewProfileForm/>}></Route>
+          <Route path="/terms-conditions" element={<TermsAndConditions/>}></Route>
 
          <Route path="/matches" element={<MatchesPage/>}></Route>
          <Route path="/billing" element={<BillingPage/>}></Route>

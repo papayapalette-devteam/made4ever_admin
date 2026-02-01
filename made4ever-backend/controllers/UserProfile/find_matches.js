@@ -62,6 +62,7 @@ const calculateMatchScore = (prefs, person) => {
     ["City", "ContactDetails.City"],
     ["PropertySize", "PropertyDetails.PropertySize"],
     ["Caste", "ReligiousDetails.Caste"],
+    ["Gothram", "ReligiousDetails.Gothram"],
     ["MotherTongue", "PersonalDetails.MotherTongue"],
   ];
 
@@ -83,7 +84,7 @@ const findMatches = async (req, res) => {
 
     const userPrefs = req.body.PartnerPrefrences;
     const userGender = req.body.PartnerPrefrences?.Gender;
-    const userGothra = req.body.PartnerPrefrences?.Gothra;
+    // const userGothra = req.body.PartnerPrefrences?.Gothra;
 
     if (!userGender)
       return res.status(400).json({ success: false, message: "User gender missing" });
@@ -91,11 +92,15 @@ const findMatches = async (req, res) => {
     const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
     // Fetch candidates of opposite gender
+    // ✅ PAGINATED QUERY
     const candidates = await UserProfile.find({
       "PersonalDetails.Gender": oppositeGender,
-      IsActive:true
+      IsActive: true,
+      Bureau: { $ne: null }
     })
       .populate("Bureau")
+      .skip(skip)
+      .limit(limit)
       .lean();
       
 

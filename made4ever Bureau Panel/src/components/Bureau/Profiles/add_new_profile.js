@@ -14,9 +14,12 @@ import {
   Box,
   Checkbox,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function NewProfileForm() {
+
+  const navigate=useNavigate()
+  
   const [step, setStep] = useState(1);
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -97,6 +100,7 @@ export default function NewProfileForm() {
       Community: "",
       Religion: "",
       Caste: [],
+      Gothram:[],
       MotherTongue: [],
       AnnualFamilyIncome: "",
       PersonalIncome: "",
@@ -120,6 +124,7 @@ export default function NewProfileForm() {
       ResidentialType: "",
       PropertySize: "",
       PropertyDescription: "",
+      AcceptTerms:false
     },
   });
 
@@ -723,6 +728,23 @@ export default function NewProfileForm() {
 
   const add_new_profile = async () => {
     try {
+      if(user_profile.PropertyDetails.AcceptTerms===false)
+      {
+        return  Swal.fire({
+          icon: "error",
+          title: "Terms & Conditions!",
+          text: "Please accept terms & conditions!",
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+        }).then(() => {
+          // Refresh the page after alert closes
+          window.location.reload();
+        });
+      }
+      
       const resp = await api.post("api/user/add-new-profile", user_profile);
 
       if (resp.status === 200) {
@@ -2901,6 +2923,72 @@ export default function NewProfileForm() {
                       </FormControl>
                     </div>
 
+                           {/* Gothram */}
+
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Gothram
+                      </label>
+
+                      <FormControl fullWidth>
+                        <Select
+                          name="Caste"
+                          multiple
+                          value={user_profile?.PartnerPrefrences?.Gothram || []}
+                          onOpen={() => {
+                            getall_gothra_group();
+                          }}
+                          onChange={(e) => {
+                            handleMultiSelectChange(e, "Gothram");
+                          }}
+                          displayEmpty
+                          renderValue={(selected) => {
+                            if (selected.length === 0) {
+                              return (
+                                <span style={{ color: "#888" }}>
+                                  Select Gothram
+                                </span>
+                              );
+                            }
+                            return (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}
+                              >
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ))}
+                              </Box>
+                            );
+                          }}
+                        >
+                          {All_Gothra_Group.map((option) => (
+                            <MenuItem
+                              key={option._id}
+                              value={option.lookup_value}
+                            >
+                              <Checkbox
+                                checked={user_profile?.PartnerPrefrences?.Gothram.includes(
+                                  option.lookup_value,
+                                )}
+                                color="primary"
+                              />
+                              {option.lookup_value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
+
                     {/* Mother Tongue */}
 
                     <div>
@@ -3803,6 +3891,31 @@ export default function NewProfileForm() {
                     value={user_profile.PropertyDetails.PropertyDescription}
                   ></textarea>
                 </div>
+
+       
+{/* Terms & Conditions */}
+<div className="flex items-start gap-2 mt-4">
+  <input
+    type="checkbox"
+    id="acceptTerms"
+    className="mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+    checked={user_profile?.PropertyDetails?.AcceptTerms || false}
+    onChange={(e) =>
+      handleChange(
+        "PropertyDetails",
+        "AcceptTerms",
+        e.target.checked
+      )
+    }
+  />
+  <label htmlFor="acceptTerms" className="text-sm text-gray-700 mt-1">
+    I accept the{" "}
+    <span className="text-red-600 font-medium cursor-pointer" onClick={()=>navigate('/terms-conditions')}>
+      Terms & Conditions
+    </span>
+  </label>
+</div>
+
               </div>
             )}
           </div>

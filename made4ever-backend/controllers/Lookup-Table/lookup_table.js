@@ -113,7 +113,8 @@ exports.getLookup = async (req, res) => {
     // Fetch paginated data
     const lookups = await LookupTable.find(query)
       .populate("parent_lookup_id")
-      .sort({ createdAt: -1 })
+      // .sort({ createdAt: -1 })
+      .sort({lookup_value:1})
       .skip(skip)
       .limit(parseInt(limit));
 

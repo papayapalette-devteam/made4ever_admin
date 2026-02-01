@@ -77,6 +77,7 @@ const PartnerPrefrencesSchema = new mongoose.Schema({
   Community: {type: String, default: ""},
   Religion: {type: String, default: ""},
   Caste: { type: Array, default: [] },
+  Gothram: { type: Array, default: [] },
   MotherTongue: {type: Array, default: []},
   AnnualFamilyIncome: {type: String, default: ""},
   PersonalIncome: {type: String, default: ""},
@@ -101,7 +102,8 @@ const PropertyDetailsSchema = new mongoose.Schema({
   PropertyType: { type: String, default: "" },
   ResidentialType: { type: String, default: "" },
   PropertySize: { type: String, default: "" },
-  PropertyDescription: { type: String, default: "" }
+  PropertyDescription: { type: String, default: "" },
+  AcceptTerms:{ type: Boolean, default: false },
 });
 
 const UserProfileSchema = new mongoose.Schema(

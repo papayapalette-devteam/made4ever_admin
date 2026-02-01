@@ -48,7 +48,7 @@ function MspVideo() {
 
   useEffect(() => {
     getall_msp_video();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);

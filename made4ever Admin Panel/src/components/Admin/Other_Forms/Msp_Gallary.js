@@ -57,7 +57,7 @@ function MspGallary() {
 
   useEffect(() => {
     getall_msp_gallary();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -80,8 +80,73 @@ function MspGallary() {
     });
   };
 
-  const onDeletehospital = () => {
-    alert("delete");
+    const onDelete = async (row) => {
+    try {
+      const confirmResult = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you really want to delete this Image?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+          cancelButton: "my-swal-cancel-button",
+        },
+      });
+
+      // 🔹 If user cancels, stop execution
+      if (!confirmResult.isConfirmed) return;
+
+      const resp = await api.delete(`api/msp/Deletemsp-image/${row._id}`);
+
+      if (resp.status === 200) {
+        setTimeout(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Image Deleted",
+            text: "Image Deleted Successfully...",
+            showConfirmButton: true,
+            customClass: {
+              popup: "small-swal-popup",
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
+      } else {
+        console.warn("⚠️ Error:", resp.data.response.data.message);
+        setTimeout(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Error Occured",
+            text: resp.data.response.data.message,
+            showConfirmButton: true,
+            customClass: {
+              confirmButton: "my-swal-button",
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }, 0);
+      }
+    } catch (error) {
+      console.log(error);
+      setTimeout(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Error Occurred",
+          text: error.response?.data?.message || "Something went wrong",
+          showConfirmButton: true,
+          customClass: { confirmButton: "my-swal-button" },
+        }).then(() => {
+          window.location.reload(); // optional, you can remove this if not needed
+        });
+      }, 0);
+    }
   };
 
   const columns = [
@@ -164,7 +229,7 @@ function MspGallary() {
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDeletehospital(params.row._id);
+                   onDelete(params.row);
                   handleCloseMenu();
                 }}
               >

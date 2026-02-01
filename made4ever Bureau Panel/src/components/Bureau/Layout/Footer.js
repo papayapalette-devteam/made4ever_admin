@@ -1,5 +1,13 @@
 import React from "react";
-import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin} from "lucide-react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Globe
+} from "lucide-react";
 
 export default function Footer() {
   return (
@@ -14,12 +22,57 @@ export default function Footer() {
               India's #1 income-generating and match-making web portal for marriage bureaus.
               Connecting hearts, building futures.
             </p>
-            <div className="flex space-x-4">
-              <Facebook className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition" />
-              <Twitter className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition" />
-              <Instagram className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition" />
-              <Linkedin className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition" />
-            </div>
+      <div className="flex space-x-4">
+  <a
+    href="https://www.facebook.com/people/Made4ever-Matrimonial/61552581722726/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Facebook className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://twitter.com/ashish_narang1"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Twitter className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://www.instagram.com/made4ever_app/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Instagram className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  <a
+    href="https://www.linkedin.com/in/ashish-narang-5149aa238/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Linkedin className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  {/* YouTube */}
+  <a
+    href="https://www.youtube.com/channel/UCN6SSrH1jP9UkkCdZvjzUQg/videos"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Youtube className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+
+  {/* WordPress */}
+  <a
+    href="https://made4evermatrimonial.wordpress.com"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Globe className="h-5 w-5 text-[#bf5281] hover:text-white cursor-pointer" />
+  </a>
+</div>
           </div>
 
           {/* Quick Links */}
@@ -38,12 +91,11 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Support</h3>
             <ul className="space-y-2">
-              <li><a href="/support" className="text-gray-300 hover:text-white transition-colors">Support</a></li>
-              <li><a href="/help-center" className="text-gray-300 hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="/faq" className="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="/contact-support" className="text-gray-300 hover:text-white transition-colors">Contact Support</a></li>
-              <li><a href="/privacy-policy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="/terms-of-service" className="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
+             
+              <li><a href="https://made4ever.in/faq" className="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="https://made4ever.in/contactus" className="text-gray-300 hover:text-white transition-colors">Contact Support</a></li>
+              <li><a href="https://made4ever.in/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="https://made4ever.in/terms" className="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
             </ul>
           </div>
 
