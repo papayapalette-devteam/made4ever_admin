@@ -9,6 +9,9 @@ const inter = Inter({
 export const metadata = {
   title: "Made4Ever",
   description: "Find Your Perfect Match",
+   icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {

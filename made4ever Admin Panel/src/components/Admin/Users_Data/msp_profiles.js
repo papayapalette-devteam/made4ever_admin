@@ -116,9 +116,7 @@ function MspProfiles() {
     setMenuRowId(null);
   };
 
-  const onEdit = (row) => {
-    // setMsp(row);
-  };
+
 
   const onDelete = async (_id) => {
     if (!_id) return;
@@ -210,10 +208,7 @@ function MspProfiles() {
               disableScrollLock
             >
               <MenuItem
-                onClick={() => {
-                  onEdit(params.row);
-                  handleCloseMenu();
-                }}
+                onClick={()=>navigate('/update-user-profile',{state:{id:params.row}})}
               >
                 Edit
               </MenuItem>

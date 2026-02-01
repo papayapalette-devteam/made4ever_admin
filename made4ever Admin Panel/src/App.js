@@ -50,6 +50,7 @@ import MspProfiles from "./components/Admin/Users_Data/msp_profiles";
 import UserProfile from "./components/Admin/Users_Data/user_profile";
 import Joinnow from "./components/Admin/Join_Now/join_now";
 import ContactUs from "./components/Admin/ContactUs/contact_us";
+import NewProfileForm from "./components/Admin/Users_Data/edit_user_profile";
 
 
 
@@ -106,6 +107,7 @@ function App() {
        <Route path="/msp" element={<Msp/>}></Route>
        <Route path="/msp-profiles" element={<MspProfiles/>}></Route>
        <Route path="/user-profile" element={<UserProfile/>}></Route>
+       <Route path="/update-user-profile" element={<NewProfileForm/>}></Route>
 
       {/*===================== users data section route end ===========================*/}
 

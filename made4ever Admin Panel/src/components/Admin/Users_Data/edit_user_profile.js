@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../Layout/Footer";
-import Header from "../Layout/Header";
+
 import api from "../../../api";
 import Swal from "sweetalert2";
 import { ClipboardPaste } from "lucide-react";
@@ -15,6 +14,8 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import Adminsidebar from "../adminsidebar";
+import Adminheader from "../adminheader";
 
 export default function NewProfileForm() {
 
@@ -22,17 +23,13 @@ export default function NewProfileForm() {
   
   const [step, setStep] = useState(1);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  
-
   const location = useLocation();
   const existing_user_profile = location?.state?.id;
 
   //======================== state for adding a user=========================================
 
   const [user_profile, setuser_profile] = useState({
-    Bureau: user._id || user.id,
+    Bureau: "",
     PersonalDetails: {
       Name: "",
       DateOfBirth: "",
@@ -846,12 +843,16 @@ const getall_income_group = async () => {
   };
 
   return (
-    <div>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
+     <div>
+      <Adminheader />
+
+      <div className="layout">
+        <Adminsidebar />
+           <div className="content-wrapper ">
+          <div className=" p-4 rounded-lg">
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
+          
+          <div className="rounded-t-lg bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
             <h1 className="text-3xl font-bold">
               {existing_user_profile
                 ? "Update New Profile"
@@ -3151,6 +3152,9 @@ const getall_income_group = async () => {
                             ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
+                          {loading === "income" && (
+                        <option disabled>Loading...</option>
+                      )}
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -4018,7 +4022,7 @@ const getall_income_group = async () => {
         </div>
       </div>
 
-      <Footer />
+        </div>
     </div>
   );
 }
