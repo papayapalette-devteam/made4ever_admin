@@ -208,7 +208,7 @@ function MspProfiles() {
               disableScrollLock
             >
               <MenuItem
-                onClick={()=>navigate('/update-user-profile',{state:{id:params.row}})}
+                onClick={()=>navigate('/update-user-profile',{state:{profile:params.row}})}
               >
                 Edit
               </MenuItem>

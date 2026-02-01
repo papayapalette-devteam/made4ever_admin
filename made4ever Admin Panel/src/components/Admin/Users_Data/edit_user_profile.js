@@ -24,7 +24,9 @@ export default function NewProfileForm() {
   const [step, setStep] = useState(1);
 
   const location = useLocation();
-  const existing_user_profile = location?.state?.id;
+  const existing_user_profile = location?.state?.profile;
+
+  
 
   //======================== state for adding a user=========================================
 
@@ -127,6 +129,9 @@ export default function NewProfileForm() {
     },
   });
 
+  console.log(existing_user_profile);
+  
+
   useEffect(() => {
     if (existing_user_profile) {
       // Clone the existing profile
@@ -142,6 +147,7 @@ export default function NewProfileForm() {
       delete updatedProfile.createdAt;
       delete updatedProfile.updatedAt;
       delete updatedProfile.__v;
+      delete updatedProfile.id;
 
       // Recursive cleaner for nested objects
       const cleanObject = (obj) => {
@@ -855,7 +861,7 @@ const getall_income_group = async () => {
           <div className="rounded-t-lg bg-gradient-to-r from-red-600 to-pink-600 text-white py-6 px-6 text-center">
             <h1 className="text-3xl font-bold">
               {existing_user_profile
-                ? "Update New Profile"
+                ? `Update ${existing_user_profile.PersonalDetails.Name} Profile`
                 : "Create New Profile"}
             </h1>
 
@@ -3979,7 +3985,7 @@ const getall_income_group = async () => {
   />
   <label htmlFor="acceptTerms" className="text-sm text-gray-700 mt-1">
     I accept the{" "}
-    <span className="text-red-600 font-medium cursor-pointer" onClick={()=>navigate('/terms-conditions')}>
+    <span className="text-red-600 font-medium cursor-pointer" >
       Terms & Conditions
     </span>
   </label>
