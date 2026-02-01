@@ -5,7 +5,7 @@ import api from '../../api'
 import Swal from 'sweetalert2';
 import './signin.css'
 // import ChangePasswordModal from "./changepassworddoctor";
-import logo from "../Admin/images/Made4Ever New Logo (600 x 300 px) (1).png";
+import logo from "../Admin/images/Made4Ever New Logo (400 x 150 px) (3).png";
 import image from "../Admin/images/M4E_Admin Login.jpg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";  // 👁️ eye icons
 

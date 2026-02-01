@@ -79,11 +79,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
-              <li><a href="/about" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
-              <li><a href="/billing" className="text-gray-300 hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+              <li><a href="https://made4ever.in/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
+              <li><a href="https://made4ever.in/aboutus" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
+              <li><a href="https://made4ever.in/contactus" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+              <li><a href="https://made4ever.in/blog" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
             </ul>
           </div>
 

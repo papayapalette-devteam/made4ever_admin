@@ -186,8 +186,8 @@ if (bureau) {
           (userToCandidate + candidateToUser) / 2
         ),
       };
-    }) // ✅ FILTER MATCHES > 50%
-  .filter(match => match.matchPercentage > 0);
+    }) // ✅ FILTER MATCHES > 80%
+  .filter(match => match.matchPercentage > 80);
 
     // sort only current page
     matches.sort((a, b) => b.matchPercentage - a.matchPercentage);

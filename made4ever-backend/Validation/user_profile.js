@@ -62,7 +62,7 @@ const contactDetailsSchema = Joi.object({
   Country: Joi.string().allow(""),
   State: Joi.string().allow(""),
   City: Joi.string().allow(""),
-  PostalCode: Joi.number().allow(null)
+  // PostalCode: Joi.number().allow(null)
 });
 
 // ✅ Partner Preferences Schema

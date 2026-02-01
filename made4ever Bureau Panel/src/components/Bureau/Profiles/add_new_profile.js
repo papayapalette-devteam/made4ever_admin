@@ -24,13 +24,15 @@ export default function NewProfileForm() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  
+
   const location = useLocation();
   const existing_user_profile = location?.state?.id;
 
   //======================== state for adding a user=========================================
 
   const [user_profile, setuser_profile] = useState({
-    Bureau: user._id,
+    Bureau: user._id || user.id,
     PersonalDetails: {
       Name: "",
       DateOfBirth: "",
@@ -361,19 +363,52 @@ export default function NewProfileForm() {
   // get income
 
   const [All_Income_Group, setAll_Income_Group] = useState([]);
-  const getall_income_group = async () => {
-    try {
-      setselect_loading("income");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "income_group");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Income_Group(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
+
+
+const getall_income_group = async () => {
+  try {
+    setselect_loading("income");
+
+    const params = new URLSearchParams();
+    params.append("lookup_type", "income_group");
+
+    const resp = await api.get(
+      `api/admin/LookupList?${params.toString()}`
+    );
+
+    const sortedIncome = resp.data.data.sort((a, b) => {
+      const getValue = (str = "") => {
+        str = str.trim(); // remove extra spaces
+
+        const match = str.match(/(\d+)\s*(Lakh|Crore)/i);
+        if (!match) return 0;
+
+        let value = parseInt(match[1]);
+
+        // Convert Crore → Lakh
+        if (match[2].toLowerCase() === "crore") {
+          value *= 100;
+        }
+
+        return value;
+      };
+
+      return getValue(a.lookup_value) - getValue(b.lookup_value);
+      // 🔼 Small income first
+      // For small income last use reverse
+      // return getValue(b.lookup_value) - getValue(a.lookup_value);
+    });
+
+    setAll_Income_Group(sortedIncome);
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setselect_loading("");
+  }
+};
+
+
 
   // get country
 
@@ -415,12 +450,18 @@ export default function NewProfileForm() {
   const [All_City_Group, setAll_City_Group] = useState([]);
   const getall_city_group = async (selectedId) => {
     try {
+      console.log(selectedId);
+      
       setselect_loading("city");
       const params = new URLSearchParams();
       params.append("lookup_type", "city_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_City_Group(resp.data.data);
+      setAll_City_Group((prev) => [
+  ...prev,
+  ...resp.data.data,
+]);
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -456,7 +497,31 @@ export default function NewProfileForm() {
       const params = new URLSearchParams();
       params.append("lookup_type", "property_size");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Property_Size(resp.data.data);
+
+      const sortedProperty = resp.data.data.sort((a, b) => {
+      const getValue = (str = "") => {
+        str = str.trim(); // remove extra spaces
+
+        const match = str.match(/(\d+)\s*(GAJ)/i);
+        if (!match) return 0;
+
+        let value = parseInt(match[1]);
+
+        // Convert Crore → Lakh
+        if (match[2].toLowerCase() === "crore") {
+          value *= 100;
+        }
+
+        return value;
+      };
+
+      return getValue(a.lookup_value) - getValue(b.lookup_value);
+      // 🔼 Small income first
+      // For small income last use reverse
+      // return getValue(b.lookup_value) - getValue(a.lookup_value);
+    });
+
+    setAll_Property_Size(sortedProperty);
     } catch (error) {
       console.log(error);
     } finally {
@@ -3086,6 +3151,9 @@ export default function NewProfileForm() {
                             ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
+                          {loading === "income" && (
+                        <option disabled>Loading...</option>
+                      )}
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}

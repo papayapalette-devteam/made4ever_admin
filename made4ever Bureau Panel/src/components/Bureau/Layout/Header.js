@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../images/Made4Ever New Logo (600 x 300 px) (1).png";
+import logo from "../../images/Made4Ever New Logo (400 x 150 px) (3).png";
 import { User, LogOut, Settings, CreditCard } from "lucide-react";
 import Swal from "sweetalert2";
 import EditMspProfileModal from "./edit_profije";

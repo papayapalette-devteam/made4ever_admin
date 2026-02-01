@@ -253,7 +253,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
             <div className="flex flex-col gap-2">
               <p className="text-[11px] font-semibold">Profile Images</p>
 
-              {formData.id.map((img, index) => (
+              {formData?.images?.map((img, index) => (
                 <div key={index} className="flex items-center gap-2">
                   {img && (
                     <img

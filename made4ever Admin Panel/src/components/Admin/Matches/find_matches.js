@@ -188,20 +188,48 @@ export default function FindMatches() {
   // get income
 
   const [All_Income_Group, setAll_Income_Group] = useState([]);
-  const getall_income_group = async () => {
-    try {
-      setselect_loading("income");
-      const params = new URLSearchParams();
-      params.append("lookup_type", "income_group");
-      const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Income_Group(resp.data.data);
-  
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setselect_loading("");
-    }
-  };
+ const getall_income_group = async () => {
+  try {
+    setselect_loading("income");
+
+    const params = new URLSearchParams();
+    params.append("lookup_type", "income_group");
+
+    const resp = await api.get(
+      `api/admin/LookupList?${params.toString()}`
+    );
+
+    const sortedIncome = resp.data.data.sort((a, b) => {
+      const getValue = (str = "") => {
+        str = str.trim(); // remove extra spaces
+
+        const match = str.match(/(\d+)\s*(Lakh|Crore)/i);
+        if (!match) return 0;
+
+        let value = parseInt(match[1]);
+
+        // Convert Crore → Lakh
+        if (match[2].toLowerCase() === "crore") {
+          value *= 100;
+        }
+
+        return value;
+      };
+
+      return getValue(a.lookup_value) - getValue(b.lookup_value);
+      // 🔼 Small income first
+      // For small income last use reverse
+      // return getValue(b.lookup_value) - getValue(a.lookup_value);
+    });
+
+    setAll_Income_Group(sortedIncome);
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setselect_loading("");
+  }
+};
 
   // get country
 
@@ -248,7 +276,11 @@ export default function FindMatches() {
       params.append("lookup_type", "city_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_City_Group(resp.data.data);
+      setAll_City_Group((prev) => [
+  ...prev,
+  ...resp.data.data,
+]);
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -267,7 +299,31 @@ export default function FindMatches() {
       const params = new URLSearchParams();
       params.append("lookup_type", "property_size");
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_Property_Size(resp.data.data);
+
+      const sortedProperty = resp.data.data.sort((a, b) => {
+      const getValue = (str = "") => {
+        str = str.trim(); // remove extra spaces
+
+        const match = str.match(/(\d+)\s*(GAJ)/i);
+        if (!match) return 0;
+
+        let value = parseInt(match[1]);
+
+        // Convert Crore → Lakh
+        if (match[2].toLowerCase() === "crore") {
+          value *= 100;
+        }
+
+        return value;
+      };
+
+      return getValue(a.lookup_value) - getValue(b.lookup_value);
+      // 🔼 Small income first
+      // For small income last use reverse
+      // return getValue(b.lookup_value) - getValue(a.lookup_value);
+    });
+
+    setAll_Property_Size(sortedProperty);
     } catch (error) {
       console.log(error);
     } finally {
@@ -342,6 +398,10 @@ export default function FindMatches() {
 
   const[matches,setmatches]=useState([])
 
+const [page, setPage] = useState(1);
+const [limit] = useState(10); // fixed or changeable
+const [totalPages, setTotalPages] = useState(1);
+
   const find_matches = async () => {
     try {
 
@@ -355,8 +415,15 @@ export default function FindMatches() {
         Swal.showLoading();
       },
     });
-    
-      const resp = await api.post("api/user/find-matches", user_profile);
+
+      const resp = await api.post("api/user/find-matches", user_profile,
+        {
+        params: {
+          page: page,
+          limit: limit,
+        },
+      }
+      );
       setmatches(resp.data.matches)
   
       if (resp.status === 200) {
@@ -1724,6 +1791,7 @@ export default function FindMatches() {
 <div className="w-full max-w-full px-2 sm:px-4 md:px-8 lg:px-16">
   <MatchCard matches={matches} />
 </div>
+
 
 
  {/* show matches end */}

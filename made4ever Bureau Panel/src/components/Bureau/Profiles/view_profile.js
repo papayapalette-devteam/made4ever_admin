@@ -177,9 +177,7 @@ const UserProfile = () => {
               {user_profile?.ContactDetails?.City},{" "}
               {user_profile?.ContactDetails?.Country}
             </p>
-            <p className="text-gray-600 text-sm sm:text-base">
-              📞 {user_profile?.PersonalDetails?.MobileNumber}
-            </p>
+        
           </div>
         </div>
 

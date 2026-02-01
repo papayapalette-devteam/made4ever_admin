@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../Admin/admincss/adminsidebar.css";
-import logo from "../Admin/images/Made4Ever New Logo (400 x 150 px).png";
+import logo from "../Admin/images/Made4Ever New Logo (400 x 150 px) (3).png";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {

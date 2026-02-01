@@ -92,15 +92,11 @@ const findMatches = async (req, res) => {
     const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
     // Fetch candidates of opposite gender
-    // ✅ PAGINATED QUERY
     const candidates = await UserProfile.find({
       "PersonalDetails.Gender": oppositeGender,
-      IsActive: true,
-      Bureau: { $ne: null }
+      IsActive:true
     })
       .populate("Bureau")
-      .skip(skip)
-      .limit(limit)
       .lean();
       
 

@@ -230,7 +230,7 @@ const exportUserProfiles = async () => {
         responseType: "blob", // 🔴 required
       }
     );
-    console.log(response);
+  
     
 
     const blob = new Blob([response.data], {
