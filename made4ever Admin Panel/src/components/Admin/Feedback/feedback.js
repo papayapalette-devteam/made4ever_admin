@@ -7,7 +7,7 @@ import {
   IconButton,
   CircularProgress,
   Select,
-  Autocomplete ,
+  Autocomplete,
   MenuItem,
   Menu,
 } from "@mui/material";
@@ -19,15 +19,16 @@ import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-
 function AddFeedback() {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   const [feedback, setfeedback] = useState({
     bureau: "",
     feedback: "",
-    image:""
+    image: "",
+    audio: "",
   });
 
   const [rowCount, setRowCount] = useState(0);
@@ -39,7 +40,7 @@ function AddFeedback() {
   const [All_Feedback, setAll_Feedback] = useState([]);
   const getall_feedback = async (
     pageNumber = paginationModel.page,
-    limitNumber = paginationModel.pageSize
+    limitNumber = paginationModel.pageSize,
   ) => {
     try {
       setLoading("get-feedback");
@@ -49,7 +50,9 @@ function AddFeedback() {
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
 
-      const resp = await api.get(`api/feedback/get-feedback?${params.toString()}`);
+      const resp = await api.get(
+        `api/feedback/get-feedback?${params.toString()}`,
+      );
 
       setAll_Feedback(resp.data.data);
       setRowCount(resp.data.total);
@@ -63,9 +66,6 @@ function AddFeedback() {
   useEffect(() => {
     getall_feedback();
   }, [paginationModel]);
-
-
-  
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -83,16 +83,10 @@ function AddFeedback() {
   const [selectedBureau, setSelectedBureau] = useState(null);
   const [editId, setEditId] = useState(null);
   const onEdit = (row) => {
-    
-    
     setEditId(row._id);
-    setfeedback({bureau:row.bureau._id,feedback:row.feedback});
+    setfeedback({ bureau: row.bureau._id, feedback: row.feedback });
     setSelectedBureau(row.bureau);
   };
-
-
-
-
 
   const onDelete = async (row) => {
     try {
@@ -170,8 +164,19 @@ function AddFeedback() {
       flex: 0.2,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-     { field: "bureau", headerName: "Name", flex: 1,renderCell: (params) => params.row.bureau?.name || "-" },
-    { field: "registred_business_name", headerName: "Register Business Name", flex: 1,renderCell: (params) => params.row.bureau?.registered_business_name || "-" },
+    {
+      field: "bureau",
+      headerName: "Name",
+      flex: 1,
+      renderCell: (params) => params.row.bureau?.name || "-",
+    },
+    {
+      field: "registred_business_name",
+      headerName: "Register Business Name",
+      flex: 1,
+      renderCell: (params) =>
+        params.row.bureau?.registered_business_name || "-",
+    },
     { field: "feedback", headerName: "Feedback", flex: 1 },
 
     {
@@ -231,7 +236,7 @@ function AddFeedback() {
     formData.append("file", file);
 
     try {
-      setLoading1(true)
+      setLoading1(true);
       const res = await api.post("api/upload/upload-files", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -245,78 +250,95 @@ function AddFeedback() {
   };
 
   /* ==============================
+     Image Upload
+  ============================== */
+  const handleAudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setLoading2(true);
+      const res = await api.post("api/upload/upload-files", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setfeedback({ ...feedback, audio: res.data.urls[0] });
+    } catch {
+      Swal.fire("Error", "Audio upload failed", "error");
+    } finally {
+      setLoading2(false);
+    }
+  };
+
+
+  /* ==============================
      Save Feedback
   ============================== */
-const saveFeedback = async () => {
-  try {
-    setLoading("save-feedback");
-    const resp = editId
-      ? await api.put(`api/feedback/update-feedback/${editId}`, feedback)
-      : await api.post("api/feedback/add-feedback", feedback);
+  const saveFeedback = async () => {
+    try {
+      setLoading("save-feedback");
+      const resp = editId
+        ? await api.put(`api/feedback/update-feedback/${editId}`, feedback)
+        : await api.post("api/feedback/add-feedback", feedback);
 
-    if (resp.status === 200) {
+      if (resp.status === 200) {
+        Swal.fire({
+          title: "Success",
+          text: editId ? "Feedback updated successfully" : "Feedback published",
+          icon: "success",
+          customClass: {
+            confirmButton: "my-swal-button",
+          },
+        }).then(() => {
+          setEditId(null);
+          setfeedback({ bureau: "", feedback: "" });
+          window.location.reload();
+        });
+      }
+    } catch (err) {
       Swal.fire({
-        title: "Success",
-        text: editId
-          ? "Feedback updated successfully"
-          : "Feedback published",
-        icon: "success",
+        title: "Error",
+        text: err.response?.data?.message || "Something went wrong",
+        icon: "error",
         customClass: {
           confirmButton: "my-swal-button",
         },
-      }).then(() => {
-        setEditId(null);
-        setfeedback({ bureau: "", feedback: "" });
-        window.location.reload();
       });
+    } finally {
+      setLoading("");
     }
-  } catch (err) {
-    Swal.fire({
-      title: "Error",
-      text: err.response?.data?.message || "Something went wrong",
-      icon: "error",
-       customClass: {
-          confirmButton: "my-swal-button",
-        },
-    });
-  } finally {
-    setLoading("");
-  }
-};
-
+  };
 
   const [bureauOptions, setBureauOptions] = useState([]);
 
-
-
   let searchTimeout;
 
-const fetchBureaus = async (query) => {
-  if (!query || query.length < 1) {
-    setBureauOptions([]);
-    return;
-  }
-
-  clearTimeout(searchTimeout);
-
-  searchTimeout = setTimeout(async () => {
-    try {
-      setLoading(true);
-      const res = await api.get(
-        `api/msp/Getmsp?search=${query}`
-      );
-      console.log(res);
-      
-       setBureauOptions(Array.isArray(res.data) ? res.data.msp : res.data.msp || []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+  const fetchBureaus = async (query) => {
+    if (!query || query.length < 1) {
+      setBureauOptions([]);
+      return;
     }
-  }, 500); // 500ms debounce
-};
 
+    clearTimeout(searchTimeout);
 
+    searchTimeout = setTimeout(async () => {
+      try {
+        setLoading(true);
+        const res = await api.get(`api/msp/Getmsp?search=${query}`);
+        console.log(res);
+
+        setBureauOptions(
+          Array.isArray(res.data) ? res.data.msp : res.data.msp || [],
+        );
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 500); // 500ms debounce
+  };
 
   return (
     <div>
@@ -331,87 +353,108 @@ const fetchBureaus = async (query) => {
               <p>Create and publish feedbacks.</p>
             </div>
 
-          <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+            <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+              {/* Select Bureau */}
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <label className="form-label">Select Bureau</label>
 
-  {/* Select Bureau */}
-<FormControl fullWidth sx={{ mb: 2 }}>
-  <label className="form-label">Select Bureau</label>
-
-<Autocomplete
-  options={bureauOptions}
-  loading={loading}
-  value={selectedBureau}
-  getOptionLabel={(option) => option?.registered_business_name || ""}
-  isOptionEqualToValue={(option, value) => option._id === value._id} // 👈 important
-  onInputChange={(event, value) => fetchBureaus(value)}
-  onChange={(event, newValue) => {
-    setSelectedBureau(newValue);
-    setfeedback({
-      ...feedback,
-      bureau: newValue?._id || "",
-    });
-  }}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      size="small"
-      placeholder="Type bureau name..."
-      InputProps={{
-        ...params.InputProps,
-        endAdornment: (
-          <>
-            {loading && <CircularProgress size={18} />}
-            {params.InputProps.endAdornment}
-          </>
-        ),
-      }}
-    />
-  )}
-/>
-
-</FormControl>
-
-
-  {/* Feedback Text */}
-  <FormControl fullWidth sx={{ mb: 2 }}>
-    <label className="form-label">Feedback</label>
-    <TextField
-      size="small"
-      value={feedback.feedback}
-      onChange={(e) =>
-        setfeedback({ ...feedback, feedback: e.target.value })
-      }
-    />
-  </FormControl>
-
-        <FormControl fullWidth sx={{ mt: 2 }}>
-                  <label className="form-label">Image</label>
-                  <input type="file" onChange={handleImageUpload} />
-                  {loading1? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    feedback.image && (
-                      <img
-                        src={feedback.image}
-                        alt="preview"
-                        style={{ width: 120, marginTop: 10 }}
-                      />
-                    )
+                <Autocomplete
+                  options={bureauOptions}
+                  loading={loading}
+                  value={selectedBureau}
+                  getOptionLabel={(option) =>
+                    option?.registered_business_name || ""
+                  }
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  } // 👈 important
+                  onInputChange={(event, value) => fetchBureaus(value)}
+                  onChange={(event, newValue) => {
+                    setSelectedBureau(newValue);
+                    setfeedback({
+                      ...feedback,
+                      bureau: newValue?._id || "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      size="small"
+                      placeholder="Type bureau name..."
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loading && <CircularProgress size={18} />}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
                   )}
-                </FormControl>
+                />
+              </FormControl>
 
-  {/* Submit Button */}
-  <Button
-    sx={{ mt: 3 }}
-    className="submit-button"
-    onClick={saveFeedback}
-    disabled={!feedback.bureau || !feedback.feedback}
-  >
-    Publish Feedback
-  </Button>
+              {/* Feedback Text */}
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <label className="form-label">Feedback</label>
+                <TextField
+                  size="small"
+                  value={feedback.feedback}
+                  onChange={(e) =>
+                    setfeedback({ ...feedback, feedback: e.target.value })
+                  }
+                />
+              </FormControl>
 
-</Paper>
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <label className="form-label">Image</label>
+                <input type="file" onChange={handleImageUpload} />
+                {loading1 ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  feedback.image && (
+                    <img
+                      src={feedback.image}
+                      alt="preview"
+                      style={{ width: 120, marginTop: 10 }}
+                    />
+                  )
+                )}
+              </FormControl>
 
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <label className="form-label">Audio (if available)</label>
+
+                <input
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleAudioUpload}
+                />
+
+                {loading2 ? (
+                  <CircularProgress size={24} sx={{ mt: 1 }} />
+                ) : (
+                  feedback?.audio && (
+                    <audio
+                      src={feedback.audio}
+                      controls
+                      style={{ width: "100%", marginTop: 10 }}
+                    />
+                  )
+                )}
+              </FormControl>
+
+              {/* Submit Button */}
+              <Button
+                sx={{ mt: 3 }}
+                className="submit-button"
+                onClick={saveFeedback}
+                disabled={!feedback.bureau || !feedback.feedback}
+              >
+                Publish Feedback
+              </Button>
+            </Paper>
 
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>

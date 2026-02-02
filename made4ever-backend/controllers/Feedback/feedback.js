@@ -12,13 +12,14 @@ const createFeedback = async (req, res) => {
       });
     }
 
-    const { bureau, feedback,image } = value;
+    const { bureau, feedback,image,audio } = value;
 
     // ✅ Save to DB
     const newFeedback = await Feedback.create({
       bureau,
       feedback,
-      image
+      image,
+      audio
     });
 
     return res.status(200).json({

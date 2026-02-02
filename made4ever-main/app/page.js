@@ -45,11 +45,11 @@ export default function HomePage() {
 
 
 
-   const [testimonials,settestimonials]=useState([])
+  const [testimonials,settestimonials]=useState([])
   const get_all_feedback=async()=>
   {
     try {
-      const resp=await api.get('api/feedback/get-feedback')
+      const resp=await api.get('api/feedback/get-feedback?page=${page}&limit=6')
       settestimonials(resp.data.data)
       
     } catch (error) {
@@ -227,6 +227,16 @@ console.log(testimonials);
                   className="w-16 h-16 mx-auto rounded-full mb-4"
                 />
                  <p className="italic text-gray-700 mb-4">{t.feedback}</p>
+                 {
+                  t?.audio &&(
+                        <audio
+                      src={t.audio}
+                      controls
+                      style={{ width: "100%", marginTop: 10 }}
+                    />
+                  )
+                 }
+              
                 <div className="font-semibold">{t.bureau.name}</div>
                 <div className="text-sm text-gray-500">{new Date(t.createdAt).toDateString()}</div>
               </div>

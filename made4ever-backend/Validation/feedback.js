@@ -25,6 +25,13 @@ const feedbackValidationSchema = Joi.object({
         .messages({
           "string.base": "Image must be a string",
         }),
+
+           audio: Joi.string()
+        .allow("")
+        .optional()
+        .messages({
+          "string.base": "Audio must be a string",
+        }),
 });
 
 module.exports = {

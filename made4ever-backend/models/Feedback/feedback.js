@@ -13,6 +13,7 @@ const feedbackSchema = new mongoose.Schema(
       trim: true,
     },
     image: { type: String},
+    audio: { type: String},
   },
   { timestamps: true }
 );
