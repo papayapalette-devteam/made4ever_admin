@@ -149,6 +149,7 @@ function MspVideo() {
       flex: 0.2,
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
+
     {
       field: "msp_video",
       headerName: "Event Videos",
@@ -178,6 +179,7 @@ function MspVideo() {
               >
                 <video
                   src={video}
+                  
                   style={{
                     width: 80,
                     height: 50,
@@ -186,7 +188,7 @@ function MspVideo() {
                     cursor: "pointer",
                   }}
                   onClick={(e) => {
-                    e.preventDefault(); // stop the video from playing inline
+                    e.preventDefault();
                     window.open(video, "_blank"); // open in new tab
                   }}
                 />
@@ -195,6 +197,13 @@ function MspVideo() {
           </div>
         );
       },
+    },
+
+            {
+      field: "added",
+      headerName: "Add On",
+      flex: 0.2,
+      renderCell: (params) => new Date(params.row.createdAt).toLocaleDateString(),
     },
 
     {
