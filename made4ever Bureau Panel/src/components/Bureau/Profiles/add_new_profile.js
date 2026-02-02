@@ -2940,6 +2940,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3006,6 +3008,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3074,6 +3078,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3217,6 +3223,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3285,6 +3293,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3351,6 +3361,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
@@ -3415,6 +3427,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
