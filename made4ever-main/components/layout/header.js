@@ -16,7 +16,7 @@ const navigation = [
   { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contactus' },
   // { name: 'Admin Login', href: 'https://made4ever-admin.vercel.app/' },
-  { name: 'Bureau Login', href: 'https://made4ever-admin-dkjf.vercel.app/' },
+  { name: 'Bureau Login', href: 'https://bureau.made4ever.in/' },
 ];
 
 export default function Header() {
