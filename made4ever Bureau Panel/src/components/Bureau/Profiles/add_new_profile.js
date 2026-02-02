@@ -277,6 +277,7 @@ export default function NewProfileForm() {
       setselect_loading("cast");
       const params = new URLSearchParams();
       params.append("lookup_type", "cast_group");
+      // params.append("parent_lookup_id", user_profile.ReligiousDetails.Religion);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Cast_Group(resp.data.data);
     } catch (error) {
@@ -822,10 +823,7 @@ const getall_income_group = async () => {
           customClass: {
             confirmButton: "swal-confirm-btn",
           },
-        }).then(() => {
-          // Refresh the page after alert closes
-          window.location.reload();
-        });
+        })
       }
     } catch (error) {
       console.log(error);
@@ -1678,7 +1676,7 @@ const getall_income_group = async () => {
                         )
                       }
                       onClick={() => {
-                        if (All_Cast_Group.length === 0) getall_cast_group();
+                         getall_cast_group();
                       }}
                     >
                       <option
@@ -3151,6 +3149,9 @@ const getall_income_group = async () => {
                             ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
+                          {loading === "income" && (
+                        <option disabled>Loading...</option>
+                      )}
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}

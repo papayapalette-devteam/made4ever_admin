@@ -12,18 +12,17 @@ import {
   Menu,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-
-
 import api from "../../../api";
 import Swal from "sweetalert2";
 import UniqueLoader from "../loader";
 import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Feedback from "react-bootstrap/esm/Feedback";
+
 
 function AddFeedback() {
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   const [feedback, setfeedback] = useState({
     bureau: "",
@@ -228,12 +227,11 @@ function AddFeedback() {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    setLoading("image-upload");
     const formData = new FormData();
     formData.append("file", file);
 
     try {
+      setLoading1(true)
       const res = await api.post("api/upload/upload-files", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -242,7 +240,7 @@ function AddFeedback() {
     } catch {
       Swal.fire("Error", "Image upload failed", "error");
     } finally {
-      setLoading("");
+      setLoading1(false);
     }
   };
 
@@ -252,8 +250,6 @@ function AddFeedback() {
 const saveFeedback = async () => {
   try {
     setLoading("save-feedback");
-    console.log(editId);
-    
     const resp = editId
       ? await api.put(`api/feedback/update-feedback/${editId}`, feedback)
       : await api.post("api/feedback/add-feedback", feedback);
@@ -391,7 +387,7 @@ const fetchBureaus = async (query) => {
         <FormControl fullWidth sx={{ mt: 2 }}>
                   <label className="form-label">Image</label>
                   <input type="file" onChange={handleImageUpload} />
-                  {loading === "image-upload" ? (
+                  {loading1? (
                     <CircularProgress size={24} />
                   ) : (
                     feedback.image && (
