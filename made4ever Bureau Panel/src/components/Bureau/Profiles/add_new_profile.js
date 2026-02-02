@@ -792,10 +792,7 @@ const getall_income_group = async () => {
           customClass: {
             confirmButton: "swal-confirm-btn",
           },
-        }).then(() => {
-          // Refresh the page after alert closes
-          window.location.reload();
-        });
+        })
       }
       
       const resp = await api.post("api/user/add-new-profile", user_profile);
@@ -810,7 +807,10 @@ const getall_income_group = async () => {
           customClass: {
             confirmButton: "swal-confirm-btn",
           },
-        })
+        }).then(() => {
+          // Refresh the page after alert closes
+          navigate('/profiles')
+        });
       }
     } catch (error) {
       console.log(error);
