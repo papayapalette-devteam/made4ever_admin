@@ -1610,6 +1610,12 @@ const [totalPages, setTotalPages] = useState(1);
                             );
                           }}
                         >
+                            {select_loading === "country" && (
+    <MenuItem disabled>
+      <CircularProgress size={20} sx={{ mr: 1 }} />
+      Loading...
+    </MenuItem>
+  )}
                           {All_Country_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -1676,6 +1682,12 @@ const [totalPages, setTotalPages] = useState(1);
                             );
                           }}
                         >
+                                                    {select_loading === "state" && (
+    <MenuItem disabled>
+      <CircularProgress size={20} sx={{ mr: 1 }} />
+      Loading...
+    </MenuItem>
+  )}
                           {All_State_Group.map((option) => (
                             <MenuItem
                               key={option._id}
