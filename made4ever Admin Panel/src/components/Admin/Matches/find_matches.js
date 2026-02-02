@@ -1739,6 +1739,8 @@ const [totalPages, setTotalPages] = useState(1);
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto", 
                                 }}
                               >
                                 {selected.map((value) => (
@@ -1748,6 +1750,7 @@ const [totalPages, setTotalPages] = useState(1);
                                     size="small"
                                     color="primary"
                                     variant="outlined"
+                                    
                                   />
                                 ))}
                               </Box>
