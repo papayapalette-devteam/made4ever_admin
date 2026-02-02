@@ -28,7 +28,7 @@ const login = async (e) => {
     try {
      
 
-    if(Email==="admin@made4ever.in" && Password==="admin@123")
+    if(Email==="admin@made4ever.in" && Password==="Radha_1008")
     {
 
         Swal.fire({
