@@ -655,15 +655,7 @@ const getall_income_group = async () => {
             )?.[2]
             ?.trim() || "",
 
-        // DateOfBirth:
-        //   text.match(
-        //     /(Date of Birth|DOB|Birth Date|Born On|Birthday|D\.O\.B|Born Date|Birth Day|Date of Birth \(DD\/MM\/YYYY\)|Date of Birth \(MM\-DD\-YYYY\))\s*[:\-]?\s*([0-9\/\-\.\s]+)/i
-        //   )?.[2]?.trim() || "",
 
-        // TimeOfBirth:
-        //   text.match(
-        //     /(Time of Birth|Time|Birth Time|TOB|T\.O\.B|Born At \(Time\)|Birth Timing|Exact Birth Time|Time of Birth \(HH:MM\)|Birth Hour)\s*[:\-]?\s*(.*)/i
-        //   )?.[2]?.trim() || "",
 
         PlaceOfBirth:
           text
@@ -693,12 +685,7 @@ const getall_income_group = async () => {
             )?.[2]
             ?.trim() || "",
 
-        MobileNumber:
-          text
-            .match(
-              /(Mobile|Contact|Phone|WhatsApp|Cell)\s*(Number|No|#)?\s*[:\-]?\s*(\d{10,})/i,
-            )?.[3]
-            ?.trim() || "",
+ 
 
         Manglik: text.match(/(non\s*mangalik|not\s*manglik)/i)
           ? "No"
@@ -3560,6 +3547,8 @@ const getall_income_group = async () => {
                                   display: "flex",
                                   flexWrap: "wrap",
                                   gap: 0.5,
+                                  maxHeight: "40px",
+                                  overflowY: "auto",
                                 }}
                               >
                                 {selected.map((value) => (
