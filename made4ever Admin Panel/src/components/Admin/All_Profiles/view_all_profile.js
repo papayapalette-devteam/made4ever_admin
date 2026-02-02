@@ -20,37 +20,7 @@ import api from "../../../api";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 
-// Mock data (replace with your API data)
-const mockProfiles = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    age: 28,
-    gender: "male",
-    occupation: "Software Engineer",
-    education: "B.Tech",
-    city: "Delhi",
-    state: "Delhi",
-    income: "₹10 LPA",
-    height: "5'9\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/men/1.jpg"],
-  },
-  {
-    id: 2,
-    name: "Priya Mehta",
-    age: 25,
-    gender: "female",
-    occupation: "Doctor",
-    education: "MBBS",
-    city: "Mumbai",
-    state: "Maharashtra",
-    income: "₹12 LPA",
-    height: "5'5\"",
-    isActive: false,
-    photos: ["https://randomuser.me/api/portraits/women/2.jpg"],
-  },
-];
+
 
 export default function Allprofiles() {
   const navigate = useNavigate();

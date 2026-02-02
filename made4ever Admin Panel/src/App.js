@@ -51,6 +51,7 @@ import UserProfile from "./components/Admin/Users_Data/user_profile";
 import Joinnow from "./components/Admin/Join_Now/join_now";
 import ContactUs from "./components/Admin/ContactUs/contact_us";
 import NewProfileForm from "./components/Admin/Users_Data/edit_user_profile";
+import MatchesPage from "./components/Admin/MatchedProfiles/matched_profile";
 
 
 
@@ -116,6 +117,12 @@ function App() {
        <Route path="/sub-admin" element={<SubAdmin/>}></Route>
 
       {/*===================== create sub-admin route end ===========================*/}
+
+           {/*===================== create matches route start ===========================*/}
+
+       <Route path="/matches" element={<MatchesPage/>}></Route>
+
+      {/*===================== create matches route end ===========================*/}
 
       {/*=============================== other routes start============================ */}
 

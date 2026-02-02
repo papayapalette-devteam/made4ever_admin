@@ -162,7 +162,7 @@ const menuItems = [
   //   label: "MSP Header Text",
   //   path: "/msp-header-text",
   // },
-  { icon: <FaUsers size={20} />, label: "Matches", path: "/event-master" },
+  { icon: <FaUsers size={20} />, label: "Matches", path: "/matches" },
   { icon: <MdGroup size={20} />, label: "Find Matches", path: "/find-matches" },
   { icon: <MdManageAccounts   size={20} />, label: "View All Profiles", path: "/view-profiles" },
   { icon: <MdEditNote  nessCenter  size={20} />, label: "Create Blogs", path: "/add-blog" },

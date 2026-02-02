@@ -138,19 +138,70 @@ const resp=await axios.post(
 // 🟦 Get all accepted profiles (with populated data)
 exports.getAcceptedProfiles = async (req, res) => {
   try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Get total count
+    const total = await AcceptProfile.countDocuments();
+
+    // Fetch paginated data
     const profiles = await AcceptProfile.find()
       .populate("MaleProfile")
       .populate("FemaleProfile")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limitNumber)
+      .lean(); // 🔥 faster
 
     res.status(200).json({
       success: true,
-      count: profiles.length,
+      total,
+      page: pageNumber,
+      limit: limitNumber,
+      totalPages: Math.ceil(total / limitNumber),
       data: profiles,
     });
+
   } catch (error) {
     console.error("Error fetching accepted profiles:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
+
+
+exports.deleteAcceptedProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedProfile = await AcceptProfile.findByIdAndDelete(id);
+
+    if (!deletedProfile) {
+      return res.status(404).json({
+        success: false,
+        message: "Accepted profile not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Accepted profile deleted successfully",
+      data: deletedProfile,
+    });
+
+  } catch (error) {
+    console.error("Error deleting accepted profile:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 

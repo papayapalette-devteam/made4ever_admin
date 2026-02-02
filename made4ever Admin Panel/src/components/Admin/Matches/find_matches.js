@@ -1742,6 +1742,12 @@ const [totalPages, setTotalPages] = useState(1);
                             );
                           }}
                         >
+                          {select_loading === "city" && (
+    <MenuItem disabled>
+      <CircularProgress size={20} sx={{ mr: 1 }} />
+      Loading...
+    </MenuItem>
+  )}
                           {All_City_Group.map((option) => (
                             <MenuItem
                               key={option._id}

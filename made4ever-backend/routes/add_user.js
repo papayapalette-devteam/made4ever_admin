@@ -8,7 +8,7 @@ const {
   block_unblock
 } =require('../controllers/UserProfile/add_user_profile');
 const { getMatches } = require('../controllers/UserProfile/matching_profile');
-const { saveAcceptedProfile, getAcceptedProfiles } = require('../controllers/AcceptMatches/accept_matches');
+const { saveAcceptedProfile, getAcceptedProfiles, deleteAcceptedProfile } = require('../controllers/AcceptMatches/accept_matches');
 const { findMatches } = require('../controllers/UserProfile/find_matches');
 const { exportUserProfilesToExcel, bulkUploadUserProfiles } = require('../controllers/Export Data/export_profile');
 const excelUpload=require('../middlewares/excel_file')
@@ -28,6 +28,7 @@ router.post("/find-matches", findMatches);
 
 router.post("/accept-profile", saveAcceptedProfile);
 router.get("/accept-profile", getAcceptedProfiles);
+router.delete("/delete-accept-profile/:id", deleteAcceptedProfile);
 
 router.get("/export-excel", exportUserProfilesToExcel);
 

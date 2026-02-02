@@ -8,6 +8,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("PersonalDetails");
   const location = useLocation();
   const user_id = location.state.id;
+
   const [user_profile, setuser_profile] = useState({});
 
   // ✅ Fetch & clean user profile
