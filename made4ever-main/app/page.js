@@ -238,6 +238,7 @@ console.log(testimonials);
                  }
               
                 <div className="font-semibold">{t.bureau.name}</div>
+                <div className="font-semibold">{t.bureau.mobile_number}</div>
                 <div className="text-sm text-gray-500">{new Date(t.createdAt).toDateString()}</div>
               </div>
             ))}

@@ -327,8 +327,6 @@ function AddFeedback() {
       try {
         setLoading(true);
         const res = await api.get(`api/msp/Getmsp?search=${query}`);
-        console.log(res);
-
         setBureauOptions(
           Array.isArray(res.data) ? res.data.msp : res.data.msp || [],
         );
@@ -362,9 +360,11 @@ function AddFeedback() {
                   options={bureauOptions}
                   loading={loading}
                   value={selectedBureau}
-                  getOptionLabel={(option) =>
-                    option?.registered_business_name || ""
-                  }
+                   getOptionLabel={(option) =>
+    option
+      ? `${option.registered_business_name} - ${option.mobile_number}`
+      : ""
+  }
                   isOptionEqualToValue={(option, value) =>
                     option._id === value._id
                   } // 👈 important
