@@ -23,7 +23,6 @@ function GothraGroup() {
   const [loading, setloading] = useState(false);
   const [Gothra_Group, setGothra_Group] = useState({
     gothra_group: "",
-    cast_group: "",
   });
 
   const [rowCount, setRowCount] = useState(0);
@@ -64,7 +63,7 @@ function GothraGroup() {
 
   useEffect(() => {
     getall_gothra_group();
-  }, []);
+  }, [paginationModel]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -81,11 +80,9 @@ function GothraGroup() {
 
   const [lookup_id, setlookup_id] = useState(null);
   const onEdit = (row) => {
-    get_cast_group();
     setlookup_id(row._id);
     setGothra_Group({
       gothra_group: row.lookup_value,
-      cast_group: row.parent_lookup_id._id,
     });
   };
 
@@ -167,14 +164,6 @@ function GothraGroup() {
     },
     { field: "lookup_value", headerName: "Gothra", flex: 1 },
     {
-      field: "parent_lookup_id",
-      headerName: "Cast",
-      flex: 1,
-      renderCell: (params) => {
-        return params.row?.parent_lookup_id?.lookup_value || "";
-      },
-    },
-    {
       field: "actions",
       headerName: "Actions",
       width: 80,
@@ -221,23 +210,7 @@ function GothraGroup() {
     ...doc,
   }));
 
-  //========================================= get cast group start ================================================
-  const [loading_cast, setloading_cast] = useState(false);
-  const [cast_group, setcast_group] = useState([]);
-  const get_cast_group = async () => {
-    try {
-      setloading_cast(true);
-      const resp = await api.get(`api/admin/LookupList?lookup_type=cast_group`);
 
-      setcast_group(resp.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setloading_cast(false);
-    }
-  };
-
-  //================================ get cast group end==========================================
 
   const handlechange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -277,7 +250,6 @@ function GothraGroup() {
         lookup_id: lookup_id ? lookup_id : null,
         lookup_type: "gothra_group",
         lookup_value: Gothra_Group.gothra_group,
-        parent_lookup_id: Gothra_Group.cast_group,
       });
 
       if (resp.status === 200) {
@@ -358,49 +330,7 @@ function GothraGroup() {
                   ></TextField>
                 </FormControl>
 
-                <FormControl fullWidth size="small">
-                  <label className="form-label">Cast Group</label>
-                  <Select
-                    name="cast_group"
-                    value={Gothra_Group.cast_group}
-                    onChange={handlechange}
-                    onOpen={() => {
-                      if (cast_group.length === 0) {
-                        // prevent multiple calls
-                        get_cast_group();
-                      }
-                    }}
-                    MenuProps={{
-                      disablePortal: true,
-                      disableScrollLock: true,
-                    }}
-                    displayEmpty
-                    renderValue={(selected) => {
-                      if (!selected) {
-                        return (
-                          <span style={{ color: "#9ca3af" }}>Cast Group</span>
-                        ); // grey placeholder
-                      }
-                      return cast_group.find((item) => item._id === selected)
-                        ?.lookup_value;
-                    }}
-                  >
-                    <MenuItem disabled value="">
-                      <em>Cast Group</em>
-                    </MenuItem>
-                    {loading_cast ? (
-                      <MenuItem disabled>
-                        <CircularProgress size={20} />
-                      </MenuItem>
-                    ) : (
-                      cast_group?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.lookup_value}
-                        </MenuItem>
-                      ))
-                    )}
-                  </Select>
-                </FormControl>
+          
               </div>
 
               <Button className="submit-button" onClick={add_gothra_group}>

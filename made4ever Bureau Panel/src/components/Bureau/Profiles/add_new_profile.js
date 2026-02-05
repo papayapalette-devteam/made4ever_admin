@@ -272,12 +272,13 @@ export default function NewProfileForm() {
   // get cast
 
   const [All_Cast_Group, setAll_Cast_Group] = useState([]);
-  const getall_cast_group = async () => {
+  const getall_cast_group = async (selectedId) => {
     try {
+  
       setselect_loading("cast");
       const params = new URLSearchParams();
       params.append("lookup_type", "cast_group");
-      // params.append("parent_lookup_id", user_profile.ReligiousDetails.Religion);
+      params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Cast_Group(resp.data.data);
     } catch (error) {
@@ -1577,13 +1578,18 @@ const getall_income_group = async () => {
                     </label>
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      onChange={(e) =>
+                      onChange={(e) =>{
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute("data-id");
                         handleChange(
                           "ReligiousDetails",
                           "Religion",
                           e.target.value,
                         )
+                        getall_cast_group(selectedId);
                       }
+                    }
+            
                       onClick={() => {
                         if (All_Religion_Group.length === 0)
                           getall_religion_group();
@@ -1601,7 +1607,7 @@ const getall_income_group = async () => {
 
                       {/* Show fetched values */}
                       {All_Religion_Group.map((item) => (
-                        <option key={item._id} value={item.lookup_value}>
+                        <option key={item._id} value={item.lookup_value} data-id={item._id}>
                           {item.lookup_value}
                         </option>
                       ))}
@@ -1662,9 +1668,9 @@ const getall_income_group = async () => {
                           e.target.value,
                         )
                       }
-                      onClick={() => {
-                         getall_cast_group();
-                      }}
+                      // onClick={() => {
+                      //    getall_cast_group();
+                      // }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Caste || ""}

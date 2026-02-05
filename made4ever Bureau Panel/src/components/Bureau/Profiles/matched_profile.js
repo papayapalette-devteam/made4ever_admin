@@ -143,6 +143,16 @@ useEffect(() => {
 
 const acceptProfile = async () => {
   try {
+
+       // 🔄 Show loader
+    Swal.fire({
+      title: "Accepting Profile...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     const userId = selectedMatch.userprofile._id;
     const candidateId = selectedMatch.candidateId._id;
     const MatchingPercentage=selectedMatch.matchPercentage
@@ -152,7 +162,7 @@ const acceptProfile = async () => {
       candidateId,
       MatchingPercentage
     });
-
+    Swal.close();
     if (res.status === 200 || res.status === 201) {
       Swal.fire({
         icon: "success",
@@ -165,8 +175,10 @@ const acceptProfile = async () => {
       }).then(()=>
       (
         navigate('/matches')
+        
       ));
     } else {
+      Swal.close();
       Swal.fire({
         icon: "warning",
         title: "Unexpected Response",
@@ -178,6 +190,7 @@ const acceptProfile = async () => {
     }
 
   } catch (error) {
+    Swal.close();
     console.error(error);
     Swal.fire({
       icon: "error",
