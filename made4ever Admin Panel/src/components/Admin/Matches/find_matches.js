@@ -98,11 +98,12 @@ export default function FindMatches() {
   // get cast
 
    const [All_Cast_Group, setAll_Cast_Group] = useState([]);
-  const getall_cast_group = async () => {
+  const getall_cast_group = async (selectedId) => {
     try {
       setselect_loading("cast");
       const params = new URLSearchParams();
       params.append("lookup_type", "cast_group");
+      params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
       setAll_Cast_Group(resp.data.data);
     } catch (error) {
@@ -1028,13 +1029,18 @@ const [totalPages, setTotalPages] = useState(1);
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                         name="Religion"
-                        onChange={(e) =>
+                        onChange={(e) =>{
+                          const selectedId =
+                          e.target.selectedOptions[0].getAttribute("data-id");
+                        
                           handleChange(
                             "PartnerPrefrences",
                             "Religion",
                             e.target.value,
                           )
+                          getall_cast_group(selectedId);
                         }
+                      }
                         onClick={() => {
                           getall_religion_group();
                         }}
@@ -1048,7 +1054,7 @@ const [totalPages, setTotalPages] = useState(1);
                             "Select Religion"}
                         </option>
                         {All_Religion_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
+                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
                             {item.lookup_value}
                           </option>
                         ))}

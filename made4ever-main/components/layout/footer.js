@@ -159,7 +159,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-[#bf5281]" />
                 <span className="text-gray-300 text-sm">
-                  support@made4ever.in
+                  connect@made4ever.in
                 </span>
               </div>
             </div>
