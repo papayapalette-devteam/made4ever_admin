@@ -20,6 +20,7 @@ exports.add_msp = async (req, res) => {
       registered_business_name,
       address,
       images,
+      profile_pic
     } = req.body;
 
     const exitingprofile = await msp_data.findOne({ email: email });
@@ -37,6 +38,7 @@ exports.add_msp = async (req, res) => {
       registered_business_name,
       address,
       images,
+      profile_pic
     });
 
   
@@ -124,6 +126,7 @@ exports.update_msp = async (req, res) => {
       registered_business_name,
       address,
       images,
+      profile_pic
     } = req.body;
 
     // email conflict check
@@ -146,6 +149,7 @@ exports.update_msp = async (req, res) => {
       registered_business_name,
       address,
       images,
+      profile_pic
     };
 
     if (password) {

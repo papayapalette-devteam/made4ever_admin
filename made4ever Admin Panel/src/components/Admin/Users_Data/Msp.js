@@ -53,6 +53,7 @@ function Msp() {
     registered_business_name: "",
     address: "",
     images: [],
+    profile_pic: [],
   });
 
   const [loading, setloading] = useState(false);
@@ -123,6 +124,8 @@ function Msp() {
   const onEdit = (row) => {
     setMsp(row);
   };
+
+  
 
   const onDelete = async (_id) => {
     if (!_id) return;
@@ -317,6 +320,36 @@ function Msp() {
       setloading(false);
     }
   };
+
+    const handleProfilePicChange = async (e) => {
+    const files = Array.from(e.target.files);
+
+    // Auto upload when files selected
+    await ProfilePicupload(files);
+  };
+
+  // Upload to backend API
+  const ProfilePicupload = async (files) => {
+    if (!files.length) return;
+    setloading(true);
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append("files", file));
+
+    try {
+      const res = await api.post("api/upload/upload-files", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setMsp({ ...Msp, profile_pic: res.data.urls });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed!");
+    } finally {
+      setloading(false);
+    }
+  };
+
 
   const handlechange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -552,10 +585,17 @@ function Msp() {
                   <TextField
                     type="file"
                     name="images"
-                    defaultValue={Msp.id}
+                    defaultValue={Msp.images}
                     onChange={handleFileChange}
                     size="small"
                   />
+                  {Msp?.images?.length > 0 && (
+    <img
+      src={Msp.images[0]}
+      alt="Preview"
+      style={{ width: "120px", marginTop: "10px" }}
+    />
+  )}
                 </FormControl>
 
                 <FormControl fullWidth size="small">
@@ -566,6 +606,24 @@ function Msp() {
                     onChange={handlechange}
                     placeholder="Address"
                   ></TextField>
+                </FormControl>
+
+                                <FormControl fullWidth size="small">
+                  <label className="form-label">Upload Profile Pic</label>
+                  <TextField
+                    type="file"
+                    name="images"
+                    defaultValue={Msp.profile_pic}
+                    onChange={handleProfilePicChange}
+                    size="small"
+                  />
+                                    {Msp?.profile_pic?.length > 0 && (
+    <img
+      src={Msp.profile_pic[0]}
+      alt="Preview"
+      style={{ width: "120px", marginTop: "10px" }}
+    />
+  )}
                 </FormControl>
               </div>
 

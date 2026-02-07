@@ -29,8 +29,8 @@ function EducationSpecialization() {
     pageSize: 10,
   });
 
-  const [All_Education_Specialization, setAll_Education_Specialization] =
-    useState([]);
+  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
+  const [searchText, setSearchText] = useState("");
   const getall_education_specialization = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -42,6 +42,10 @@ function EducationSpecialization() {
       // Pagination
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Always include lookup_type
       params.append("lookup_type", "education_specialization");
@@ -62,7 +66,7 @@ function EducationSpecialization() {
 
   useEffect(() => {
     getall_education_specialization();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -343,6 +347,16 @@ function EducationSpecialization() {
               </Button>
             </Paper>
 
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
+            
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

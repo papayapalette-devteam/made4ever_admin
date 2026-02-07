@@ -46,12 +46,12 @@ function CastGroup() {
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
 
-         if (searchText) {
-        params.append("search", searchText);
-      }
-
       // Always include lookup_type
       params.append("lookup_type", "cast_group");
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Optionally, if you want to filter by parent_lookup_id
       // params.append("parent_lookup_id", "SOME_PARENT_ID");

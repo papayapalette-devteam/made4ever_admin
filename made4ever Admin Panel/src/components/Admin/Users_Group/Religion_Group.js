@@ -30,6 +30,7 @@ function ReligionGroup() {
   });
 
   const [All_Religion_Group, setAll_Religion_Group] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   const getall_religion_group = async (
     pageNumber = paginationModel.page,
@@ -45,6 +46,10 @@ function ReligionGroup() {
 
       // Always include lookup_type
       params.append("lookup_type", "religion_group");
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Optionally, if you want to filter by parent_lookup_id
       // params.append("parent_lookup_id", "SOME_PARENT_ID");
@@ -62,7 +67,7 @@ function ReligionGroup() {
 
   useEffect(() => {
     getall_religion_group();
-  }, []);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -334,6 +339,16 @@ function ReligionGroup() {
               </Button>
             </Paper>
 
+           <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
+            
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

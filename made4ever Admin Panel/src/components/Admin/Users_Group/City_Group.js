@@ -34,6 +34,7 @@ function CityGroup() {
   });
 
   const [All_City_Group, setAll_City_Group] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const getall_state_group = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -45,6 +46,10 @@ function CityGroup() {
       // Pagination
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Always include lookup_type
       params.append("lookup_type", "city_group");
@@ -65,7 +70,7 @@ function CityGroup() {
 
   useEffect(() => {
     getall_state_group();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -431,6 +436,16 @@ function CityGroup() {
                 Submit
               </Button>
             </Paper>
+
+                        <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+                          <TextField
+                            size="small"
+                            placeholder="Search..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            sx={{ width: 300, mb: 2 }}
+                          />
+                        </Paper>
 
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>

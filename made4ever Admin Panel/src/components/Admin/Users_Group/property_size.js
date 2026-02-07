@@ -32,6 +32,7 @@ function PropertySize() {
   });
 
   const [All_Property_Size, setAll_Property_Size] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const getall_property_sze = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -43,6 +44,10 @@ function PropertySize() {
       // Pagination
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Always include lookup_type
       params.append("lookup_type", "property_size");
@@ -60,7 +65,7 @@ function PropertySize() {
 
   useEffect(() => {
     getall_property_sze();
-  }, []);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -324,6 +329,16 @@ const handlechange = (e) => {
               <Button className="submit-button" onClick={add_property_size}>
                 Submit
               </Button>
+            </Paper>
+
+          <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
             </Paper>
 
             {/* Table */}

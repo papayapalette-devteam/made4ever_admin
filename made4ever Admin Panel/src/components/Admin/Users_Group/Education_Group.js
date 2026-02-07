@@ -31,6 +31,7 @@ function EducationGroup() {
   });
 
   const [All_Education_Group, setAll_Education_Group] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const getAll_Education_Group = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -42,6 +43,10 @@ function EducationGroup() {
       // Pagination
       params.append("page", pageNumber + 1); // backend is 1-indexed
       params.append("limit", limitNumber);
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Always include lookup_type
       params.append("lookup_type", "education_group");
@@ -62,7 +67,7 @@ function EducationGroup() {
 
   useEffect(() => {
     getAll_Education_Group();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
 
 
@@ -340,6 +345,16 @@ function EducationGroup() {
               </Button>
             </Paper>
 
+          <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
+            
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

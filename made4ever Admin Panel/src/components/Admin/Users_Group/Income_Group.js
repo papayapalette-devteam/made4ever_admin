@@ -31,6 +31,7 @@ function IncomeGroup() {
   });
 
   const [All_Income_Group, setAll_Income_Group] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const getall_income_group = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -45,6 +46,10 @@ function IncomeGroup() {
 
       // Always include lookup_type
       params.append("lookup_type", "income_group");
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Optionally, if you want to filter by parent_lookup_id
       // params.append("parent_lookup_id", "SOME_PARENT_ID");
@@ -62,7 +67,7 @@ function IncomeGroup() {
 
   useEffect(() => {
     getall_income_group();
-  }, [paginationModel]);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -330,6 +335,16 @@ function IncomeGroup() {
               <Button className="submit-button" onClick={add_income_group}>
                 Submit
               </Button>
+            </Paper>
+
+     <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
             </Paper>
 
             {/* Table */}

@@ -37,6 +37,15 @@ const mspValidationSchema = Joi.object({
     "array.empty": "At least one image is required",
   }),
 
+   profile_pic: Joi.array().items(
+    Joi.string().required().messages({
+      "string.empty": "Image URL or path is required",
+    })
+  ).required().messages({
+    "array.base": "Images must be provided in an array",
+    "array.empty": "At least one image is required",
+  }),
+
   is_active: Joi.boolean().default(true),
 
   other: Joi.object().optional(),

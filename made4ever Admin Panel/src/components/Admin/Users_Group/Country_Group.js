@@ -33,6 +33,7 @@ function CountryGroup() {
   });
 
   const [All_Country_Group, setAll_Country_Group] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const getall_country_group = async (
     pageNumber = paginationModel.page,
     limitNumber = paginationModel.pageSize
@@ -47,6 +48,10 @@ function CountryGroup() {
 
       // Always include lookup_type
       params.append("lookup_type", "country_group");
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Optionally, if you want to filter by parent_lookup_id
       // params.append("parent_lookup_id", "SOME_PARENT_ID");
@@ -63,7 +68,7 @@ function CountryGroup() {
 
   useEffect(() => {
     getall_country_group();
-  }, []);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -394,6 +399,16 @@ function CountryGroup() {
               </Button>
             </Paper>
 
+           <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
+            
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

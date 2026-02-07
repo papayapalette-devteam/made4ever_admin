@@ -30,6 +30,7 @@ function PropertyType() {
   });
 
   const [All_Property_Type, setAll_Property_Type] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   const getall_mother_tongue = async (
     pageNumber = paginationModel.page,
@@ -45,6 +46,10 @@ function PropertyType() {
 
       // Always include lookup_type
       params.append("lookup_type", "property_type");
+
+        if (searchText) {
+        params.append("search", searchText);
+      }
 
       // Optionally, if you want to filter by parent_lookup_id
       // params.append("parent_lookup_id", "SOME_PARENT_ID");
@@ -62,7 +67,7 @@ function PropertyType() {
 
   useEffect(() => {
     getall_mother_tongue();
-  }, []);
+  }, [paginationModel,searchText]);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRowId, setMenuRowId] = useState(null);
@@ -334,6 +339,16 @@ function PropertyType() {
               </Button>
             </Paper>
 
+          <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
+              <TextField
+                size="small"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                sx={{ width: 300, mb: 2 }}
+              />
+            </Paper>
+            
             {/* Table */}
             <Paper elevation={3} sx={{ p: 2, borderRadius: 2, marginTop: 4 }}>
               <DataGrid

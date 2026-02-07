@@ -105,10 +105,18 @@ const navigate=useNavigate()
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center font-semibold text-gray-700 hover:shadow-md transition-all"
               >
-                {user?.name
-                  ?.split(" ")
-                  .map((n) => n[0])
-                  .join("") || "U"}
+               {user?.profile_pic?.length > 0 ? (
+    <img
+      src={user.profile_pic[0]}
+      alt="Profile"
+      className="w-full h-full object-cover rounded-full"
+    />
+  ) : (
+    user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("") || "U"
+  )}
               </button>
 
               {/* Dropdown Menu */}
