@@ -1,53 +1,81 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
-import Dashboard from "./components/Bureau/Dashboard";
-import ProfilesPage from "./components/Bureau/Profiles/profile";
-import NewProfileForm from "./components/Bureau/Profiles/add_new_profile";
-import MatchesPage from "./components/Bureau/Matches/matches";
-import BillingPage from "./components/Bureau/Billing/billing";
-import UserProfile from "./components/Bureau/Profiles/view_profile";
+// Normal imports (load immediately)
 import SignIn from "./components/other component/signin";
 import ProtectedRoute from "./components/other component/protected_route";
-import MatchingProfiles from "./components/Bureau/Profiles/matched_profile";
-import MatchDetailsPage from "./components/Bureau/Profiles/full_view_matched_profile";
-import TermsAndConditions from "./components/Bureau/Profiles/terms";
 
+// Lazy loaded pages (code splitting)
+const Dashboard = lazy(() =>
+  import("./components/Bureau/Dashboard")
+);
 
+const ProfilesPage = lazy(() =>
+  import("./components/Bureau/Profiles/profile")
+);
 
+const NewProfileForm = lazy(() =>
+  import("./components/Bureau/Profiles/add_new_profile")
+);
+
+const MatchesPage = lazy(() =>
+  import("./components/Bureau/Matches/matches")
+);
+
+const BillingPage = lazy(() =>
+  import("./components/Bureau/Billing/billing")
+);
+
+const UserProfile = lazy(() =>
+  import("./components/Bureau/Profiles/view_profile")
+);
+
+const MatchingProfiles = lazy(() =>
+  import("./components/Bureau/Profiles/matched_profile")
+);
+
+const MatchDetailsPage = lazy(() =>
+  import("./components/Bureau/Profiles/full_view_matched_profile")
+);
+
+const TermsAndConditions = lazy(() =>
+  import("./components/Bureau/Profiles/terms")
+);
+
+// Professional Loader Component
+const Loader = () => (
+  <div className="flex justify-center items-center h-screen">
+    <div className="text-lg font-semibold animate-pulse">
+      Loading...
+    </div>
+  </div>
+);
 
 function App() {
   return (
-   
     <BrowserRouter>
-      <Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
 
-        <Route path="/" element={<SignIn/>}></Route>
-           {/* Protected Area */}
-        <Route
-          element={<ProtectedRoute />}
-        >
-         <Route path="/buerau-dashboard" element={<Dashboard/>}></Route>
+          {/* Public Route */}
+          <Route path="/" element={<SignIn />} />
 
-         <Route path="/profiles" element={<ProfilesPage/>}></Route>
-         <Route path="/view-profiles" element={<UserProfile/>}></Route>
-         <Route path="/matched-profile" element={<MatchingProfiles/>}></Route>
-         <Route path="/match-details" element={<MatchDetailsPage/>}></Route>
-         <Route path="/add-new-profile" element={<NewProfileForm/>}></Route>
-          <Route path="/terms-conditions" element={<TermsAndConditions/>}></Route>
+          {/* Protected Area */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/buerau-dashboard" element={<Dashboard />} />
+            <Route path="/profiles" element={<ProfilesPage />} />
+            <Route path="/view-profiles" element={<UserProfile />} />
+            <Route path="/matched-profile" element={<MatchingProfiles />} />
+            <Route path="/match-details" element={<MatchDetailsPage />} />
+            <Route path="/add-new-profile" element={<NewProfileForm />} />
+            <Route path="/terms-conditions" element={<TermsAndConditions />} />
+            <Route path="/matches" element={<MatchesPage />} />
+            <Route path="/billing" element={<BillingPage />} />
+          </Route>
 
-         <Route path="/matches" element={<MatchesPage/>}></Route>
-         <Route path="/billing" element={<BillingPage/>}></Route>
-    
-        </Route>
-      </Routes>
-     
-      
-        
+        </Routes>
+      </Suspense>
     </BrowserRouter>
-
-   
   );
 }
 

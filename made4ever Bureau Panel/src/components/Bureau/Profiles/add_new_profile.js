@@ -293,6 +293,7 @@ export default function NewProfileForm() {
   const [All_Gothra_Group, setAll_Gothra_Group] = useState([]);
   const getall_gothra_group = async () => {
     try {
+  
       setselect_loading("gotra");
       const params = new URLSearchParams();
       params.append("lookup_type", "gothra_group");
@@ -301,6 +302,7 @@ export default function NewProfileForm() {
     } catch (error) {
       console.log(error);
     } finally {
+     
       setselect_loading("");
     }
   };
@@ -346,8 +348,7 @@ export default function NewProfileForm() {
 
   // get education specialization
 
-  const [All_Education_Specialization, setAll_Education_Specialization] =
-    useState([]);
+  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
   const getall_education_specialization = async () => {
     try {
       setselect_loading("education_specialization");
@@ -432,7 +433,7 @@ const getall_income_group = async () => {
   useEffect(()=>
   {
     getall_country_group()
-  })
+  },[])
   // get state
 
   const [All_State_Group, setAll_State_Group] = useState([]);
@@ -1696,7 +1697,6 @@ const getall_income_group = async () => {
                       ))}
                     </select>
                   </div>
-
                   {/* Gothram */}
                   <div>
                     <label className="block text-gray-700 font-medium mb-1">
@@ -1716,6 +1716,7 @@ const getall_income_group = async () => {
                           getall_gothra_group();
                       }}
                     >
+                     
                       <option
                         value={user_profile?.ReligiousDetails?.Gothram || ""}
                       >
@@ -1733,6 +1734,7 @@ const getall_income_group = async () => {
                         </option>
                       ))}
                     </select>
+
                   </div>
                 </div>
               </div>
@@ -1815,7 +1817,7 @@ const getall_income_group = async () => {
                         {user_profile?.FamilyDetails?.FatherOccupation ||
                           "Select Occupation"}
                       </option>
-                      {loading === "occupation" && (
+                      {select_loading === "occupation" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -1969,7 +1971,7 @@ const getall_income_group = async () => {
                         {user_profile?.EducationDetails?.HighestEducation ||
                           "Select Education"}
                       </option>
-                      {loading === "education" && (
+                      {select_loading === "education" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2011,7 +2013,7 @@ const getall_income_group = async () => {
                         {user_profile?.EducationDetails
                           ?.EducationSpecialization || "Select Specialization"}
                       </option>
-                      {loading === "education_specialization" && (
+                      {select_loading === "education_specialization" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2039,6 +2041,10 @@ const getall_income_group = async () => {
                           e.target.value,
                         )
                       }
+                       onClick={() => {
+                        if (All_Occupation.length === 0)
+                          getall_occupation();
+                      }}
                     >
                       <option
                         value={user_profile?.EducationDetails?.Occupation || ""}
@@ -2046,6 +2052,9 @@ const getall_income_group = async () => {
                         {user_profile?.EducationDetails?.Occupation ||
                           "Select Occupation"}
                       </option>
+                       {select_loading === "occupation" && (
+                        <option disabled>Loading...</option>
+                      )}
                       {All_Occupation.map((item) => (
                         <option key={item._id} value={item.lookup_value}>
                           {item.lookup_value}
@@ -2083,7 +2092,7 @@ const getall_income_group = async () => {
                         {user_profile?.EducationDetails?.AnnualFamilyIncome ||
                           "Select Annual Family Income"}
                       </option>
-                      {loading === "income" && (
+                      {select_loading === "income" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2124,7 +2133,7 @@ const getall_income_group = async () => {
                         {user_profile?.EducationDetails?.PersonalIncome ||
                           "Select Personal Income"}
                       </option>
-                      {loading === "income" && (
+                      {select_loading === "income" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2240,7 +2249,7 @@ const getall_income_group = async () => {
                         {user_profile?.ContactDetails?.Country ||
                           "Select Country"}
                       </option>
-                      {loading === "country" && (
+                      {select_loading === "country" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2275,7 +2284,7 @@ const getall_income_group = async () => {
                       <option value={user_profile?.ContactDetails?.State || ""}>
                         {user_profile?.ContactDetails?.State || "Select State"}
                       </option>
-                      {loading === "state" && (
+                      {select_loading === "state" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2307,7 +2316,7 @@ const getall_income_group = async () => {
                       <option value={user_profile?.ContactDetails?.City || ""}>
                         {user_profile?.ContactDetails?.City || "Select City"}
                       </option>
-                      {loading === "city" && (
+                      {select_loading === "city" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -2857,13 +2866,18 @@ const getall_income_group = async () => {
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                         name="Religion"
-                        onChange={(e) =>
-                          handleChange(
-                            "PartnerPrefrences",
+                        onChange={(e) =>{
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute("data-id");
+                        handleChange(
+                         "PartnerPrefrences",
                             "Religion",
                             e.target.value,
-                          )
-                        }
+                        )
+                        getall_cast_group(selectedId);
+                      }
+                    }
+                        
                         onClick={() => {
                           getall_religion_group();
                         }}
@@ -2876,8 +2890,11 @@ const getall_income_group = async () => {
                           {user_profile?.PartnerPrefrences?.Religion ||
                             "Select Religion"}
                         </option>
+                         {select_loading === "religion" && (
+                        <option disabled>Loading...</option>
+                      )}
                         {All_Religion_Group.map((item) => (
-                          <option key={item._id} value={item.lookup_value}>
+                          <option key={item._id} value={item.lookup_value} data-id={item._id}>
                             {item.lookup_value}
                           </option>
                         ))}
@@ -2911,6 +2928,9 @@ const getall_income_group = async () => {
                           {user_profile?.PartnerPrefrences?.Community ||
                             "Select Community"}
                         </option>
+                            {select_loading === "community" && (
+                        <option disabled>Loading...</option>
+                      )}
                         {All_Community_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -2969,6 +2989,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                              {select_loading === "cast" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Cast_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3037,6 +3060,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                   {select_loading === "gotra" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Gothra_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3107,6 +3133,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                   {select_loading === "mother_tongue" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Mother_Tongue.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3154,7 +3183,7 @@ const getall_income_group = async () => {
                             ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
-                          {loading === "income" && (
+                          {select_loading === "income" && (
                         <option disabled>Loading...</option>
                       )}
                         {All_Income_Group.map((item) => (
@@ -3193,6 +3222,7 @@ const getall_income_group = async () => {
                           {user_profile?.PartnerPrefrences?.PersonalIncome ||
                             "Select Personal Income"}
                         </option>
+                     b
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -3252,6 +3282,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "property_size" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Property_Size.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3322,6 +3355,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "education" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Education_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3390,6 +3426,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "occupation" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Occupation.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3456,6 +3495,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "country" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_Country_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3524,6 +3566,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "state" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_State_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3592,6 +3637,9 @@ const getall_income_group = async () => {
                             );
                           }}
                         >
+                                           {select_loading === "city" && (
+                        <MenuItem disabled>Loading...</MenuItem>
+                      )}
                           {All_City_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3854,7 +3902,7 @@ const getall_income_group = async () => {
                         {user_profile?.PropertyDetails?.PropertyType ||
                           "Select Property Type"}
                       </option>
-                      {loading === "property_type" && (
+                      {select_loading === "property_type" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -3899,7 +3947,7 @@ const getall_income_group = async () => {
                         {user_profile?.PropertyDetails?.ResidentialType ||
                           "Select Residential Type"}
                       </option>
-                      {loading === "residence_type" && (
+                      {select_loading === "residence_type" && (
                         <option disabled>Loading...</option>
                       )}
 
@@ -3940,7 +3988,7 @@ const getall_income_group = async () => {
                         {user_profile?.PropertyDetails?.PropertySize ||
                           "Select Property Size"}
                       </option>
-                      {loading === "residence_type" && (
+                      {select_loading === "property_size" && (
                         <option disabled>Loading...</option>
                       )}
 
