@@ -429,6 +429,10 @@ const getall_income_group = async () => {
     }
   };
 
+  useEffect(()=>
+  {
+    getall_country_group()
+  })
   // get state
 
   const [All_State_Group, setAll_State_Group] = useState([]);
@@ -439,7 +443,10 @@ const getall_income_group = async () => {
       params.append("lookup_type", "state_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-      setAll_State_Group(resp.data.data);
+          setAll_State_Group((prev) => [
+  ...prev,
+  ...resp.data.data,
+]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -452,13 +459,12 @@ const getall_income_group = async () => {
   const [All_City_Group, setAll_City_Group] = useState([]);
   const getall_city_group = async (selectedId) => {
     try {
-      console.log(selectedId);
-      
       setselect_loading("city");
       const params = new URLSearchParams();
       params.append("lookup_type", "city_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
+    
       setAll_City_Group((prev) => [
   ...prev,
   ...resp.data.data,
@@ -2223,10 +2229,10 @@ const getall_income_group = async () => {
                         );
                         getall_state_group(selectedId);
                       }}
-                      onClick={() => {
-                        if (All_Country_Group.length === 0)
-                          getall_country_group();
-                      }}
+                      // onClick={() => {
+                      //   if (All_Country_Group.length === 0)
+                      //     getall_country_group();
+                      // }}
                     >
                       <option
                         value={user_profile?.ContactDetails?.Country || ""}
@@ -2925,9 +2931,9 @@ const getall_income_group = async () => {
                           name="Caste"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Caste || []}
-                          onOpen={() => {
-                            getall_cast_group();
-                          }}
+                          // onOpen={() => {
+                          //   getall_cast_group();
+                          // }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Caste");
                           }}
@@ -3074,7 +3080,7 @@ const getall_income_group = async () => {
                             if (selected.length === 0) {
                               return (
                                 <span style={{ color: "#888" }}>
-                                  Select Caste
+                                  Select Mother Tounge
                                 </span>
                               );
                             }
@@ -3412,9 +3418,9 @@ const getall_income_group = async () => {
                           name="Country"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Country || []}
-                          onOpen={() => {
-                            getall_country_group();
-                          }}
+                          // onOpen={() => {
+                          //   getall_country_group();
+                          // }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Country");
                           }}
@@ -3548,9 +3554,9 @@ const getall_income_group = async () => {
                           name="City"
                           multiple
                           value={user_profile?.PartnerPrefrences?.City || []}
-                          onOpen={() => {
-                            getall_city_group();
-                          }}
+                          // onOpen={() => {
+                          //   getall_city_group();
+                          // }}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "City");
                           }}
