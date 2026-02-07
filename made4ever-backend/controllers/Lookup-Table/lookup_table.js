@@ -83,7 +83,7 @@ exports.saveLookup = async (req, res) => {
 
 exports.getLookup = async (req, res) => {
   try {
-    const { lookup_type, parent_lookup_id, page, limit } = req.query;
+    const { lookup_type, parent_lookup_id, page, limit,search="" } = req.query;
 
     if (!lookup_type) {
       return res.status(400).json({
@@ -94,7 +94,7 @@ exports.getLookup = async (req, res) => {
 
     // Build query object
     const query = { lookup_type };
-
+   
     if (parent_lookup_id) {
       if (!mongoose.Types.ObjectId.isValid(parent_lookup_id)) {
         return res.status(400).json({
@@ -103,6 +103,13 @@ exports.getLookup = async (req, res) => {
         });
       }
       query.parent_lookup_id =new mongoose.Types.ObjectId(parent_lookup_id);
+    }
+
+   if (search && search.trim() !== "") {
+      query.lookup_value = {
+        $regex: search,
+        $options: "i", // case insensitive
+      };
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);

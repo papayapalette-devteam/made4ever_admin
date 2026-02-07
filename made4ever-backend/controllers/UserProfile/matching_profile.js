@@ -66,7 +66,7 @@ const calculateMatchScore = (prefs, person) => {
     ["City", "ContactDetails.City"],
     ["PropertySize", "PropertyDetails.PropertySize"],
     ["Caste", "ReligiousDetails.Caste"],
-    ["Gothram", "ReligiousDetails.Gothram"],
+    // ["Gothram", "ReligiousDetails.Gothram"],
     ["MotherTongue", "PersonalDetails.MotherTongue"],
   ];
 
