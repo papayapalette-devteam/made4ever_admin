@@ -22,7 +22,7 @@ const personalDetailsSchema = Joi.object({
   Living: Joi.string().allow(""),
   AnyDisability: Joi.string().allow(""),
   MaritalStatus: Joi.string().allow(""),
-  HasChildren: Joi.boolean().allow(""),
+  HasChildren: Joi.boolean().allow("",null),
   ChildrenCount:Joi.number().allow(null)
 });
 

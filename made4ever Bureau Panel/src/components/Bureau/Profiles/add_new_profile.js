@@ -3,7 +3,7 @@ import Footer from "../Layout/Footer";
 import Header from "../Layout/Header";
 import api from "../../../api";
 import Swal from "sweetalert2";
-import { ClipboardPaste } from "lucide-react";
+import { ClipboardPaste,Download } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import {
   FormControl,
@@ -651,139 +651,168 @@ const getall_income_group = async () => {
   //=============================== paste function=========================================
 
   const handlePaste = async () => {
-    try {
-      const text = await navigator.clipboard.readText();
+  try {
+    const text = await navigator.clipboard.readText();
 
-      // ✅ 1. Personal Details extraction
-      const personal = {
-        Name:
-          text
-            .match(
-              /(Full Name|Name|Candidate Name|Bride Name|Groom Name|Boy Name|Girl Name|Person Name|Applicant Name|Member Name|User Name|Register Name)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+   const getValue = (label) => {
+  const regex = new RegExp(`(${label})\\s*[:\\-]?\\s*(.+)`, "i");
+  const match = text.match(regex);
+  return match ? match[2].trim() : "";
+};
 
 
+    const getNumber = (label) => {
+      const regex = new RegExp(`${label}\\s*[:\\-]?\\s*(\\d+)`, "i");
+      return text.match(regex)?.[1]
+        ? Number(text.match(regex)[1])
+        : 0;
+    };
 
-        PlaceOfBirth:
-          text
-            .match(
-              /(Place of Birth|Birth Place|POB|P\.O\.B|Birthplace|Born At \(Place\)|Birth Location|Native Place|Birth City|Birth Town)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+    const getBoolean = (label) => {
+      const value = getValue(label).toLowerCase();
+      return value === "yes" || value === "true";
+    };
 
-        Age:
-          text
-            .match(
-              /(Age|Current Age|Years|Years Old|Present Age|Age \(Years\)|Age in Years)\s*[:\-]?\s*(\d+)/i,
-            )?.[2]
-            ?.trim() || "",
+    const getArray = (label) => {
+      const value = getValue(label);
+      return value ? value.split(",").map((v) => v.trim()) : [];
+    };
 
-        Height:
-          text
-            .match(
-              /(Height|Height \(cm\)|Height \(feet\)|Height in cm|Height in feet|Height \(ft\/inches\)|Body Height|Physical Height|Ht\.)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+    // ✅ Convert time into HH:MM format for input type="time"
+//   const formatTime = (timeString) => {
+//   if (!timeString) return "";
 
-        Complexion:
-          text
-            .match(
-              /(Complexion|Skin Tone|Skin Color|Skin Complexion|Color|Appearance|Fair\/Wheatish\/Dark|Body Complexion|Complexion Type)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+//   // If already HH:MM format
+//   if (/^\d{2}:\d{2}$/.test(timeString)) return timeString;
 
- 
+//   // Convert 10:30 AM → 10:30
+//   const date = new Date(`1970-01-01 ${timeString}`);
+//   if (isNaN(date)) return "";
 
-        Manglik: text.match(/(non\s*mangalik|not\s*manglik)/i)
-          ? "No"
-          : text.match(
-                /(manglik|mangal dosha|chevvai dosham|mars effect|mangal|mangalik dosha)/i,
-              )
-            ? "Yes"
-            : "",
-      };
+//   return date.toTimeString().slice(0, 5);
+// };
 
-      // ✅ 2. Religious Details
-      const religion = {
-        Religion: text.match(/(Religion)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
-        Community:
-          text.match(/(Community)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() || "",
-        Caste:
-          text
-            .match(
-              /(Caste|Sub-Caste|Subcaste|Caste\/Sub-Caste|Sect|Varna|Ethnic Group|Religion & Caste)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
-        Gothram:
-          text.match(/(Gotra|Gothra|Gothram)\s*[:\-]?\s*(.*)/i)?.[2]?.trim() ||
-          "",
-      };
 
-      // ✅ 3. Family Details
-      const family = {
-        FatherName:
-          text
-            .match(
-              /(Father Name|Father's Full Name|Father|Dad's Name|Parent Name \(Father\)|Paternal Name)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
 
-        FatherOccupation:
-          text
-            .match(
-              /(Father's Occupation|Father's Job|Father Work|Father's Business|Dad's Profession|Father's Employment|Father Occupation Details|Father's Career)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+    setuser_profile((prev) => ({
+      ...prev,
 
-        MotherName:
-          text
-            .match(
-              /(Mother Name|Mother's Full Name|Mother|Mom's Name|Parent Name \(Mother\)|Maternal Name)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
+      PersonalDetails: {
+        ...prev.PersonalDetails,
+        Name: getValue("Name|Full Name|Candidate Name"),
+// DateOfBirth: getValue("Date of Birth|DOB"),
+// TimeOfBirth: formatTime(getValue("Time of Birth|TOB")),
 
-        MotherOccupation:
-          text
-            .match(
-              /(Mother's Occupation|Mother's Job|Mother Work|Mother's Business|Mom's Profession|Mother's Employment|Mother Occupation Details|Mother's Career)\s*[:\-]?\s*(.*)/i,
-            )?.[2]
-            ?.trim() || "",
-      };
+        PlaceOfBirth: getValue("Place of Birth"),
+        Age: getNumber("Age"),
+        Complexion: getValue("Complexion"),
+        Height: getValue("Height"),
+        Weight: getValue("Weight"),
+        MotherTongue: getValue("Mother Tongue"),
+        Gender: getValue("Gender"),
+        Drinking: getValue("Drinking"),
+        Smoking: getValue("Smoking"),
+        Nri: getValue("NRI"),
+        PermanentResident: getBoolean("Permanent Resident"),
+        TemporaryResident: getBoolean("Temporary Resident"),
+        NonVeg: getValue("Food Habit|NonVeg"),
+        Manglik: getValue("Manglik"),
+        Living: getValue("Living"),
+        AnyDisability: getValue("Disability"),
+        MaritalStatus: getValue("Marital Status"),
+        HasChildren: getBoolean("Has Children"),
+        ChildrenCount: getNumber("Children Count"),
+      },
 
-      // ✅ Update the entire user_profile state
-      setuser_profile((prev) => ({
-        ...prev,
-        PersonalDetails: {
-          ...prev.PersonalDetails,
-          ...personal,
-        },
-        ReligiousDetails: {
-          ...prev.ReligiousDetails,
-          ...religion,
-        },
-        FamilyDetails: {
-          ...prev.FamilyDetails,
-          ...family,
-        },
-      }));
+      ReligiousDetails: {
+        ...prev.ReligiousDetails,
+        Community: getValue("Community"),
+        Caste: getValue("Caste"),
+        Religion: getValue("Religion"),
+        Gothram: getValue("Gotra|Gothram"),
+      },
 
-      Swal.fire({
-        icon: "success",
-        title: "Data Pasted Successfully!",
-        text: "WhatsApp message parsed and added to all sections.",
-        timer: 2000,
-        showConfirmButton: true,
-      });
-    } catch (err) {
-      console.error("Error parsing data:", err);
-      Swal.fire({
-        icon: "error",
-        title: "Invalid Data Format",
-        text: "Please copy a valid WhatsApp message format.",
-      });
-    }
-  };
+      FamilyDetails: {
+        ...prev.FamilyDetails,
+        FatherName: getValue("Father Name"),
+        MotherName: getValue("Mother Name"),
+        FatherOccupation: getValue("Father Occupation"),
+        MotherOccupation: getValue("Mother Occupation"),
+        NoOfSiblings: getNumber("Siblings"),
+        FamilyType: getValue("Family Type"),
+        FamilyDescription: getValue("Family Description"),
+      },
+
+      EducationDetails: {
+        ...prev.EducationDetails,
+        HighestEducation: getValue("Highest Education|Education"),
+        EducationSpecialization: getValue("Specialization"),
+        Occupation: getValue("Occupation"),
+        AnnualFamilyIncome: getValue("Family Income"),
+        PersonalIncome: getValue("Personal Income"),
+        EducationDetails: getValue("Education Details"),
+        OccupationDetails: getValue("Occupation Details"),
+      },
+
+      ContactDetails: {
+        ...prev.ContactDetails,
+        ParmanentAddress: getValue("Address"),
+        Country: getValue("Country"),
+        State: getValue("State"),
+        City: getValue("City"),
+      },
+
+      PartnerPrefrences: {
+        ...prev.PartnerPrefrences,
+        MaritialStatus: getValue("Preferred Marital Status"),
+        HasChildren: getBoolean("Preferred Has Children"),
+        ChildrenCount: getNumber("Preferred Children Count"),
+        NonVeg: getValue("Preferred Food Habit"),
+        Manglik: getValue("Preferred Manglik"),
+        Nri: getValue("Preferred NRI"),
+        PermanentResident: getBoolean("Preferred Permanent Resident"),
+        TemporaryResident: getBoolean("Preferred Temporary Resident"),
+        Community: getValue("Preferred Community"),
+        Religion: getValue("Preferred Religion"),
+        Caste: getArray("Preferred Caste"),
+        Gothram: getArray("Preferred Gothram"),
+        MotherTongue: getArray("Preferred Mother Tongue"),
+        AnnualFamilyIncome: getValue("Preferred Family Income"),
+        PersonalIncome: getValue("Preferred Personal Income"),
+        PropertySize: getArray("Preferred Property Size"),
+        HeighstEducation: getArray("Preferred Education"),
+        Occupation: getArray("Preferred Occupation"),
+        Country: getArray("Preferred Country"),
+        State: getArray("Preferred State"),
+        City: getArray("Preferred City"),
+      },
+
+      PropertyDetails: {
+        ...prev.PropertyDetails,
+        PropertyType: getValue("Property Type"),
+        ResidentialType: getValue("Residential Type"),
+        PropertySize: getValue("Property Size"),
+        PropertyDescription: getValue("Property Description"),
+        AcceptTerms: getBoolean("Accept Terms"),
+      },
+    }));
+
+    Swal.fire({
+      icon: "success",
+      title: "Full Biodata Imported Successfully!",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Format",
+      text: "Please paste correct WhatsApp biodata format.",
+    });
+  }
+};
+
 
   //========================= post method for adding new profile===============================
 
@@ -838,6 +867,106 @@ const getall_income_group = async () => {
     }
   };
 
+//============================ sample data ============
+
+//================== sample data=====================================
+  const handleDownloadSample = () => {
+  const sampleText = `
+----- MATRIMONY BIODATA SAMPLE FORMAT -----
+
+Name: Rahul Sharma
+Date of Birth: 15-08-1995
+Time of Birth: 10:30 AM
+Place of Birth: Jaipur
+Age: 29
+Complexion: Fair
+Height: 5.10
+Weight: 72
+Mother Tongue: Hindi
+Gender: Male
+Drinking: No
+Smoking: No
+NRI: No
+Permanent Resident: Yes
+Temporary Resident: No
+Food Habit: Veg
+Manglik: No
+Living: With Family
+Disability: No
+Marital Status: Unmarried
+Has Children: No
+Children Count: 0
+
+Religion: Hindu
+Community: Brahmin
+Caste: Sharma
+Gotra: Bhardwaj
+
+Father Name: Ramesh Sharma
+Father Occupation: Business
+Mother Name: Sushma Sharma
+Mother Occupation: Homemaker
+Siblings: 1
+Family Type: Joint
+Family Description: Well settled family
+
+Highest Education: B.Tech
+Specialization: Computer Science
+Occupation: Software Engineer
+Family Income: INR 4Lakh To 7 Lakh
+Personal Income: INR 4Lakh To 7 Lakh
+Education Details: Engineering from IIT
+Occupation Details: Working in MNC
+
+Address: Vaishali Nagar
+Country: India
+State: Rajasthan
+City: Jaipur
+
+Preferred Marital Status: Unmarried
+Preferred Has Children: No
+Preferred Children Count: 0
+Preferred Food Habit: Veg
+Preferred Manglik: No
+Preferred NRI: No
+Preferred Permanent Resident: Yes
+Preferred Temporary Resident: No
+Preferred Community: Brahmin
+Preferred Religion: Hindu
+Preferred Caste: Sharma, Pandit
+Preferred Gothram: Bhardwaj
+Preferred Mother Tongue: Hindi, English
+Preferred Family Income: INR 4Lakh To 7 Lakh
+Preferred Personal Income: INR 4Lakh To 7 Lakh
+Preferred Property Size: 2BHK, 3BHK
+Preferred Education: B.Tech, MBA
+Preferred Occupation: Engineer, Doctor
+Preferred Country: India
+Preferred State: Rajasthan
+Preferred City: Jaipur
+
+Property Type: Own House
+Residential Type: Apartment
+Property Size: 3BHK
+Property Description: Well maintained flat
+Accept Terms: Yes
+
+--------------------------------------------
+Copy this format and edit values before pasting.
+`;
+
+  const blob = new Blob([sampleText], { type: "text/plain" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = "Matrimony_Biodata_Sample.txt";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+
   return (
     <div>
       <Header />
@@ -855,23 +984,51 @@ const getall_income_group = async () => {
               Step {step} of 8 — Complete your details to get the best matches!
             </p>
           </div>
-          <label className="md:hidden">Paste WhatsApp Data</label>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}
-          >
-            <button
-              onClick={handlePaste}
-              className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 mt-2 rounded-lg hover:bg-gray-100 transition group"
-            >
-              <ClipboardPaste size={18} color="black" />
+<div className="flex items-center justify-between mt-4">
 
-              {/* Tooltip */}
-              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 group-hover:translate-y-[-2px] transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
-                Paste WhatsApp Data
-              </span>
-            </button>
-          </OverlayTrigger>
+  {/* LEFT SIDE - Paste Button */}
+  <div>
+    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}
+    >
+      <button
+        onClick={handlePaste}
+        className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
+      >
+        <ClipboardPaste size={18} />
+
+     
+
+        {/* Tooltip (Optional if using bootstrap tooltip) */}
+        <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
+          Paste WhatsApp Data
+        </span>
+      </button>
+    </OverlayTrigger>
+  </div>
+
+  {/* RIGHT SIDE - Download Sample Button */}
+  <div>
+    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="paste-tooltip">Download Biodata Sample</Tooltip>}
+    >
+    <button
+      type="button"
+      onClick={handleDownloadSample}
+      className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
+    >
+      <Download size={18} />
+      <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
+          Download Biodata Sample
+        </span>
+    </button>
+    </OverlayTrigger>
+  </div>
+
+</div>
+
 
           {/* Step Indicators */}
           <div className="flex justify-between items-center px-6 py-4 border-b bg-gray-50 overflow-x-auto">

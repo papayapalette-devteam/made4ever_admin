@@ -26,32 +26,54 @@ import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 
 export default function MatchesPage() {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(1);
+const [limit] = useState(10);
+const [totalPages, setTotalPages] = useState(1);
+
+
   // ✅ Fetch accepted matches from backend
-  const fetchMatches = async () => {
-    try {
-      const res = await api.get("/api/user/accept-profile");
-      if (res.status === 200 && Array.isArray(res.data.data)) {
-        setMatches(res.data.data);
-        setSelectedMatch(res.data.data[0] || null);
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error Fetching Matches",
-        text: error.response?.data?.message || "Something went wrong!",
-      });
-    } finally {
-      setLoading(false);
+const fetchMatches = async (pageNumber = 1) => {
+  try {
+    setLoading(true);
+
+    const res = await api.get("/api/user/accept-profile", {
+      params: {
+        page: pageNumber,
+        limit: limit,
+        bureau: user._id,   // if required
+      },
+    });
+
+    if (res.status === 200 && Array.isArray(res.data.data)) {
+      setMatches(res.data.data);
+      setSelectedMatch(res.data.data[0] || null);
+
+      setPage(res.data.page);
+      setTotalPages(res.data.totalPages || 1);
     }
-  };
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error Fetching Matches",
+      text: error.response?.data?.message || "Something went wrong!",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
-    fetchMatches();
-  }, []);
+    fetchMatches(page);
+  }, [page]);
 
   if (loading) {
     return (
@@ -212,6 +234,45 @@ export default function MatchesPage() {
                 )}
               </CardContent>
             </Card>
+            {/* ✅ Pagination */}
+{totalPages > 1 && (
+  <div className="flex justify-center items-center mt-6 space-x-2">
+    
+    {/* Previous */}
+    <button
+      onClick={() => setPage((prev) => prev - 1)}
+      disabled={page === 1}
+      className={`px-3 py-1 rounded border text-sm ${
+        page === 1
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-white hover:bg-gray-100"
+      }`}
+    >
+      Previous
+    </button>
+
+    {/* Page Numbers */}
+<span className="px-4 py-1 text-sm text-gray-700">
+  Page <span className="font-semibold">{page}</span> of{" "}
+  <span className="font-semibold">{totalPages}</span>
+</span>
+
+
+    {/* Next */}
+    <button
+      onClick={() => setPage((prev) => prev + 1)}
+      disabled={page === totalPages}
+      className={`px-3 py-1 rounded border text-sm ${
+        page === totalPages
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-white hover:bg-gray-100"
+      }`}
+    >
+      Next
+    </button>
+  </div>
+)}
+
           </div>
 
           {/* ✅ Selected Match Details */}

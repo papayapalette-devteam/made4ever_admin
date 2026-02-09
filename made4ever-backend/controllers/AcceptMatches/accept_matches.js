@@ -136,26 +136,82 @@ const resp=await axios.post(
 };
 
 // 🟦 Get all accepted profiles (with populated data)
+// exports.getAcceptedProfiles = async (req, res) => {
+//   try {
+//     const { page = 1, limit = 10 } = req.query;
+
+//     const pageNumber = parseInt(page);
+//     const limitNumber = parseInt(limit);
+
+//     const skip = (pageNumber - 1) * limitNumber;
+
+//     // Get total count
+//     const total = await AcceptProfile.countDocuments();
+
+//     // Fetch paginated data
+//     const profiles = await AcceptProfile.find()
+//       .populate("MaleProfile")
+//       .populate("FemaleProfile")
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(limitNumber)
+//       .lean(); // 🔥 faster
+
+//     res.status(200).json({
+//       success: true,
+//       total,
+//       page: pageNumber,
+//       limit: limitNumber,
+//       totalPages: Math.ceil(total / limitNumber),
+//       data: profiles,
+//     });
+
+//   } catch (error) {
+//     console.error("Error fetching accepted profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
+
+
+
 exports.getAcceptedProfiles = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, bureau } = req.query;
 
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
-
     const skip = (pageNumber - 1) * limitNumber;
 
-    // Get total count
-    const total = await AcceptProfile.countDocuments();
+    // ✅ Step 1: Get all profile IDs of this bureau
+    const bureauProfiles = await UserProfile.find({ Bureau: bureau })
+      .select("_id");
 
-    // Fetch paginated data
-    const profiles = await AcceptProfile.find()
+    const profileIds = bureauProfiles.map(p => p._id);
+
+    // ✅ Step 2: Find AcceptProfile where
+    // MaleProfile OR FemaleProfile is in those IDs
+    const total = await AcceptProfile.countDocuments({
+      $or: [
+        { MaleProfile: { $in: profileIds } },
+        { FemaleProfile: { $in: profileIds } }
+      ]
+    });
+
+    const profiles = await AcceptProfile.find({
+      $or: [
+        { MaleProfile: { $in: profileIds } },
+        { FemaleProfile: { $in: profileIds } }
+      ]
+    })
       .populate("MaleProfile")
       .populate("FemaleProfile")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNumber)
-      .lean(); // 🔥 faster
+      .lean();
 
     res.status(200).json({
       success: true,
@@ -174,6 +230,8 @@ exports.getAcceptedProfiles = async (req, res) => {
     });
   }
 };
+
+
 
 
 exports.deleteAcceptedProfile = async (req, res) => {
