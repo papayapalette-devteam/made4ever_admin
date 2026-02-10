@@ -11,6 +11,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import api from "../../../api";
+import { X } from "lucide-react";
+
 
 /* Slide Animation */
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -202,9 +204,19 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
     <Modal open={open} onClose={handleClose}>
       <Slide direction="left" in={open} mountOnEnter unmountOnExit>
         <Box sx={style}>
-          <Typography fontSize="16px" fontWeight={600} mb={2}>
-            Edit Profile
-          </Typography>
+         <div className="flex items-center justify-between mb-4">
+        <Typography fontSize="16px" fontWeight={600}>
+          Edit Profile
+        </Typography>
+
+        <button
+          onClick={handleClose}
+          className="p-1 rounded-full hover:bg-gray-100 transition"
+        >
+          <X size={18} className="text-gray-600 hover:text-red-600" />
+        </button>
+      </div>
+
 
           <div className="flex flex-col gap-2">
 
