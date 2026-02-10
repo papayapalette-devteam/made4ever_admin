@@ -37,7 +37,7 @@ const style = {
   boxShadow: "-8px 0 24px rgba(0,0,0,0.18)",
   p: { xs: 2, sm: 3 },    // little less padding on mobile
   overflowY: "auto",
-  overflowX: "hidden",
+  overflowX: "auto",
 };
 
 
