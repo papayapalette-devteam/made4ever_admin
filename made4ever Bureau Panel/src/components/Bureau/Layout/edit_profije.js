@@ -22,15 +22,22 @@ const style = {
   position: "absolute",
   top: 0,
   right: 0,
-  width: 420,
+  width: {
+    xs: "100%",   // mobile full width
+    sm: 420,      // tablet and above
+  },
   height: "100vh",
   bgcolor: "#fff",
-  borderRadius: "14px 0 0 14px",
+  borderRadius: {
+    xs: 0,                // mobile no radius
+    sm: "14px 0 0 14px",  // desktop radius
+  },
   boxShadow: "-8px 0 24px rgba(0,0,0,0.18)",
-  p: 3,
+  p: { xs: 2, sm: 3 },    // little less padding on mobile
   overflowY: "auto",
   overflowX: "hidden",
 };
+
 
 const compactInputStyle = {
   "& .MuiOutlinedInput-root": {
