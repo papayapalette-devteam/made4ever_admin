@@ -37,7 +37,7 @@ const style = {
   boxShadow: "-8px 0 24px rgba(0,0,0,0.18)",
   p: { xs: 2, sm: 3 },    // little less padding on mobile
   overflowY: "auto",
-  overflowX: "auto",
+  overflowX: "hidden",
 };
 
 
@@ -218,7 +218,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
       </div>
 
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 pb-20 overflow-scroll">
 
             <TextField
               label="Name"
