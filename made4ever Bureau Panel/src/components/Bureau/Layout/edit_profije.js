@@ -218,7 +218,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
       </div>
 
 
-          <div className="flex flex-col gap-2 pb-20 overflow-scroll">
+          <div className="flex flex-col gap-2 pb-10 overflow-scroll">
 
             <TextField
               label="Name"
