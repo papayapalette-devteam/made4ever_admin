@@ -437,9 +437,17 @@ const getall_income_group = async () => {
   // get state
 
   const [All_State_Group, setAll_State_Group] = useState([]);
+  const [loadedCountries, setLoadedCountries] = useState([]);
+
   const getall_state_group = async (selectedId) => {
     try {
       setselect_loading("state");
+
+         // 🔥 If already loaded, don't call API again
+    if (loadedCountries.includes(selectedId)) {
+      return;
+    }
+
       const params = new URLSearchParams();
       params.append("lookup_type", "state_group");
       params.append("parent_lookup_id", selectedId);
@@ -448,6 +456,7 @@ const getall_income_group = async () => {
   ...prev,
   ...resp.data.data,
 ]);
+setLoadedCountries((prev) => [...prev, selectedId]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -458,9 +467,14 @@ const getall_income_group = async () => {
   // get city
 
   const [All_City_Group, setAll_City_Group] = useState([]);
+  const [loadedStatesForCity, setLoadedStatesForCity] = useState([]);
+
   const getall_city_group = async (selectedId) => {
     try {
       setselect_loading("city");
+       if (loadedStatesForCity.includes(selectedId)) {
+      return;
+    }
       const params = new URLSearchParams();
       params.append("lookup_type", "city_group");
       params.append("parent_lookup_id", selectedId);
@@ -470,6 +484,7 @@ const getall_income_group = async () => {
   ...prev,
   ...resp.data.data,
 ]);
+setLoadedStatesForCity((prev) => [...prev, selectedId]);
 
     } catch (error) {
       console.log(error);
