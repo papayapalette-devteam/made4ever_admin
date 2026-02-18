@@ -67,9 +67,12 @@ function MspVideo() {
   const onEdit = (row) => {
     setlookup_id(row._id);
     setMsp_Video({
-      msp_video: row.lookup_value,
+      msp_video: row.msp_video[0],
     });
   };
+
+
+  
 
 
     const onDelete = async (row) => {
@@ -285,60 +288,56 @@ function MspVideo() {
     }
   };
 
-  const add_msp_video = async () => {
-    try {
-      setloading(true);
+ const add_msp_video = async () => {
+  try {
+    setloading(true);
 
-      const resp = await api.post("api/msp/Savemsp-video", Msp_Video);
+    const payload = {
+      ...Msp_Video,
+    };
 
-      if (resp.status === 200) {
-        setTimeout(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Msp Video Added",
-            text: "Msp Video Uploaded Successfully...",
-            showConfirmButton: true,
-            customClass: {
-              popup: "small-swal-popup",
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      } else {
-        console.warn("⚠️ Error:", resp.data.response.data.message);
-        setTimeout(() => {
-          Swal.fire({
-            icon: "error",
-            title: "Error Occured",
-            text: resp.data.response.data.message,
-            showConfirmButton: true,
-            customClass: {
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      }
-    } catch (error) {
-      console.error("❌ API Error:", error.response.data.message);
-      setTimeout(() => {
-        Swal.fire({
-          icon: "error",
-          title: "Error Occurred",
-          text: error.response?.data?.message || "Something went wrong",
-          showConfirmButton: true,
-          customClass: { confirmButton: "my-swal-button" },
-        }).then(() => {
-          window.location.reload(); // optional, you can remove this if not needed
-        });
-      }, 0);
-    } finally {
-      setloading(false);
+    // If editing, include id
+    if (lookup_id) {
+      payload.id = lookup_id;
     }
-  };
+
+    const resp = await api.post(
+      "api/msp/Savemsp-video",
+      payload
+    );
+
+    if (resp.status === 200) {
+      Swal.fire({
+        icon: "success",
+        title: lookup_id
+          ? "Msp Video Updated"
+          : "Msp Video Added",
+        text: lookup_id
+          ? "Msp Video Updated Successfully..."
+          : "Msp Video Uploaded Successfully...",
+        showConfirmButton: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+        },
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error Occurred",
+      text: error.response?.data?.message || "Something went wrong",
+      showConfirmButton: true,
+      customClass: { confirmButton: "my-swal-button" },
+    });
+  } finally {
+    setloading(false);
+  }
+};
+
 
   return (
     <div>
@@ -369,6 +368,18 @@ function MspVideo() {
                   ></input>
                 </FormControl>
               </div>
+
+                {Msp_Video.msp_video && (
+    <div style={{ marginTop: "15px" }}>
+      <video
+        width="100%"
+        height="200"
+        controls
+        src={Msp_Video.msp_video}
+        style={{ borderRadius: "8px" }}
+      />
+    </div>
+  )}
 
               <Button className="submit-button" onClick={add_msp_video}>
                 Submit

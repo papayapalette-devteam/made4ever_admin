@@ -4,37 +4,61 @@ const mspGallaryValidationSchema = require("../../Validation/msp_gallary");
 
 exports.add_msp_gallary = async (req, res) => {
   try {
-    // ✅ Validate request body
-    const { error, value } = mspGallaryValidationSchema.validate(req.body);
+    const { id, ...rest } = req.body;
+
+    // ✅ Validate only gallery field (exclude id)
+    const { error } = mspGallaryValidationSchema.validate(rest);
     if (error) {
       return res.status(400).json({
         status: "error",
         message: error.details[0].message,
       });
     }
-    const {
-      msp_gallary,
-    } = req.body;
 
-  
+    // ✅ UPDATE
+    if (id) {
+      const updatedGallary = await MspGallary.findByIdAndUpdate(
+        id,
+        { msp_gallary: rest.msp_gallary },
+        { new: true }
+      );
 
+      if (!updatedGallary) {
+        return res.status(404).json({
+          status: "error",
+          message: "MSP Gallary not found",
+        });
+      }
+
+      return res.status(200).json({
+        status: "success",
+        message: "MSP Gallary updated successfully",
+        msp: updatedGallary,
+      });
+    }
+
+    // ✅ ADD
     const new_msp_gallary = new MspGallary({
-     msp_gallary
+      msp_gallary: rest.msp_gallary,
     });
 
-    // Save the deal to the database
     const resp = await new_msp_gallary.save();
-    res
-      .status(200)
-      .send({ message: "Msp Gallary added successfully", msp: resp });
+
+    res.status(200).json({
+      status: "success",
+      message: "MSP Gallary added successfully",
+      msp: resp,
+    });
+
   } catch (error) {
-    console.error("Error adding msp gallary:", error);
-    res.status(500).send({
-      message: "Error occurred while adding msp gallary",
+    console.error("Error in add/update MSP gallary:", error);
+    res.status(500).json({
+      message: "Error occurred while processing MSP gallary",
       error: error.message,
     });
   }
 };
+
 
 exports.get_msp_gallary = async (req, res) => {
   try {

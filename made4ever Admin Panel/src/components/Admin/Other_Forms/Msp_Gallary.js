@@ -76,7 +76,7 @@ function MspGallary() {
   const onEdit = (row) => {
     setlookup_id(row._id);
     setMsp_Gallary({
-      msp_gallary: row.lookup_value,
+      msp_gallary: row.msp_gallary,
     });
   };
 
@@ -280,59 +280,55 @@ function MspGallary() {
   };
 
   const add_msp_galarry = async () => {
-    try {
-      setloading(true);
+  try {
+    setloading(true);
 
-      const resp = await api.post("api/msp/Savemsp-gallary", Msp_Gallary);
+    const payload = {
+      ...Msp_Gallary,
+    };
 
-      if (resp.status === 200) {
-        setTimeout(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Msp Gallary Added",
-            text: "Msp Gallary Uploaded Successfully...",
-            showConfirmButton: true,
-            customClass: {
-              popup: "small-swal-popup",
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      } else {
-        console.warn("⚠️ Error:", resp.data.response.data.message);
-        setTimeout(() => {
-          Swal.fire({
-            icon: "error",
-            title: "Error Occured",
-            text: resp.data.response.data.message,
-            showConfirmButton: true,
-            customClass: {
-              confirmButton: "my-swal-button",
-            },
-          }).then(() => {
-            window.location.reload();
-          });
-        }, 0);
-      }
-    } catch (error) {
-      console.error("❌ API Error:", error.response.data.message);
-      setTimeout(() => {
-        Swal.fire({
-          icon: "error",
-          title: "Error Occurred",
-          text: error.response?.data?.message || "Something went wrong",
-          showConfirmButton: true,
-          customClass: { confirmButton: "my-swal-button" },
-        }).then(() => {
-          window.location.reload(); // optional, you can remove this if not needed
-        });
-      }, 0);
-    } finally {
-      setloading(false);
+    // If editing, attach id
+    if (lookup_id) {
+      payload.id = lookup_id;
     }
-  };
+
+    const resp = await api.post(
+      "api/msp/Savemsp-gallary",
+      payload
+    );
+
+    if (resp.status === 200) {
+      Swal.fire({
+        icon: "success",
+        title: lookup_id
+          ? "Msp Gallary Updated"
+          : "Msp Gallary Added",
+        text: lookup_id
+          ? "Msp Gallary Updated Successfully..."
+          : "Msp Gallary Uploaded Successfully...",
+        showConfirmButton: true,
+        customClass: {
+          popup: "small-swal-popup",
+          confirmButton: "my-swal-button",
+        },
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error Occurred",
+      text: error.response?.data?.message || "Something went wrong",
+      showConfirmButton: true,
+      customClass: { confirmButton: "my-swal-button" },
+    });
+  } finally {
+    setloading(false);
+  }
+};
+
 
   return (
     <div>
@@ -363,6 +359,33 @@ function MspGallary() {
                   ></input>
                 </FormControl>
               </div>
+
+              {/* ✅ Image Preview */}
+{Msp_Gallary.msp_gallary.length > 0 && (
+  <div
+    style={{
+      display: "flex",
+      gap: "10px",
+      marginTop: "15px",
+      flexWrap: "wrap",
+    }}
+  >
+    {Msp_Gallary.msp_gallary.map((img, index) => (
+      <img
+        key={index}
+        src={img}
+        alt="preview"
+        width="100"
+        height="100"
+        style={{
+          objectFit: "cover",
+          borderRadius: "8px",
+          border: "1px solid #ddd",
+        }}
+      />
+    ))}
+      </div>
+)}
 
               <Button className="submit-button" onClick={add_msp_galarry}>
                 Submit

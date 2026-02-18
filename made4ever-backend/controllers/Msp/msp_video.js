@@ -4,37 +4,58 @@ const mspVideoValidationSchema = require("../../Validation/msp_video");
 
 exports.add_msp_video = async (req, res) => {
   try {
-    // ✅ Validate request body
-    const { error, value } = mspVideoValidationSchema.validate(req.body);
+    const { id, ...rest } = req.body; // separate id
+
+    // Validate only actual schema fields
+    const { error } = mspVideoValidationSchema.validate(rest);
     if (error) {
       return res.status(400).json({
         status: "error",
         message: error.details[0].message,
       });
     }
-    const {
-      msp_video,
-    } = req.body;
 
-  
+    // UPDATE
+    if (id) {
+      const updatedVideo = await MspVideo.findByIdAndUpdate(
+        id,
+        rest,
+        { new: true }
+      );
 
-    const new_msp_video = new MspVideo({
-     msp_video
+      if (!updatedVideo) {
+        return res.status(404).json({
+          status: "error",
+          message: "MSP Video not found",
+        });
+      }
+
+      return res.status(200).json({
+        status: "success",
+        message: "MSP Video updated successfully",
+        msp: updatedVideo,
+      });
+    }
+
+    // ADD
+    const new_msp_video = new MspVideo(rest);
+    const resp = await new_msp_video.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "MSP Video added successfully",
+      msp: resp,
     });
 
-    // Save the deal to the database
-    const resp = await new_msp_video.save();
-    res
-      .status(200)
-      .send({ message: "Msp Video added successfully", msp: resp });
   } catch (error) {
-    console.error("Error adding msp video:", error);
-    res.status(500).send({
-      message: "Error occurred while adding msp video",
+    console.error("Error in add/update MSP video:", error);
+    res.status(500).json({
+      message: "Error occurred while processing MSP video",
       error: error.message,
     });
   }
 };
+
 
 exports.get_msp_video = async (req, res) => {
   try {
