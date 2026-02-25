@@ -108,5 +108,48 @@ const verifyOtp = async (req, res) => {
   }
 };
 
+const reset_password = async (req, res) => {
+  try {
+    const { phone, otp,newPassword } = req.body;
 
-module.exports={sendOtp,verifyOtp}
+  
+    // Check if OTP was generated
+    if (!otpStore[phone]) {
+      return res.status(400).json({ success: false, message: "OTP not generated" });
+    }
+
+    // Verify OTP
+    if (otpStore[phone] !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    // Remove OTP after successful verification
+    delete otpStore[phone];
+
+    // Find user
+    const user = await MSP.findOne({ mobile_number: phone });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Respond with user info & token
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+      user: user
+    });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    res.status(500).json({ success: false, message: "Something went wrong", error: error.message });
+  }
+};
+
+
+module.exports={sendOtp,verifyOtp,reset_password}
