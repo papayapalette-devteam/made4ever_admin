@@ -134,7 +134,7 @@ const ForgotPasswordModal = ({ onClose }) => {
         {!otpSent && (
           <button
             onClick={sendOtp}
-            className="w-full rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition"
+            className="login-btn w-full"
           >
             {loading === "send-otp" ? (
               <CircularProgress size={20} sx={{ color: "white" }} />

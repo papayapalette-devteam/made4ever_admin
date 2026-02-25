@@ -203,7 +203,7 @@ function SignIn() {
                   />
                   Remember me
                 </label>
-                <a onClick={() => setShowForgotModal(true)}>Forgot Password?</a>
+                <a onClick={() => setShowForgotModal(true)} className="cursor-pointer">Forgot Password?</a>
               </div>
 
               <button className="login-btn" onClick={login}>

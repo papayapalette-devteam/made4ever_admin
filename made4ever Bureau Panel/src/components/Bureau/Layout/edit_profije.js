@@ -12,6 +12,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import api from "../../../api";
 import { X } from "lucide-react";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 
 /* Slide Animation */
@@ -67,6 +70,8 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
     images: [],
     profile_pic: [],
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [img_loading, setimg_loading] = useState(false);
@@ -227,6 +232,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               onChange={handleChange}
               fullWidth
               size="small"
+              disabled
               sx={compactInputStyle}
             />
 
@@ -239,16 +245,28 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               sx={compactInputStyle}
             />
 
-            <TextField
-              label="New Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-              sx={compactInputStyle}
-            />
+<TextField
+  label="New Password"
+  name="password"
+  type={showPassword ? "text" : "password"}
+  value={formData.password}
+  onChange={handleChange}
+  fullWidth
+  size="small"
+  sx={compactInputStyle}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={() => setShowPassword(!showPassword)}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
 
             <TextField
               label="Mobile Number"
@@ -257,6 +275,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               onChange={handleChange}
               fullWidth
               size="small"
+              disabled
               sx={compactInputStyle}
             />
 
@@ -267,6 +286,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               onChange={handleChange}
               fullWidth
               size="small"
+              disabled
               sx={compactInputStyle}
             />
 
@@ -279,6 +299,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               size="small"
               multiline
               rows={2}
+              disabled
               sx={compactInputStyle}
             />
 
@@ -291,18 +312,18 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
                   alt="profile"
                   className="w-12 h-12 rounded-full object-cover border"
                 />
-                <IconButton
+                {/* <IconButton
                   color="error"
                   onClick={() => removeProfilePicField(index)}
                 >
                   <DeleteIcon />
-                </IconButton>
+                </IconButton> */}
               </div>
             ))}
-            <Button component="label" size="small" variant="outlined">
+            {/* <Button component="label" size="small" variant="outlined">
               {profilepic_loading ? "Uploading..." : "Add Profile Image"}
               <input hidden type="file" accept="image/*" onChange={handleProfilePicChange} />
-            </Button>
+            </Button> */}
 
             {/* ID Images */}
             <p className="text-xs font-semibold mt-3">ID Images</p>
@@ -313,27 +334,27 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
                   alt="id"
                   className="w-12 h-12 rounded object-cover border"
                 />
-                <IconButton
+                {/* <IconButton
                   color="error"
                   onClick={() => removeImageField(index)}
                 >
                   <DeleteIcon />
-                </IconButton>
+                </IconButton> */}
               </div>
             ))}
-            <Button component="label" size="small" variant="outlined">
+            {/* <Button component="label" size="small" variant="outlined">
               {img_loading ? "Uploading..." : "Add ID Image"}
               <input hidden type="file" accept="image/*" onChange={handleFileChange} />
-            </Button>
+            </Button> */}
 
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleSubmit}
               disabled={loading}
               sx={{ mt: 2 }}
             >
               {loading ? "Updating..." : "Save Changes"}
-            </Button>
+            </Button> */}
 
           </div>
         </Box>
