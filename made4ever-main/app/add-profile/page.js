@@ -28,7 +28,6 @@ export default function NewProfileForm() {
 
   const [step, setStep] = useState(1);
 
-  const user = JSON.parse(localStorage.getItem("user"));
 
 
 
