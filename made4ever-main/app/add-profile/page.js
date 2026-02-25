@@ -1023,7 +1023,7 @@ Copy this format and edit values before pasting.
 
 
   return (
-    <div>
+    <div className="mt-6">
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50 flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden">
