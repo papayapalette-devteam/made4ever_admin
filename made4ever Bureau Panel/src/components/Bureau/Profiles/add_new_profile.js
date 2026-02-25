@@ -3,7 +3,7 @@ import Footer from "../Layout/Footer";
 import Header from "../Layout/Header";
 import api from "../../../api";
 import Swal from "sweetalert2";
-import { ClipboardPaste,Download } from "lucide-react";
+import { ClipboardPaste, Download } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import {
   FormControl,
@@ -15,16 +15,18 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function NewProfileForm() {
 
-  const navigate=useNavigate()
-  
+  const navigate = useNavigate()
+
   const [step, setStep] = useState(1);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  
+
 
   const location = useLocation();
   const existing_user_profile = location?.state?.id;
@@ -102,7 +104,7 @@ export default function NewProfileForm() {
       Community: "",
       Religion: "",
       Caste: [],
-      Gothram:[],
+      Gothram: [],
       MotherTongue: [],
       AnnualFamilyIncome: "",
       PersonalIncome: "",
@@ -126,9 +128,12 @@ export default function NewProfileForm() {
       ResidentialType: "",
       PropertySize: "",
       PropertyDescription: "",
-      AcceptTerms:false
+      AcceptTerms: false
     },
   });
+
+  const [openSelect, setOpenSelect] = useState("");
+
 
   useEffect(() => {
     if (existing_user_profile) {
@@ -274,7 +279,7 @@ export default function NewProfileForm() {
   const [All_Cast_Group, setAll_Cast_Group] = useState([]);
   const getall_cast_group = async (selectedId) => {
     try {
-  
+
       setselect_loading("cast");
       const params = new URLSearchParams();
       params.append("lookup_type", "cast_group");
@@ -293,7 +298,7 @@ export default function NewProfileForm() {
   const [All_Gothra_Group, setAll_Gothra_Group] = useState([]);
   const getall_gothra_group = async () => {
     try {
-  
+
       setselect_loading("gotra");
       const params = new URLSearchParams();
       params.append("lookup_type", "gothra_group");
@@ -302,7 +307,7 @@ export default function NewProfileForm() {
     } catch (error) {
       console.log(error);
     } finally {
-     
+
       setselect_loading("");
     }
   };
@@ -348,7 +353,7 @@ export default function NewProfileForm() {
 
   // get education specialization
 
-  const [All_Education_Specialization, setAll_Education_Specialization] =useState([]);
+  const [All_Education_Specialization, setAll_Education_Specialization] = useState([]);
   const getall_education_specialization = async () => {
     try {
       setselect_loading("education_specialization");
@@ -368,48 +373,48 @@ export default function NewProfileForm() {
   const [All_Income_Group, setAll_Income_Group] = useState([]);
 
 
-const getall_income_group = async () => {
-  try {
-    setselect_loading("income");
+  const getall_income_group = async () => {
+    try {
+      setselect_loading("income");
 
-    const params = new URLSearchParams();
-    params.append("lookup_type", "income_group");
+      const params = new URLSearchParams();
+      params.append("lookup_type", "income_group");
 
-    const resp = await api.get(
-      `api/admin/LookupList?${params.toString()}`
-    );
+      const resp = await api.get(
+        `api/admin/LookupList?${params.toString()}`
+      );
 
-    const sortedIncome = resp.data.data.sort((a, b) => {
-      const getValue = (str = "") => {
-        str = str.trim(); // remove extra spaces
+      const sortedIncome = resp.data.data.sort((a, b) => {
+        const getValue = (str = "") => {
+          str = str.trim(); // remove extra spaces
 
-        const match = str.match(/(\d+)\s*(Lakh|Crore)/i);
-        if (!match) return 0;
+          const match = str.match(/(\d+)\s*(Lakh|Crore)/i);
+          if (!match) return 0;
 
-        let value = parseInt(match[1]);
+          let value = parseInt(match[1]);
 
-        // Convert Crore → Lakh
-        if (match[2].toLowerCase() === "crore") {
-          value *= 100;
-        }
+          // Convert Crore → Lakh
+          if (match[2].toLowerCase() === "crore") {
+            value *= 100;
+          }
 
-        return value;
-      };
+          return value;
+        };
 
-      return getValue(a.lookup_value) - getValue(b.lookup_value);
-      // 🔼 Small income first
-      // For small income last use reverse
-      // return getValue(b.lookup_value) - getValue(a.lookup_value);
-    });
+        return getValue(a.lookup_value) - getValue(b.lookup_value);
+        // 🔼 Small income first
+        // For small income last use reverse
+        // return getValue(b.lookup_value) - getValue(a.lookup_value);
+      });
 
-    setAll_Income_Group(sortedIncome);
+      setAll_Income_Group(sortedIncome);
 
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setselect_loading("");
-  }
-};
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setselect_loading("");
+    }
+  };
 
 
 
@@ -430,10 +435,9 @@ const getall_income_group = async () => {
     }
   };
 
-  useEffect(()=>
-  {
+  useEffect(() => {
     getall_country_group()
-  },[])
+  }, [])
   // get state
 
   const [All_State_Group, setAll_State_Group] = useState([]);
@@ -443,20 +447,20 @@ const getall_income_group = async () => {
     try {
       setselect_loading("state");
 
-         // 🔥 If already loaded, don't call API again
-    if (loadedCountries.includes(selectedId)) {
-      return;
-    }
+      // 🔥 If already loaded, don't call API again
+      if (loadedCountries.includes(selectedId)) {
+        return;
+      }
 
       const params = new URLSearchParams();
       params.append("lookup_type", "state_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-          setAll_State_Group((prev) => [
-  ...prev,
-  ...resp.data.data,
-]);
-setLoadedCountries((prev) => [...prev, selectedId]);
+      setAll_State_Group((prev) => [
+        ...prev,
+        ...resp.data.data,
+      ]);
+      setLoadedCountries((prev) => [...prev, selectedId]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -472,19 +476,19 @@ setLoadedCountries((prev) => [...prev, selectedId]);
   const getall_city_group = async (selectedId) => {
     try {
       setselect_loading("city");
-       if (loadedStatesForCity.includes(selectedId)) {
-      return;
-    }
+      if (loadedStatesForCity.includes(selectedId)) {
+        return;
+      }
       const params = new URLSearchParams();
       params.append("lookup_type", "city_group");
       params.append("parent_lookup_id", selectedId);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
-    
+
       setAll_City_Group((prev) => [
-  ...prev,
-  ...resp.data.data,
-]);
-setLoadedStatesForCity((prev) => [...prev, selectedId]);
+        ...prev,
+        ...resp.data.data,
+      ]);
+      setLoadedStatesForCity((prev) => [...prev, selectedId]);
 
     } catch (error) {
       console.log(error);
@@ -523,29 +527,29 @@ setLoadedStatesForCity((prev) => [...prev, selectedId]);
       const resp = await api.get(`api/admin/LookupList?${params.toString()}`);
 
       const sortedProperty = resp.data.data.sort((a, b) => {
-      const getValue = (str = "") => {
-        str = str.trim(); // remove extra spaces
+        const getValue = (str = "") => {
+          str = str.trim(); // remove extra spaces
 
-        const match = str.match(/(\d+)\s*(GAJ)/i);
-        if (!match) return 0;
+          const match = str.match(/(\d+)\s*(GAJ)/i);
+          if (!match) return 0;
 
-        let value = parseInt(match[1]);
+          let value = parseInt(match[1]);
 
-        // Convert Crore → Lakh
-        if (match[2].toLowerCase() === "crore") {
-          value *= 100;
-        }
+          // Convert Crore → Lakh
+          if (match[2].toLowerCase() === "crore") {
+            value *= 100;
+          }
 
-        return value;
-      };
+          return value;
+        };
 
-      return getValue(a.lookup_value) - getValue(b.lookup_value);
-      // 🔼 Small income first
-      // For small income last use reverse
-      // return getValue(b.lookup_value) - getValue(a.lookup_value);
-    });
+        return getValue(a.lookup_value) - getValue(b.lookup_value);
+        // 🔼 Small income first
+        // For small income last use reverse
+        // return getValue(b.lookup_value) - getValue(a.lookup_value);
+      });
 
-    setAll_Property_Size(sortedProperty);
+      setAll_Property_Size(sortedProperty);
     } catch (error) {
       console.log(error);
     } finally {
@@ -666,176 +670,175 @@ setLoadedStatesForCity((prev) => [...prev, selectedId]);
   //=============================== paste function=========================================
 
   const handlePaste = async () => {
-  try {
-    const text = await navigator.clipboard.readText();
+    try {
+      const text = await navigator.clipboard.readText();
 
-   const getValue = (label) => {
-  const regex = new RegExp(`(${label})\\s*[:\\-]?\\s*(.+)`, "i");
-  const match = text.match(regex);
-  return match ? match[2].trim() : "";
-};
-
-
-    const getNumber = (label) => {
-      const regex = new RegExp(`${label}\\s*[:\\-]?\\s*(\\d+)`, "i");
-      return text.match(regex)?.[1]
-        ? Number(text.match(regex)[1])
-        : 0;
-    };
-
-    const getBoolean = (label) => {
-      const value = getValue(label).toLowerCase();
-      return value === "yes" || value === "true";
-    };
-
-    const getArray = (label) => {
-      const value = getValue(label);
-      return value ? value.split(",").map((v) => v.trim()) : [];
-    };
-
-    // ✅ Convert time into HH:MM format for input type="time"
-//   const formatTime = (timeString) => {
-//   if (!timeString) return "";
-
-//   // If already HH:MM format
-//   if (/^\d{2}:\d{2}$/.test(timeString)) return timeString;
-
-//   // Convert 10:30 AM → 10:30
-//   const date = new Date(`1970-01-01 ${timeString}`);
-//   if (isNaN(date)) return "";
-
-//   return date.toTimeString().slice(0, 5);
-// };
+      const getValue = (label) => {
+        const regex = new RegExp(`(${label})\\s*[:\\-]?\\s*(.+)`, "i");
+        const match = text.match(regex);
+        return match ? match[2].trim() : "";
+      };
 
 
+      const getNumber = (label) => {
+        const regex = new RegExp(`${label}\\s*[:\\-]?\\s*(\\d+)`, "i");
+        return text.match(regex)?.[1]
+          ? Number(text.match(regex)[1])
+          : 0;
+      };
 
-    setuser_profile((prev) => ({
-      ...prev,
+      const getBoolean = (label) => {
+        const value = getValue(label).toLowerCase();
+        return value === "yes" || value === "true";
+      };
 
-      PersonalDetails: {
-        ...prev.PersonalDetails,
-        Name: getValue("Name|Full Name|Candidate Name"),
-// DateOfBirth: getValue("Date of Birth|DOB"),
-// TimeOfBirth: formatTime(getValue("Time of Birth|TOB")),
+      const getArray = (label) => {
+        const value = getValue(label);
+        return value ? value.split(",").map((v) => v.trim()) : [];
+      };
 
-        PlaceOfBirth: getValue("Place of Birth"),
-        Age: getNumber("Age"),
-        Complexion: getValue("Complexion"),
-        Height: getValue("Height"),
-        Weight: getValue("Weight"),
-        MotherTongue: getValue("Mother Tongue"),
-        Gender: getValue("Gender"),
-        Drinking: getValue("Drinking"),
-        Smoking: getValue("Smoking"),
-        Nri: getValue("NRI"),
-        PermanentResident: getBoolean("Permanent Resident"),
-        TemporaryResident: getBoolean("Temporary Resident"),
-        NonVeg: getValue("Food Habit|NonVeg"),
-        Manglik: getValue("Manglik"),
-        Living: getValue("Living"),
-        AnyDisability: getValue("Disability"),
-        MaritalStatus: getValue("Marital Status"),
-        HasChildren: getBoolean("Has Children"),
-        ChildrenCount: getNumber("Children Count"),
-      },
+      // ✅ Convert time into HH:MM format for input type="time"
+      //   const formatTime = (timeString) => {
+      //   if (!timeString) return "";
 
-      ReligiousDetails: {
-        ...prev.ReligiousDetails,
-        Community: getValue("Community"),
-        Caste: getValue("Caste"),
-        Religion: getValue("Religion"),
-        Gothram: getValue("Gotra|Gothram"),
-      },
+      //   // If already HH:MM format
+      //   if (/^\d{2}:\d{2}$/.test(timeString)) return timeString;
 
-      FamilyDetails: {
-        ...prev.FamilyDetails,
-        FatherName: getValue("Father Name"),
-        MotherName: getValue("Mother Name"),
-        FatherOccupation: getValue("Father Occupation"),
-        MotherOccupation: getValue("Mother Occupation"),
-        NoOfSiblings: getNumber("Siblings"),
-        FamilyType: getValue("Family Type"),
-        FamilyDescription: getValue("Family Description"),
-      },
+      //   // Convert 10:30 AM → 10:30
+      //   const date = new Date(`1970-01-01 ${timeString}`);
+      //   if (isNaN(date)) return "";
 
-      EducationDetails: {
-        ...prev.EducationDetails,
-        HighestEducation: getValue("Highest Education|Education"),
-        EducationSpecialization: getValue("Specialization"),
-        Occupation: getValue("Occupation"),
-        AnnualFamilyIncome: getValue("Family Income"),
-        PersonalIncome: getValue("Personal Income"),
-        EducationDetails: getValue("Education Details"),
-        OccupationDetails: getValue("Occupation Details"),
-      },
+      //   return date.toTimeString().slice(0, 5);
+      // };
 
-      ContactDetails: {
-        ...prev.ContactDetails,
-        ParmanentAddress: getValue("Address"),
-        Country: getValue("Country"),
-        State: getValue("State"),
-        City: getValue("City"),
-      },
 
-      PartnerPrefrences: {
-        ...prev.PartnerPrefrences,
-        MaritialStatus: getValue("Preferred Marital Status"),
-        HasChildren: getBoolean("Preferred Has Children"),
-        ChildrenCount: getNumber("Preferred Children Count"),
-        NonVeg: getValue("Preferred Food Habit"),
-        Manglik: getValue("Preferred Manglik"),
-        Nri: getValue("Preferred NRI"),
-        PermanentResident: getBoolean("Preferred Permanent Resident"),
-        TemporaryResident: getBoolean("Preferred Temporary Resident"),
-        Community: getValue("Preferred Community"),
-        Religion: getValue("Preferred Religion"),
-        Caste: getArray("Preferred Caste"),
-        Gothram: getArray("Preferred Gothram"),
-        MotherTongue: getArray("Preferred Mother Tongue"),
-        AnnualFamilyIncome: getValue("Preferred Family Income"),
-        PersonalIncome: getValue("Preferred Personal Income"),
-        PropertySize: getArray("Preferred Property Size"),
-        HeighstEducation: getArray("Preferred Education"),
-        Occupation: getArray("Preferred Occupation"),
-        Country: getArray("Preferred Country"),
-        State: getArray("Preferred State"),
-        City: getArray("Preferred City"),
-      },
 
-      PropertyDetails: {
-        ...prev.PropertyDetails,
-        PropertyType: getValue("Property Type"),
-        ResidentialType: getValue("Residential Type"),
-        PropertySize: getValue("Property Size"),
-        PropertyDescription: getValue("Property Description"),
-        AcceptTerms: getBoolean("Accept Terms"),
-      },
-    }));
+      setuser_profile((prev) => ({
+        ...prev,
 
-    Swal.fire({
-      icon: "success",
-      title: "Full Biodata Imported Successfully!",
-      timer: 2000,
-      showConfirmButton: false,
-    });
+        PersonalDetails: {
+          ...prev.PersonalDetails,
+          Name: getValue("Name|Full Name|Candidate Name"),
+          // DateOfBirth: getValue("Date of Birth|DOB"),
+          // TimeOfBirth: formatTime(getValue("Time of Birth|TOB")),
 
-  } catch (err) {
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Format",
-      text: "Please paste correct WhatsApp biodata format.",
-    });
-  }
-};
+          PlaceOfBirth: getValue("Place of Birth"),
+          Age: getNumber("Age"),
+          Complexion: getValue("Complexion"),
+          Height: getValue("Height"),
+          Weight: getValue("Weight"),
+          MotherTongue: getValue("Mother Tongue"),
+          Gender: getValue("Gender"),
+          Drinking: getValue("Drinking"),
+          Smoking: getValue("Smoking"),
+          Nri: getValue("NRI"),
+          PermanentResident: getBoolean("Permanent Resident"),
+          TemporaryResident: getBoolean("Temporary Resident"),
+          NonVeg: getValue("Food Habit|NonVeg"),
+          Manglik: getValue("Manglik"),
+          Living: getValue("Living"),
+          AnyDisability: getValue("Disability"),
+          MaritalStatus: getValue("Marital Status"),
+          HasChildren: getBoolean("Has Children"),
+          ChildrenCount: getNumber("Children Count"),
+        },
+
+        ReligiousDetails: {
+          ...prev.ReligiousDetails,
+          Community: getValue("Community"),
+          Caste: getValue("Caste"),
+          Religion: getValue("Religion"),
+          Gothram: getValue("Gotra|Gothram"),
+        },
+
+        FamilyDetails: {
+          ...prev.FamilyDetails,
+          FatherName: getValue("Father Name"),
+          MotherName: getValue("Mother Name"),
+          FatherOccupation: getValue("Father Occupation"),
+          MotherOccupation: getValue("Mother Occupation"),
+          NoOfSiblings: getNumber("Siblings"),
+          FamilyType: getValue("Family Type"),
+          FamilyDescription: getValue("Family Description"),
+        },
+
+        EducationDetails: {
+          ...prev.EducationDetails,
+          HighestEducation: getValue("Highest Education|Education"),
+          EducationSpecialization: getValue("Specialization"),
+          Occupation: getValue("Occupation"),
+          AnnualFamilyIncome: getValue("Family Income"),
+          PersonalIncome: getValue("Personal Income"),
+          EducationDetails: getValue("Education Details"),
+          OccupationDetails: getValue("Occupation Details"),
+        },
+
+        ContactDetails: {
+          ...prev.ContactDetails,
+          ParmanentAddress: getValue("Address"),
+          Country: getValue("Country"),
+          State: getValue("State"),
+          City: getValue("City"),
+        },
+
+        PartnerPrefrences: {
+          ...prev.PartnerPrefrences,
+          MaritialStatus: getValue("Preferred Marital Status"),
+          HasChildren: getBoolean("Preferred Has Children"),
+          ChildrenCount: getNumber("Preferred Children Count"),
+          NonVeg: getValue("Preferred Food Habit"),
+          Manglik: getValue("Preferred Manglik"),
+          Nri: getValue("Preferred NRI"),
+          PermanentResident: getBoolean("Preferred Permanent Resident"),
+          TemporaryResident: getBoolean("Preferred Temporary Resident"),
+          Community: getValue("Preferred Community"),
+          Religion: getValue("Preferred Religion"),
+          Caste: getArray("Preferred Caste"),
+          Gothram: getArray("Preferred Gothram"),
+          MotherTongue: getArray("Preferred Mother Tongue"),
+          AnnualFamilyIncome: getValue("Preferred Family Income"),
+          PersonalIncome: getValue("Preferred Personal Income"),
+          PropertySize: getArray("Preferred Property Size"),
+          HeighstEducation: getArray("Preferred Education"),
+          Occupation: getArray("Preferred Occupation"),
+          Country: getArray("Preferred Country"),
+          State: getArray("Preferred State"),
+          City: getArray("Preferred City"),
+        },
+
+        PropertyDetails: {
+          ...prev.PropertyDetails,
+          PropertyType: getValue("Property Type"),
+          ResidentialType: getValue("Residential Type"),
+          PropertySize: getValue("Property Size"),
+          PropertyDescription: getValue("Property Description"),
+          AcceptTerms: getBoolean("Accept Terms"),
+        },
+      }));
+
+      Swal.fire({
+        icon: "success",
+        title: "Full Biodata Imported Successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Format",
+        text: "Please paste correct WhatsApp biodata format.",
+      });
+    }
+  };
 
 
   //========================= post method for adding new profile===============================
 
   const add_new_profile = async () => {
     try {
-      if(user_profile.PropertyDetails.AcceptTerms===false)
-      {
-        return  Swal.fire({
+      if (user_profile.PropertyDetails.AcceptTerms === false) {
+        return Swal.fire({
           icon: "error",
           title: "Terms & Conditions!",
           text: "Please accept terms & conditions!",
@@ -846,7 +849,7 @@ setLoadedStatesForCity((prev) => [...prev, selectedId]);
           },
         })
       }
-      
+
       const resp = await api.post("api/user/add-new-profile", user_profile);
 
       if (resp.status === 200) {
@@ -882,11 +885,11 @@ setLoadedStatesForCity((prev) => [...prev, selectedId]);
     }
   };
 
-//============================ sample data ============
+  //============================ sample data ============
 
-//================== sample data=====================================
+  //================== sample data=====================================
   const handleDownloadSample = () => {
-  const sampleText = `
+    const sampleText = `
 ----- MATRIMONY BIODATA SAMPLE FORMAT -----
 
 Name: Rahul Sharma
@@ -970,16 +973,16 @@ Accept Terms: Yes
 Copy this format and edit values before pasting.
 `;
 
-  const blob = new Blob([sampleText], { type: "text/plain" });
-  const link = document.createElement("a");
+    const blob = new Blob([sampleText], { type: "text/plain" });
+    const link = document.createElement("a");
 
-  link.href = URL.createObjectURL(blob);
-  link.download = "Matrimony_Biodata_Sample.txt";
+    link.href = URL.createObjectURL(blob);
+    link.download = "Matrimony_Biodata_Sample.txt";
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
 
   return (
@@ -999,50 +1002,50 @@ Copy this format and edit values before pasting.
               Step {step} of 8 — Complete your details to get the best matches!
             </p>
           </div>
-<div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-4">
 
-  {/* LEFT SIDE - Paste Button */}
-  <div>
-    <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}
-    >
-      <button
-        onClick={handlePaste}
-        className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
-      >
-        <ClipboardPaste size={18} />
+            {/* LEFT SIDE - Paste Button */}
+            <div>
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="paste-tooltip">Paste WhatsApp Data</Tooltip>}
+              >
+                <button
+                  onClick={handlePaste}
+                  className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
+                >
+                  <ClipboardPaste size={18} />
 
-     
 
-        {/* Tooltip (Optional if using bootstrap tooltip) */}
-        <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
-          Paste WhatsApp Data
-        </span>
-      </button>
-    </OverlayTrigger>
-  </div>
 
-  {/* RIGHT SIDE - Download Sample Button */}
-  <div>
-    <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="paste-tooltip">Download Biodata Sample</Tooltip>}
-    >
-    <button
-      type="button"
-      onClick={handleDownloadSample}
-      className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
-    >
-      <Download size={18} />
-      <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
-          Download Biodata Sample
-        </span>
-    </button>
-    </OverlayTrigger>
-  </div>
+                  {/* Tooltip (Optional if using bootstrap tooltip) */}
+                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
+                    Paste WhatsApp Data
+                  </span>
+                </button>
+              </OverlayTrigger>
+            </div>
 
-</div>
+            {/* RIGHT SIDE - Download Sample Button */}
+            <div>
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="paste-tooltip">Download Biodata Sample</Tooltip>}
+              >
+                <button
+                  type="button"
+                  onClick={handleDownloadSample}
+                  className="relative flex items-center justify-center gap-2 text-black bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition group shadow-sm"
+                >
+                  <Download size={18} />
+                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-md">
+                    Download Biodata Sample
+                  </span>
+                </button>
+              </OverlayTrigger>
+            </div>
+
+          </div>
 
 
           {/* Step Indicators */}
@@ -1064,14 +1067,13 @@ Copy this format and edit values before pasting.
                   className="flex flex-col items-center min-w-[80px]"
                 >
                   <div
-                  onClick={() => setStep(num)}
-                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold cursor-pointer ${
-                      step === num
-                        ? "bg-red-600 text-white"
-                        : step > num
-                          ? "bg-green-500 text-white"
-                          : "bg-gray-300 text-gray-700"
-                    }`}
+                    onClick={() => setStep(num)}
+                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold cursor-pointer ${step === num
+                      ? "bg-red-600 text-white"
+                      : step > num
+                        ? "bg-green-500 text-white"
+                        : "bg-gray-300 text-gray-700"
+                      }`}
                   >
                     {num}
                   </div>
@@ -1085,7 +1087,7 @@ Copy this format and edit values before pasting.
 
           {/* Form Body */}
           {/* ================= STEP NAVIGATION ================= */}
-{/* <div className="flex flex-wrap gap-2 mb-6">
+          {/* <div className="flex flex-wrap gap-2 mb-6">
   {[1,2,3,4,5,6,7,8].map((s) => (
     <button
       key={s}
@@ -1139,8 +1141,8 @@ Copy this format and edit values before pasting.
                       value={
                         user_profile?.PersonalDetails?.DateOfBirth
                           ? new Date(user_profile.PersonalDetails.DateOfBirth)
-                              .toISOString()
-                              .split("T")[0] // ✅ Converts to 'YYYY-MM-DD'
+                            .toISOString()
+                            .split("T")[0] // ✅ Converts to 'YYYY-MM-DD'
                           : ""
                       }
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -1694,51 +1696,51 @@ Copy this format and edit values before pasting.
                   {/* ✅ Show extra fields if Divorce is selected */}
                   {(user_profile.PersonalDetails.MaritalStatus === "Divorce" ||
                     user_profile.PersonalDetails.MaritalStatus ===
-                      "Widow/Widower") && (
-                    <div className="mt-3 ml-4 space-y-2">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          className="accent-red-600"
-                          checked={
-                            user_profile.PersonalDetails.HasChildren || false
-                          }
-                          onChange={(e) =>
-                            handleChange(
-                              "PersonalDetails",
-                              "HasChildren",
-                              e.target.checked,
-                            )
-                          }
-                        />
-                        Do you have children?
-                      </label>
-
-                      {/* ✅ If user has children, show number input */}
-                      {user_profile.PersonalDetails.HasChildren && (
-                        <div className="flex items-center gap-2 ml-6">
-                          <label className="text-sm text-gray-700">
-                            How many children?
-                          </label>
+                    "Widow/Widower") && (
+                      <div className="mt-3 ml-4 space-y-2">
+                        <label className="flex items-center gap-2">
                           <input
-                            type="number"
-                            min="1"
-                            className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
-                            value={
-                              user_profile.PersonalDetails.ChildrenCount || 0
+                            type="checkbox"
+                            className="accent-red-600"
+                            checked={
+                              user_profile.PersonalDetails.HasChildren || false
                             }
                             onChange={(e) =>
                               handleChange(
                                 "PersonalDetails",
-                                "ChildrenCount",
-                                e.target.value,
+                                "HasChildren",
+                                e.target.checked,
                               )
                             }
                           />
-                        </div>
-                      )}
-                    </div>
-                  )}
+                          Do you have children?
+                        </label>
+
+                        {/* ✅ If user has children, show number input */}
+                        {user_profile.PersonalDetails.HasChildren && (
+                          <div className="flex items-center gap-2 ml-6">
+                            <label className="text-sm text-gray-700">
+                              How many children?
+                            </label>
+                            <input
+                              type="number"
+                              min="1"
+                              className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                              value={
+                                user_profile.PersonalDetails.ChildrenCount || 0
+                              }
+                              onChange={(e) =>
+                                handleChange(
+                                  "PersonalDetails",
+                                  "ChildrenCount",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </div>
               </div>
             )}
@@ -1757,7 +1759,7 @@ Copy this format and edit values before pasting.
                     </label>
                     <select
                       className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      onChange={(e) =>{
+                      onChange={(e) => {
                         const selectedId =
                           e.target.selectedOptions[0].getAttribute("data-id");
                         handleChange(
@@ -1767,8 +1769,8 @@ Copy this format and edit values before pasting.
                         )
                         getall_cast_group(selectedId);
                       }
-                    }
-            
+                      }
+
                       onClick={() => {
                         if (All_Religion_Group.length === 0)
                           getall_religion_group();
@@ -1847,9 +1849,9 @@ Copy this format and edit values before pasting.
                           e.target.value,
                         )
                       }
-                      // onClick={() => {
-                      //    getall_cast_group();
-                      // }}
+                    // onClick={() => {
+                    //    getall_cast_group();
+                    // }}
                     >
                       <option
                         value={user_profile?.ReligiousDetails?.Caste || ""}
@@ -1888,7 +1890,7 @@ Copy this format and edit values before pasting.
                           getall_gothra_group();
                       }}
                     >
-                     
+
                       <option
                         value={user_profile?.ReligiousDetails?.Gothram || ""}
                       >
@@ -2213,7 +2215,7 @@ Copy this format and edit values before pasting.
                           e.target.value,
                         )
                       }
-                       onClick={() => {
+                      onClick={() => {
                         if (All_Occupation.length === 0)
                           getall_occupation();
                       }}
@@ -2224,7 +2226,7 @@ Copy this format and edit values before pasting.
                         {user_profile?.EducationDetails?.Occupation ||
                           "Select Occupation"}
                       </option>
-                       {select_loading === "occupation" && (
+                      {select_loading === "occupation" && (
                         <option disabled>Loading...</option>
                       )}
                       {All_Occupation.map((item) => (
@@ -2410,10 +2412,10 @@ Copy this format and edit values before pasting.
                         );
                         getall_state_group(selectedId);
                       }}
-                      // onClick={() => {
-                      //   if (All_Country_Group.length === 0)
-                      //     getall_country_group();
-                      // }}
+                    // onClick={() => {
+                    //   if (All_Country_Group.length === 0)
+                    //     getall_country_group();
+                    // }}
                     >
                       <option
                         value={user_profile?.ContactDetails?.Country || ""}
@@ -2794,53 +2796,53 @@ Copy this format and edit values before pasting.
                     {(user_profile.PartnerPrefrences.MaritialStatus ===
                       "Divorced" ||
                       user_profile.PartnerPrefrences.MaritialStatus ===
-                        "Widow/Widower") && (
-                      <div className="mt-3 ml-4 space-y-2">
-                        <label className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            className="accent-red-600"
-                            checked={
-                              user_profile.PartnerPrefrences.HasChildren ||
-                              false
-                            }
-                            onChange={(e) =>
-                              handleChange(
-                                "PartnerPrefrences",
-                                "HasChildren",
-                                e.target.checked,
-                              )
-                            }
-                          />
-                          Do you have children?
-                        </label>
-
-                        {/* ✅ If user has children, show number input */}
-                        {user_profile.PartnerPrefrences.HasChildren && (
-                          <div className="flex items-center gap-2 ml-6">
-                            <label className="text-sm text-gray-700">
-                              How many children?
-                            </label>
+                      "Widow/Widower") && (
+                        <div className="mt-3 ml-4 space-y-2">
+                          <label className="flex items-center gap-2">
                             <input
-                              type="number"
-                              min="1"
-                              className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
-                              value={
-                                user_profile.PartnerPrefrences.ChildrenCount ||
-                                0
+                              type="checkbox"
+                              className="accent-red-600"
+                              checked={
+                                user_profile.PartnerPrefrences.HasChildren ||
+                                false
                               }
                               onChange={(e) =>
                                 handleChange(
                                   "PartnerPrefrences",
-                                  "ChildrenCount",
-                                  e.target.value,
+                                  "HasChildren",
+                                  e.target.checked,
                                 )
                               }
                             />
-                          </div>
-                        )}
-                      </div>
-                    )}
+                            Do you have children?
+                          </label>
+
+                          {/* ✅ If user has children, show number input */}
+                          {user_profile.PartnerPrefrences.HasChildren && (
+                            <div className="flex items-center gap-2 ml-6">
+                              <label className="text-sm text-gray-700">
+                                How many children?
+                              </label>
+                              <input
+                                type="number"
+                                min="1"
+                                className="border rounded-md p-2 w-24 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                                value={
+                                  user_profile.PartnerPrefrences.ChildrenCount ||
+                                  0
+                                }
+                                onChange={(e) =>
+                                  handleChange(
+                                    "PartnerPrefrences",
+                                    "ChildrenCount",
+                                    e.target.value,
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                     {/* Food Preference */}
                     <div>
@@ -3038,18 +3040,18 @@ Copy this format and edit values before pasting.
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
                         name="Religion"
-                        onChange={(e) =>{
-                        const selectedId =
-                          e.target.selectedOptions[0].getAttribute("data-id");
-                        handleChange(
-                         "PartnerPrefrences",
+                        onChange={(e) => {
+                          const selectedId =
+                            e.target.selectedOptions[0].getAttribute("data-id");
+                          handleChange(
+                            "PartnerPrefrences",
                             "Religion",
                             e.target.value,
-                        )
-                        getall_cast_group(selectedId);
-                      }
-                    }
-                        
+                          )
+                          getall_cast_group(selectedId);
+                        }
+                        }
+
                         onClick={() => {
                           getall_religion_group();
                         }}
@@ -3062,9 +3064,9 @@ Copy this format and edit values before pasting.
                           {user_profile?.PartnerPrefrences?.Religion ||
                             "Select Religion"}
                         </option>
-                         {select_loading === "religion" && (
-                        <option disabled>Loading...</option>
-                      )}
+                        {select_loading === "religion" && (
+                          <option disabled>Loading...</option>
+                        )}
                         {All_Religion_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value} data-id={item._id}>
                             {item.lookup_value}
@@ -3100,9 +3102,9 @@ Copy this format and edit values before pasting.
                           {user_profile?.PartnerPrefrences?.Community ||
                             "Select Community"}
                         </option>
-                            {select_loading === "community" && (
-                        <option disabled>Loading...</option>
-                      )}
+                        {select_loading === "community" && (
+                          <option disabled>Loading...</option>
+                        )}
                         {All_Community_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -3123,9 +3125,9 @@ Copy this format and edit values before pasting.
                           name="Caste"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Caste || []}
-                          // onOpen={() => {
-                          //   getall_cast_group();
-                          // }}
+                          open={openSelect === "Caste"}
+                          onOpen={() => setOpenSelect("Caste")}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Caste");
                           }}
@@ -3161,9 +3163,28 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                              {select_loading === "cast" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "cast" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Cast_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3182,7 +3203,7 @@ Copy this format and edit values before pasting.
                       </FormControl>
                     </div>
 
-                           {/* Gothram */}
+                    {/* Gothram */}
 
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
@@ -3196,7 +3217,10 @@ Copy this format and edit values before pasting.
                           value={user_profile?.PartnerPrefrences?.Gothram || []}
                           onOpen={() => {
                             getall_gothra_group();
+                            setOpenSelect("Gothram");
                           }}
+                          open={openSelect === "Gothram"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Gothram");
                           }}
@@ -3232,9 +3256,28 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                   {select_loading === "gotra" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "gotra" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Gothra_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3267,9 +3310,13 @@ Copy this format and edit values before pasting.
                           value={
                             user_profile?.PartnerPrefrences?.MotherTongue || []
                           }
+
                           onOpen={() => {
                             getall_mother_tongue();
+                            setOpenSelect("MotherTongue");
                           }}
+                          open={openSelect === "MotherTongue"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "MotherTongue");
                           }}
@@ -3305,9 +3352,29 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                   {select_loading === "mother_tongue" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "mother_tongue" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Mother_Tongue.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3355,9 +3422,9 @@ Copy this format and edit values before pasting.
                             ?.AnnualFamilyIncome ||
                             "Select Annual Family Income"}
                         </option>
-                          {select_loading === "income" && (
-                        <option disabled>Loading...</option>
-                      )}
+                        {select_loading === "income" && (
+                          <option disabled>Loading...</option>
+                        )}
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -3394,7 +3461,7 @@ Copy this format and edit values before pasting.
                           {user_profile?.PartnerPrefrences?.PersonalIncome ||
                             "Select Personal Income"}
                         </option>
-                     b
+                        b
                         {All_Income_Group.map((item) => (
                           <option key={item._id} value={item.lookup_value}>
                             {item.lookup_value}
@@ -3416,9 +3483,13 @@ Copy this format and edit values before pasting.
                           value={
                             user_profile?.PartnerPrefrences?.PropertySize || []
                           }
+
                           onOpen={() => {
                             getall_property_size();
+                            setOpenSelect("PropertySize");
                           }}
+                          open={openSelect === "PropertySize"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "PropertySize");
                           }}
@@ -3454,9 +3525,28 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "property_size" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "property_size" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Property_Size.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3489,9 +3579,13 @@ Copy this format and edit values before pasting.
                             user_profile?.PartnerPrefrences?.HeighstEducation ||
                             []
                           }
+
                           onOpen={() => {
                             getAll_Education_Group();
+                            setOpenSelect("Education");
                           }}
+                          open={openSelect === "Education"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "HeighstEducation");
                           }}
@@ -3527,9 +3621,29 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "education" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "education" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Education_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3560,9 +3674,13 @@ Copy this format and edit values before pasting.
                           value={
                             user_profile?.PartnerPrefrences?.Occupation || []
                           }
+
                           onOpen={() => {
                             getall_occupation();
+                            setOpenSelect("Occupation");
                           }}
+                          open={openSelect === "Occupation"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Occupation");
                           }}
@@ -3598,9 +3716,29 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "occupation" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "occupation" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Occupation.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3629,9 +3767,11 @@ Copy this format and edit values before pasting.
                           name="Country"
                           multiple
                           value={user_profile?.PartnerPrefrences?.Country || []}
-                          // onOpen={() => {
-                          //   getall_country_group();
-                          // }}
+                          onOpen={() => {
+                            setOpenSelect("Country");
+                          }}
+                          open={openSelect === "Country"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "Country");
                           }}
@@ -3667,9 +3807,28 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "country" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "country" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_Country_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3700,9 +3859,13 @@ Copy this format and edit values before pasting.
                           name="State"
                           multiple
                           value={user_profile?.PartnerPrefrences?.State || []}
+
                           onOpen={() => {
-                            getall_state_group();
+                            getall_state_group()
+                            setOpenSelect("State");
                           }}
+                          open={openSelect === "State"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "State");
                           }}
@@ -3738,9 +3901,28 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "state" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "state" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_State_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3771,9 +3953,12 @@ Copy this format and edit values before pasting.
                           name="City"
                           multiple
                           value={user_profile?.PartnerPrefrences?.City || []}
-                          // onOpen={() => {
-                          //   getall_city_group();
-                          // }}
+                          onOpen={() => {
+
+                            setOpenSelect("City");
+                          }}
+                          open={openSelect === "City"}
+                          onClose={() => setOpenSelect("")}
                           onChange={(e) => {
                             handleMultiSelectChange(e, "City");
                           }}
@@ -3809,9 +3994,29 @@ Copy this format and edit values before pasting.
                             );
                           }}
                         >
-                                           {select_loading === "city" && (
-                        <MenuItem disabled>Loading...</MenuItem>
-                      )}
+
+                          <MenuItem
+                            // disabled
+                            value={false}
+                            sx={{
+                              justifyContent: "flex-end",
+                              borderBottom: "1px solid #eee",
+                              pointerEvents: "auto",   // VERY IMPORTANT
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenSelect("");
+                              }}
+                            >
+                              <CloseIcon fontSize="small" sx={{ color: "red" }} />
+                            </IconButton>
+                          </MenuItem>
+                          {select_loading === "city" && (
+                            <MenuItem disabled>Loading...</MenuItem>
+                          )}
                           {All_City_Group.map((option) => (
                             <MenuItem
                               key={option._id}
@@ -3975,8 +4180,8 @@ Copy this format and edit values before pasting.
                           className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center"
                         >
                           {file.endsWith(".mp4") ||
-                          file.endsWith(".mov") ||
-                          file.endsWith(".webm") ? (
+                            file.endsWith(".mov") ||
+                            file.endsWith(".webm") ? (
                             <video
                               src={file}
                               controls
@@ -3991,10 +4196,10 @@ Copy this format and edit values before pasting.
                     {/* fallback if no file uploaded */}
                     {(!user_profile?.Upload?.AudioVideo ||
                       user_profile.Upload.AudioVideo.length === 0) && (
-                      <div className="w-32 h-20  rounded-lg flex items-center justify-center text-gray-400 text-sm">
-                        Media Preview
-                      </div>
-                    )}
+                        <div className="w-32 h-20  rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                          Media Preview
+                        </div>
+                      )}
                   </div>
                 </div>
 
@@ -4195,29 +4400,29 @@ Copy this format and edit values before pasting.
                   ></textarea>
                 </div>
 
-       
-{/* Terms & Conditions */}
-<div className="flex items-start gap-2 mt-4">
-  <input
-    type="checkbox"
-    id="acceptTerms"
-    className="mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-    checked={user_profile?.PropertyDetails?.AcceptTerms || false}
-    onChange={(e) =>
-      handleChange(
-        "PropertyDetails",
-        "AcceptTerms",
-        e.target.checked
-      )
-    }
-  />
-  <label htmlFor="acceptTerms" className="text-sm text-gray-700 mt-1">
-    I accept the{" "}
-    <span className="text-red-600 font-medium cursor-pointer" onClick={()=>navigate('/terms-conditions')}>
-      Terms & Conditions
-    </span>
-  </label>
-</div>
+
+                {/* Terms & Conditions */}
+                <div className="flex items-start gap-2 mt-4">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    className="mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                    checked={user_profile?.PropertyDetails?.AcceptTerms || false}
+                    onChange={(e) =>
+                      handleChange(
+                        "PropertyDetails",
+                        "AcceptTerms",
+                        e.target.checked
+                      )
+                    }
+                  />
+                  <label htmlFor="acceptTerms" className="text-sm text-gray-700 mt-1">
+                    I accept the{" "}
+                    <span className="text-red-600 font-medium cursor-pointer" onClick={() => navigate('/terms-conditions')}>
+                      Terms & Conditions
+                    </span>
+                  </label>
+                </div>
 
               </div>
             )}
@@ -4228,11 +4433,10 @@ Copy this format and edit values before pasting.
             <button
               disabled={step === 1}
               onClick={() => setStep(step - 1)}
-              className={`px-5 py-2 rounded-lg border ${
-                step === 1
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-gray-100"
-              }`}
+              className={`px-5 py-2 rounded-lg border ${step === 1
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-100"
+                }`}
             >
               Back
             </button>
