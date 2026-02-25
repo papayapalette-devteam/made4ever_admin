@@ -40,7 +40,7 @@ const style = {
   boxShadow: "-8px 0 24px rgba(0,0,0,0.18)",
   p: { xs: 2, sm: 3 },    // little less padding on mobile
   overflowY: "auto",
-  overflowX: "hidden",
+  overflowX: "auto",
 };
 
 
@@ -223,7 +223,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
       </div>
 
 
-          <div className="flex flex-col gap-2 pb-10 overflow-scroll">
+          <div className="flex flex-col gap-2 pb-2 ">
 
             <TextField
               label="Name"
@@ -245,7 +245,7 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               sx={compactInputStyle}
             />
 
-<TextField
+  <TextField
   label="New Password"
   name="password"
   type={showPassword ? "text" : "password"}
@@ -347,14 +347,14 @@ const EditMspProfileModal = ({ open, handleClose, mspData }) => {
               <input hidden type="file" accept="image/*" onChange={handleFileChange} />
             </Button> */}
 
-            {/* <Button
+            <Button
               variant="contained"
               onClick={handleSubmit}
               disabled={loading}
               sx={{ mt: 2 }}
             >
               {loading ? "Updating..." : "Save Changes"}
-            </Button> */}
+            </Button>
 
           </div>
         </Box>
