@@ -284,9 +284,9 @@ line-height: normal;
     font-size: 1.3rem;
   }
   .visual-side {
-    height: 30vh;
+    height: 20vh;
   }
   .form-side {
-    height: 70vh;
+    height: 80vh;
   }
 }
