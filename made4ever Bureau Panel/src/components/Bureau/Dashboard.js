@@ -60,6 +60,25 @@ const Dashboard = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
 
+  const [referralLink, setReferralLink] = useState("");
+
+useEffect(() => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user?._id && user?.registered_business_name) {
+    // Combine ID + Name
+    const payload = JSON.stringify({ id: user._id, name: user.registered_business_name });
+    const encoded = btoa(payload); // encode as base64
+
+    const link = `https://made4ever.in/add-profile?ref=${encoded}`;
+    setReferralLink(link);
+  }
+}, []);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(referralLink);
+    alert("Referral link copied!");
+  };
+
     const[total_profile,settotal_profile]=useState([])
     const get_all_profile=async()=>
     {
@@ -142,9 +161,14 @@ const Dashboard = () => {
           Here's what's happening with your bureau today.
         </p>
       </div>
-
+    <button
+      onClick={handleCopy}
+      className="bg-pink-600 text-white px-4 py-2 rounded-lg"
+    >
+      Copy Referral Link
+    </button>
       {/* Stats Section */}
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-2">
         <StatsCard
           title="Total Profiles"
           value={total_profile}

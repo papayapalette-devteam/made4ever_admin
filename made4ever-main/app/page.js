@@ -261,7 +261,7 @@ console.log(testimonials);
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="h-48 w-full object-cover"
+                  className="h-48 w-full object-cover object-top"
                 />
                 <div className="p-6 text-left">
                   <h3 className="text-xl font-semibold mb-2">{post.title}</h3>

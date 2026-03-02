@@ -136,6 +136,30 @@ export default function NewProfileForm() {
   });
 
 
+ 
+const[bureauName,setbureauName]=useState("")
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+
+  if (ref) {
+    try {
+      const decoded = JSON.parse(atob(ref));
+      setbureauName(decoded.name)
+
+      // Store in user_profile
+      setuser_profile((prev) => ({
+        ...prev,
+        Bureau: decoded.id, // hidden
+      }));
+    } catch (error) {
+      console.error("Invalid referral link");
+    }
+  }
+}, []);
+
+
   
   const [openSelect, setOpenSelect] = useState("");
 
@@ -144,7 +168,9 @@ export default function NewProfileForm() {
   let searchTimeout;
 
   const [Loading, setLoading] = useState(false);
-  const [selectedBureau, setSelectedBureau] = useState(null);
+
+   const [selectedBureau, setSelectedBureau] = useState(null);
+
   const fetchBureaus = async (query) => {
     if (!query || query.length < 1) {
       setBureauOptions([]);
@@ -157,8 +183,6 @@ export default function NewProfileForm() {
       try {
         setLoading(true);
         const res = await api.get(`api/msp/Getmsp?search=${query}`);
-        console.log(res);
-
         setBureauOptions(
           Array.isArray(res.data) ? res.data.msp : res.data.msp || [],
         );
@@ -1151,58 +1175,14 @@ Copy this format and edit values before pasting.
                 </h2>
                 {/* bureau */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Select Bureau
-                    </label>
-                 
-
-<Autocomplete
-  options={bureauOptions}
-  loading={Loading}
-  value={selectedBureau}
-  getOptionLabel={(option) =>
-    option
-      ? `${option.registered_business_name} - ${option.mobile_number}`
-      : ""
-  }
-  isOptionEqualToValue={(option, value) =>
-    option._id === value?._id
-  }
-  onInputChange={(event, value) => fetchBureaus(value)}
-  onChange={(event, newValue) => {
-    setSelectedBureau(newValue);
-    setuser_profile({
-      ...user_profile,
-      Bureau: newValue?._id || "",
-    });
-  }}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      variant="standard"
-      placeholder="Type bureau name..."
-      InputProps={{
-        ...params.InputProps,
-        disableUnderline: true,
-        className:
-          "h-[49.28px] border rounded-lg h-[48px] px-3 flex items-center focus-within:ring-2 focus-within:ring-red-500 w-full",
-        endAdornment: (
-          <>
-            {Loading && <CircularProgress size={18} />}
-            {params.InputProps.endAdornment}
-          </>
-        ),
-      }}
-      inputProps={{
-        ...params.inputProps,
-        className: "py-0",  // 🔥 removes extra top-bottom padding
-      }}
-    />
-  )}
-/>
-                   
-                  </div>
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Referred By
+  </label>
+  <div className="px-4 py-2 bg-gray-100 rounded-lg text-gray-800 font-semibold">
+    {bureauName || "N/A"}
+  </div>
+</div>
                   {/* Full Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
