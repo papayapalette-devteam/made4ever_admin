@@ -164,11 +164,11 @@ if (bureau) {
       Bureau: { $ne: null }
     })
       .populate("Bureau")
-      .skip(skip)
-      .limit(limit)
-      .lean();
+      // .skip(skip)
+      // .limit(limit)
+      // .lean();
 
-    const matches = candidates.map((candidate) => {
+    let matches = candidates.map((candidate) => {
       const userToCandidate = calculateMatchScore(
         user.PartnerPrefrences,
         candidate
@@ -187,16 +187,26 @@ if (bureau) {
         ),
       };
     }) // ✅ FILTER MATCHES > 80%
-  .filter(match => match.matchPercentage > 80);
+  // .filter(match => match.matchPercentage > 80);
+
+  matches = matches.filter((match) => match.matchPercentage >= 80);
 
     // sort only current page
     matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+    const paginatedMatches = matches.slice((page - 1) * limit, page * limit);
 
     const highMatchFound = matches.some(
   (m) => m.matchPercentage >= 80
 );
 
-if (msp && highMatchFound) {
+// if (msp && highMatchFound) {
+//   msp.credits -= 5;
+//   await msp.save();
+// }
+
+// Only deduct credits if user is viewing the first page
+if (msp && paginatedMatches.length > 0 && page === 1) {
   msp.credits -= 5;
   await msp.save();
 }
@@ -206,9 +216,9 @@ if (msp && highMatchFound) {
       success: true,
       page,
       limit,
-      totalMatches: totalCandidates,
+      totalMatches: matches.length,
       totalPages: Math.ceil(totalCandidates / limit),
-      matches,
+      matches:paginatedMatches,
     });
   } catch (err) {
     console.error("❌ Matchmaking error:", err);

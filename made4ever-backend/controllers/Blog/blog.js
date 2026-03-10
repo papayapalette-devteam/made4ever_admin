@@ -45,7 +45,7 @@ const addBlog = async (req, res) => {
     const blog = new Blog(value);
     await blog.save();
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       message: "Blog added successfully",
       data: blog,

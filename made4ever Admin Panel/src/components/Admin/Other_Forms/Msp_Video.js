@@ -373,7 +373,7 @@ function MspVideo() {
     <div style={{ marginTop: "15px" }}>
       <video
         width="100%"
-        height="200"
+        height="auto"
         controls
         src={Msp_Video.msp_video}
         style={{ borderRadius: "8px" }}

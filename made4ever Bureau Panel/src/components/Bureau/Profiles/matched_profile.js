@@ -39,6 +39,7 @@ export default function MatchingProfiles() {
 
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [totalmatches, settotalmatches] = useState(0);
   const [loading, setLoading] = useState(false);
 
   // Fetch matching data
@@ -70,12 +71,15 @@ const fetchMatches = async (pageNumber = page) => {
       }
     );
 
+    
+
     const results = resp.data.matches || [];
 
     setMatches(results);
     setSelectedMatch(results?.[0] || null);
     setTotalPages(resp.data.totalPages);
     setPage(pageNumber);
+    settotalmatches(resp.data.totalMatches)
 
     Swal.close(); // ✅ close loader
 
@@ -230,7 +234,7 @@ const acceptProfile = async () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <StatsCard
                 title="Total Matches"
-                value={matches.length}
+                value={totalmatches}
                 description="Found profiles"
                 icon={<Heart className="h-4 w-4 text-gray-500" />}
               />
