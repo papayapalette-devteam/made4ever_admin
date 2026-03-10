@@ -71,7 +71,7 @@ const fetchMatches = async (pageNumber = page) => {
       }
     );
 
-    
+
 
     const results = resp.data.matches || [];
 

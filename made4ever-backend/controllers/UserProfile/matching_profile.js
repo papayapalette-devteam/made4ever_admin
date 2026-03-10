@@ -196,9 +196,9 @@ if (bureau) {
 
     const paginatedMatches = matches.slice((page - 1) * limit, page * limit);
 
-    const highMatchFound = matches.some(
-  (m) => m.matchPercentage >= 80
-);
+//     const highMatchFound = matches.some(
+//   (m) => m.matchPercentage >= 80
+// );
 
 // if (msp && highMatchFound) {
 //   msp.credits -= 5;
@@ -217,7 +217,7 @@ if (msp && paginatedMatches.length > 0 && page === 1) {
       page,
       limit,
       totalMatches: matches.length,
-      totalPages: Math.ceil(totalCandidates / limit),
+      totalPages: Math.ceil(matches.length / limit),
       matches:paginatedMatches,
     });
   } catch (err) {
