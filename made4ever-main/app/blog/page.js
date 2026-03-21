@@ -14,40 +14,49 @@ import { useRouter } from 'next/navigation';
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
-   const [mockBlogPosts,setmockBlogPosts]=useState([])
+  const [mockBlogPosts, setmockBlogPosts] = useState([])
 
   const router = useRouter();
 
 
- 
-  const get_all_blogs=async()=>
-  {
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // fixed or changeable
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setloading] = useState(false);
+  const get_all_blogs = async () => {
     try {
-      const resp=await api.get('api/blog/all-blogs')
+      setloading(true)
+      const resp = await api.get('api/blog/all-blogs', {
+        params: {
+          page: page,
+          limit: limit,
+        },
+      })
       console.log(resp);
       setmockBlogPosts(resp.data.data)
-      
-      
+      setTotalPages(resp.data.totalPages)
+
     } catch (error) {
       console.log(error);
-      
+
+    } finally {
+      setloading(false)
     }
   }
 
-  useEffect(()=>
-  {
+  useEffect(() => {
     get_all_blogs()
 
-  },[])
+  }, [page])
 
   return (
     <div className="min-h-screen bg-white">
-        <Header/>
+      <Header />
       {/* Header */}
       {/* <div className="bg-red-600 text-white py-6 text-center font-bold text-2xl mt-10">
         Made4Ever Blog
       </div> */}
-            <section className="py-20 text-center">
+      <section className="py-20 text-center">
         <div className="max-w-5xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
             <span className="text-[#bf5281]">Made4Ever Blog</span>
@@ -73,35 +82,47 @@ export default function BlogPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-3 space-y-8">
-            {mockBlogPosts.map(post => (
-              <div key={post.id} className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-                <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
-                <div className="p-6">
-             
-                  <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-500 flex items-center gap-2">
-                      <Calendar className="h-4 w-4" /> {new Date(post.createdAt).toDateString()}
-                    </div>
-             <button
-  onClick={() => router.push(`/blog/${post._id}`)}
-  className="text-[#bf5281] font-semibold flex items-center gap-1 cursor-pointer"
->
-  Read More <ArrowRight className="h-4 w-4" />
-</button>
+         <div className="lg:col-span-3 space-y-8">
+  {loading ? (
+    <div className="flex justify-center items-center py-20">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#bf5281]"></div>
+    </div>
+  ) : mockBlogPosts.length === 0 ? (
+    <p className="text-center text-gray-500">No blogs found.</p>
+  ) : (
+    mockBlogPosts.map(post => (
+      <div key={post.id} className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+        <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+        <div className="p-6">
+          <h2 className="text-xl font-bold mb-2">{post.title}</h2>
+          <p className="text-gray-600 mb-4">{post.excerpt}</p>
 
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-500 flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {new Date(post.createdAt).toDateString()}
+            </div>
+
+            <button
+              onClick={() => router.push(`/blog/${post._id}`)}
+              className="text-[#bf5281] font-semibold flex items-center gap-1 cursor-pointer"
+            >
+              Read More <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
+
+
 
           {/* Sidebar */}
           <div className="space-y-6">
 
-           
+
 
             {/* Quick Stats */}
             <div className="border rounded-lg p-6 shadow space-y-4">
@@ -131,11 +152,38 @@ export default function BlogPage() {
 
           </div>
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-4 border-t pt-3">
+            <button className='cursor-pointer'
+              variant="outline"
+              size="sm"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
+              Prev
+            </button>
+
+            <span className="text-sm text-gray-600">
+              Page <b>{page}</b> of <b>{totalPages}</b>
+            </span>
+
+            <button
+              className='cursor-pointer'
+              variant="outline"
+              size="sm"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
-  
-      <Footer/>
+
+      <Footer />
     </div>
   );
 }
