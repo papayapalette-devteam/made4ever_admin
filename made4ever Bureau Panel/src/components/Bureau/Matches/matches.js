@@ -27,51 +27,51 @@ import Footer from "../Layout/Footer";
 
 export default function MatchesPage() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
 
 
-    
+
 
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-const [limit] = useState(10);
-const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
 
   // ✅ Fetch accepted matches from backend
-const fetchMatches = async (pageNumber = 1) => {
-  try {
-    setLoading(true);
+  const fetchMatches = async (pageNumber = 1) => {
+    try {
+      setLoading(true);
 
-    const res = await api.get("/api/user/accept-profile", {
-      params: {
-        page: pageNumber,
-        limit: limit,
-        bureau: user._id,   // if required
-      },
-    });
+      const res = await api.get("/api/user/accept-profile", {
+        params: {
+          page: pageNumber,
+          limit: limit,
+          bureau: user._id,   // if required
+        },
+      });
 
-    if (res.status === 200 && Array.isArray(res.data.data)) {
-      setMatches(res.data.data);
-      setSelectedMatch(res.data.data[0] || null);
+      if (res.status === 200 && Array.isArray(res.data.data)) {
+        setMatches(res.data.data);
+        setSelectedMatch(res.data.data[0] || null);
 
-      setPage(res.data.page);
-      setTotalPages(res.data.totalPages || 1);
+        setPage(res.data.page);
+        setTotalPages(res.data.totalPages || 1);
+      }
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error Fetching Matches",
+        text: error.response?.data?.message || "Something went wrong!",
+      });
+    } finally {
+      setLoading(false);
     }
-
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Error Fetching Matches",
-      text: error.response?.data?.message || "Something went wrong!",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
 
@@ -93,7 +93,7 @@ const fetchMatches = async (pageNumber = 1) => {
     if (!profile)
       return <p className="text-gray-500 text-center">No {label} Data</p>;
 
-    const { PersonalDetails, EducationDetails, ContactDetails, Upload ,Bureau} =
+    const { PersonalDetails, EducationDetails, ContactDetails, Upload, Bureau } =
       profile;
 
     const image =
@@ -136,7 +136,7 @@ const fetchMatches = async (pageNumber = 1) => {
             <p>
               <b>Complexion:</b> {PersonalDetails?.Complexion || "--"}
             </p>
-              <p>
+            <p>
               <b>Bureau:</b> {Bureau?.registered_business_name || "--"}
             </p>
           </div>
@@ -148,65 +148,138 @@ const fetchMatches = async (pageNumber = 1) => {
 
   const canAcceptMatch = (match) => {
 
-   
-    
-  const loggedIn = user._id;
+
+
+    const loggedIn = user._id;
 
 
 
-  const maleBureau = match?.MaleProfile?.Bureau._id;
-  const femaleBureau = match?.FemaleProfile?.Bureau._id;
-  const matchedBy = match?.MatchedBy;
+    const maleBureau = match?.MaleProfile?.Bureau._id;
+    const femaleBureau = match?.FemaleProfile?.Bureau._id;
+    const matchedBy = match?.MatchedBy;
 
 
 
-  if (!maleBureau || !femaleBureau || !matchedBy) return false;
+    if (!maleBureau || !femaleBureau || !matchedBy) return false;
 
-  // ✅ Same Bureau
-  if (maleBureau === femaleBureau) {
-    return loggedIn === matchedBy;
-  }
-
-  // ✅ Different Bureau
-  return (
-    loggedIn !== matchedBy &&
-    (loggedIn === maleBureau || loggedIn === femaleBureau)
-  );
-};
-
-const handleAccept = async (matchId) => {
-  try {
-    if (!matchId) return;
-
-    // ✅ Call backend API
-    const res = await api.put(`api/user/approved-acceptprofile/${matchId}`);
-
-    if (res.status === 200) {
-      Swal.fire({
-        icon: "success",
-        title: "Match Accepted",
-        text: "Credits have been deducted successfully!",
-          confirmButtonText: "OK",
-        customClass: {
-            confirmButton: "swal-confirm-btn",
-          },
-      });
-
-      // Optionally: refresh matches list or update state
-      // fetchMatches(page) or update local state
+    // ✅ Same Bureau
+    if (maleBureau === femaleBureau) {
+      return loggedIn === matchedBy;
     }
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Cannot Accept Match",
-      text: error.response?.data?.message || "Something went wrong!",
+
+    // ✅ Different Bureau
+    return (
+      loggedIn !== matchedBy &&
+      (loggedIn === maleBureau || loggedIn === femaleBureau)
+    );
+  };
+
+  const handleAccept = async (matchId) => {
+
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to accept this match?",
+      icon: "warning",
+      confirmButtonText: "Yes, accept it!",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "swal-confirm-btn mr-2",
+        cancelButton: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded",
+      },
+    });
+
+    if (!result.isConfirmed) return; // User clicked cancel
+
+    try {
+      if (!matchId) return;
+
+      // ✅ Call backend API
+      const res = await api.put(`api/user/approved-acceptprofile/${matchId}`);
+
+      if (res.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Match Accepted",
+          text: "Credits have been deducted successfully!",
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "swal-confirm-btn",
+
+          },
+        });
+
+        window.location.reload();
+
+        // Optionally: refresh matches list or update state
+        // fetchMatches(page) or update local state
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Cannot Accept Match",
+        text: error.response?.data?.message || "Something went wrong!",
         confirmButtonText: "OK",
         customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      });
+    }
+  };
+
+
+  const handleReject = async (matchId) => {
+
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to reject this match?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, reject it!",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "swal-confirm-btn mr-2",
+        cancelButton: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded",
+      },
+      buttonsStyling: false, // Important to make customClass work
+    });
+
+    if (!result.isConfirmed) return; // User clicked cancel
+
+    try {
+      if (!matchId) return;
+
+      const res = await api.put(`api/user/reject-acceptprofile/${matchId}`);
+
+      if (res.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Match Rejected",
+          text: "The match status has been updated.",
+          customClass: {
             confirmButton: "swal-confirm-btn",
           },
-    });
-  }
-};
+        });
+
+        window.location.reload();
+
+
+        // Refresh match list or update state
+        // fetchMatches(page) or remove from local state
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Cannot Reject Match",
+        text: error.response?.data?.message || "Something went wrong!",
+        customClass: {
+          confirmButton: "swal-confirm-btn",
+        },
+      });
+    }
+  };
 
 
   return (
@@ -271,11 +344,10 @@ const handleAccept = async (matchId) => {
                     <div
                       key={match._id}
                       onClick={() => setSelectedMatch(match)}
-                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                        selectedMatch?._id === match._id
+                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${selectedMatch?._id === match._id
                           ? "bg-red-50 border-red-200"
                           : "hover:bg-gray-50"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center space-x-3">
                         <Avatar
@@ -308,43 +380,41 @@ const handleAccept = async (matchId) => {
               </CardContent>
             </Card>
             {/* ✅ Pagination */}
-{totalPages > 1 && (
-  <div className="flex justify-center items-center mt-6 space-x-2">
-    
-    {/* Previous */}
-    <button
-      onClick={() => setPage((prev) => prev - 1)}
-      disabled={page === 1}
-      className={`px-3 py-1 rounded border text-sm ${
-        page === 1
-          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-          : "bg-white hover:bg-gray-100"
-      }`}
-    >
-      Previous
-    </button>
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-6 space-x-2">
 
-    {/* Page Numbers */}
-<span className="px-4 py-1 text-sm text-gray-700">
-  Page <span className="font-semibold">{page}</span> of{" "}
-  <span className="font-semibold">{totalPages}</span>
-</span>
+                {/* Previous */}
+                <button
+                  onClick={() => setPage((prev) => prev - 1)}
+                  disabled={page === 1}
+                  className={`px-3 py-1 rounded border text-sm ${page === 1
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-white hover:bg-gray-100"
+                    }`}
+                >
+                  Previous
+                </button>
+
+                {/* Page Numbers */}
+                <span className="px-4 py-1 text-sm text-gray-700">
+                  Page <span className="font-semibold">{page}</span> of{" "}
+                  <span className="font-semibold">{totalPages}</span>
+                </span>
 
 
-    {/* Next */}
-    <button
-      onClick={() => setPage((prev) => prev + 1)}
-      disabled={page === totalPages}
-      className={`px-3 py-1 rounded border text-sm ${
-        page === totalPages
-          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-          : "bg-white hover:bg-gray-100"
-      }`}
-    >
-      Next
-    </button>
-  </div>
-)}
+                {/* Next */}
+                <button
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={page === totalPages}
+                  className={`px-3 py-1 rounded border text-sm ${page === totalPages
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-white hover:bg-gray-100"
+                    }`}
+                >
+                  Next
+                </button>
+              </div>
+            )}
 
           </div>
 
@@ -356,7 +426,7 @@ const handleAccept = async (matchId) => {
                   {/* Top Badge + Date */}
                   <div className="flex items-center justify-between">
                     <Badge className="bg-green-100 text-green-700 flex items-center">
-                      <CheckCircle className="h-4 w-4 mr-1" /> Accepted
+                      <CheckCircle className="h-4 w-4 mr-1" /> {selectedMatch.Status}
                     </Badge>
                     <span className="text-sm text-gray-600">
                       Matched on{" "}
@@ -376,34 +446,34 @@ const handleAccept = async (matchId) => {
                     </span>
                   </div>
 
-                  
- {canAcceptMatch(selectedMatch) && selectedMatch.Status === "Pending" && (
-  <div className="mt-6 flex gap-4 justify-center">
-    
-    {/* ✅ Accept Button */}
-    <Button
-      className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
-      style={{ backgroundColor: "#16a34a" }} // green-600
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} // hover green-700
-      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}
-      onClick={() => handleAccept(selectedMatch._id)}
-    >
-      ✅ Accept Match
-    </Button>
 
-    {/* ❌ Reject Button */}
-    <Button
-      className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
-      style={{ backgroundColor: "#dc2626" }} // red-600
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b91c1c")} // hover red-700
-      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
-      // onClick={() => handleReject(selectedMatch._id)}
-    >
-      ❌ Reject Match
-    </Button>
+                  {canAcceptMatch(selectedMatch) && selectedMatch.Status === "Pending" && (
+                    <div className="mt-6 flex gap-4 justify-center">
 
-  </div>
-)}
+                      {/* ✅ Accept Button */}
+                      <Button
+                        className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
+                        style={{ backgroundColor: "#16a34a" }} // green-600
+                        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} // hover green-700
+                        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}
+                        onClick={() => handleAccept(selectedMatch._id)}
+                      >
+                        ✅ Accept Match
+                      </Button>
+
+                      {/* ❌ Reject Button */}
+                      <Button
+                        className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
+                        style={{ backgroundColor: "#dc2626" }} // red-600
+                        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b91c1c")} // hover red-700
+                        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
+                        onClick={() => handleReject(selectedMatch._id)}
+                      >
+                        ❌ Reject Match
+                      </Button>
+
+                    </div>
+                  )}
 
                 </CardHeader>
 
@@ -414,7 +484,7 @@ const handleAccept = async (matchId) => {
                   </div>
                 </CardContent>
 
-                
+
               </Card>
             </div>
           )}

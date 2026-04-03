@@ -376,3 +376,28 @@ exports.ApprovedacceptMatch = async (req, res) => {
 };
 
 
+exports.rejectMatch = async (req, res) => {
+  try {
+    const matchId = req.params.id; // Get match ID from URL
+
+    // Find match
+    const match = await AcceptProfile.findById(matchId);
+    if (!match) {
+      return res.status(404).json({ message: "Match not found" });
+    }
+
+    // Check if already rejected
+    if (match.Status === "Rejected") {
+      return res.status(400).json({ message: "Match already rejected" });
+    }
+
+    // Update status
+    match.Status = "Rejected";
+    await match.save();
+
+    res.json({ message: "Match rejected successfully", match });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
