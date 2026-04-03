@@ -160,11 +160,15 @@ const acceptProfile = async () => {
     const userId = selectedMatch.userprofile._id;
     const candidateId = selectedMatch.candidateId._id;
     const MatchingPercentage=selectedMatch.matchPercentage
+    const Status="Pending"
+    const MatchedBy=user._id
 
     const res = await api.post("/api/user/accept-profile", {
       userId,
       candidateId,
-      MatchingPercentage
+      MatchingPercentage,
+      Status,
+      MatchedBy
     });
     Swal.close();
     if (res.status === 200 || res.status === 201) {

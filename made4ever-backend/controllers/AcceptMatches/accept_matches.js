@@ -6,7 +6,7 @@ const axios =require('axios')
 // 🟩 Save accepted profile (male/female logic)
 exports.saveAcceptedProfile = async (req, res) => {
   try {
-    const { candidateId, userId,MatchingPercentage } = req.body;
+    const { candidateId, userId,MatchingPercentage,Status,MatchedBy } = req.body;
 
     if (!candidateId || !userId) {
       return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -67,7 +67,9 @@ const userBureauPhone = user_bureau_details.mobile_number;
     const newMatch = await AcceptProfile.create({
       MaleProfile: maleProfileId,
       FemaleProfile: femaleProfileId,
-      MatchingPercentage
+      MatchingPercentage,
+      Status,
+      MatchedBy
     });
 
 const profileUrl="https://made4ever.in"
@@ -200,18 +202,30 @@ exports.getAcceptedProfiles = async (req, res) => {
       ]
     });
 
-    const profiles = await AcceptProfile.find({
-      $or: [
-        { MaleProfile: { $in: profileIds } },
-        { FemaleProfile: { $in: profileIds } }
-      ]
-    })
-      .populate("MaleProfile")
-      .populate("FemaleProfile")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitNumber)
-      .lean();
+const profiles = await AcceptProfile.find({
+  $or: [
+    { MaleProfile: { $in: profileIds } },
+    { FemaleProfile: { $in: profileIds } }
+  ]
+})
+  .populate({
+    path: "MaleProfile",
+    populate: {
+      path: "Bureau", // 👈 populate bureau inside male
+      model: "msp"
+    }
+  })
+  .populate({
+    path: "FemaleProfile",
+    populate: {
+      path: "Bureau", // 👈 populate bureau inside female
+      model: "msp"
+    }
+  })
+  .sort({ createdAt: -1 })
+  .skip(skip)
+  .limit(limitNumber)
+  .lean();
 
     res.status(200).json({
       success: true,
@@ -259,6 +273,105 @@ exports.deleteAcceptedProfile = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
+  }
+};
+
+
+
+
+exports.ApprovedacceptMatch = async (req, res) => {
+  try {
+    const matchId = req.params.id;;
+
+
+    
+
+    // ✅ Step 1: Find match
+    const match = await AcceptProfile.findById(matchId)
+      .populate("MaleProfile")
+      .populate("FemaleProfile");
+
+    if (!match) {
+      return res.status(404).json({ message: "Match not found" });
+    }
+
+    if (match.Status === "Accepted") {
+      return res.status(400).json({ message: "Match already accepted" });
+    }
+
+    // ✅ Step 2: Get bureau IDs
+    const maleBureauId = match.MaleProfile?.Bureau;
+    const femaleBureauId = match.FemaleProfile?.Bureau;
+
+    if (!maleBureauId || !femaleBureauId) {
+      return res.status(400).json({ message: "Invalid bureau data" });
+    }
+
+    const CREDIT_COST = 5;
+
+    // ✅ Step 3: Fetch bureau data
+    const [maleBureau, femaleBureau] = await Promise.all([
+      MSP.findById(maleBureauId),
+      MSP.findById(femaleBureauId),
+    ]);
+
+    if (!maleBureau || !femaleBureau) {
+      return res.status(404).json({ message: "Bureau not found" });
+    }
+
+    // ✅ Step 4: Check credits BEFORE updating status
+
+    // SAME BUREAU
+    if (maleBureauId.toString() === femaleBureauId.toString()) {
+      if (maleBureau.credits < CREDIT_COST) {
+        return res.status(400).json({
+          message: "Insufficient credits",
+        });
+      }
+    }
+
+    // DIFFERENT BUREAU
+    else {
+      if (
+        maleBureau.credits < CREDIT_COST ||
+        femaleBureau.credits < CREDIT_COST
+      ) {
+        return res.status(400).json({
+          message: "One or both bureaus have insufficient credits",
+        });
+      }
+    }
+
+    // ✅ Step 5: Update status
+    match.Status = "Accepted";
+    await match.save();
+
+    // ✅ Step 6: Deduct credits
+
+    if (maleBureauId.toString() === femaleBureauId.toString()) {
+      // SAME → deduct once
+      await MSP.findByIdAndUpdate(maleBureauId, {
+        $inc: { credits: -CREDIT_COST },
+      });
+    } else {
+      // DIFFERENT → deduct from both
+      await Promise.all([
+        MSP.findByIdAndUpdate(maleBureauId, {
+          $inc: { credits: -CREDIT_COST },
+        }),
+        MSP.findByIdAndUpdate(femaleBureauId, {
+          $inc: { credits: -CREDIT_COST },
+        }),
+      ]);
+    }
+
+    res.json({
+      message: "Match accepted and credits deducted",
+      match,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 

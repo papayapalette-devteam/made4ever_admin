@@ -206,10 +206,10 @@ if (bureau) {
 // }
 
 // Only deduct credits if user is viewing the first page
-if (msp && paginatedMatches.length > 0 && page === 1) {
-  msp.credits -= 5;
-  await msp.save();
-}
+// if (msp && paginatedMatches.length > 0 && page === 1) {
+//   msp.credits -= 5;
+//   await msp.save();
+// }
 
 
     return res.status(200).json({

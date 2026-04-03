@@ -29,6 +29,9 @@ export default function MatchesPage() {
 
     const user = JSON.parse(localStorage.getItem("user"));
 
+
+    
+
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +74,9 @@ const fetchMatches = async (pageNumber = 1) => {
 };
 
 
+
+
+
   useEffect(() => {
     fetchMatches(page);
   }, [page]);
@@ -87,7 +93,7 @@ const fetchMatches = async (pageNumber = 1) => {
     if (!profile)
       return <p className="text-gray-500 text-center">No {label} Data</p>;
 
-    const { PersonalDetails, EducationDetails, ContactDetails, Upload } =
+    const { PersonalDetails, EducationDetails, ContactDetails, Upload ,Bureau} =
       profile;
 
     const image =
@@ -130,11 +136,78 @@ const fetchMatches = async (pageNumber = 1) => {
             <p>
               <b>Complexion:</b> {PersonalDetails?.Complexion || "--"}
             </p>
+              <p>
+              <b>Bureau:</b> {Bureau?.registered_business_name || "--"}
+            </p>
           </div>
         </CardContent>
       </Card>
     );
   };
+
+
+  const canAcceptMatch = (match) => {
+
+   
+    
+  const loggedIn = user._id;
+
+
+
+  const maleBureau = match?.MaleProfile?.Bureau._id;
+  const femaleBureau = match?.FemaleProfile?.Bureau._id;
+  const matchedBy = match?.MatchedBy;
+
+
+
+  if (!maleBureau || !femaleBureau || !matchedBy) return false;
+
+  // ✅ Same Bureau
+  if (maleBureau === femaleBureau) {
+    return loggedIn === matchedBy;
+  }
+
+  // ✅ Different Bureau
+  return (
+    loggedIn !== matchedBy &&
+    (loggedIn === maleBureau || loggedIn === femaleBureau)
+  );
+};
+
+const handleAccept = async (matchId) => {
+  try {
+    if (!matchId) return;
+
+    // ✅ Call backend API
+    const res = await api.put(`api/user/approved-acceptprofile/${matchId}`);
+
+    if (res.status === 200) {
+      Swal.fire({
+        icon: "success",
+        title: "Match Accepted",
+        text: "Credits have been deducted successfully!",
+          confirmButtonText: "OK",
+        customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+      });
+
+      // Optionally: refresh matches list or update state
+      // fetchMatches(page) or update local state
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Cannot Accept Match",
+      text: error.response?.data?.message || "Something went wrong!",
+        confirmButtonText: "OK",
+        customClass: {
+            confirmButton: "swal-confirm-btn",
+          },
+    });
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -225,7 +298,7 @@ const fetchMatches = async (pageNumber = 1) => {
                               "Female"}
                           </p>
                           <Badge className="bg-green-100 text-green-700">
-                            Accepted
+                            {match.Status}
                           </Badge>
                         </div>
                       </div>
@@ -302,6 +375,36 @@ const fetchMatches = async (pageNumber = 1) => {
                       {selectedMatch.MatchingPercentage || 0}% Match
                     </span>
                   </div>
+
+                  
+ {canAcceptMatch(selectedMatch) && selectedMatch.Status === "Pending" && (
+  <div className="mt-6 flex gap-4 justify-center">
+    
+    {/* ✅ Accept Button */}
+    <Button
+      className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
+      style={{ backgroundColor: "#16a34a" }} // green-600
+      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} // hover green-700
+      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}
+      onClick={() => handleAccept(selectedMatch._id)}
+    >
+      ✅ Accept Match
+    </Button>
+
+    {/* ❌ Reject Button */}
+    <Button
+      className="text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105"
+      style={{ backgroundColor: "#dc2626" }} // red-600
+      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#b91c1c")} // hover red-700
+      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
+      // onClick={() => handleReject(selectedMatch._id)}
+    >
+      ❌ Reject Match
+    </Button>
+
+  </div>
+)}
+
                 </CardHeader>
 
                 <CardContent>
@@ -310,6 +413,8 @@ const fetchMatches = async (pageNumber = 1) => {
                     {renderProfile(selectedMatch.FemaleProfile, "Female")}
                   </div>
                 </CardContent>
+
+                
               </Card>
             </div>
           )}
