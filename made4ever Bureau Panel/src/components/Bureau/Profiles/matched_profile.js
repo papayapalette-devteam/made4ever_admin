@@ -448,7 +448,7 @@ const acceptProfile = async () => {
                         <b>Height:</b> {height}
                       </p>
                         <p>
-                        <b>Buerau Name:</b> {Bureau}
+                        {/* <b>Buerau Name:</b> {Bureau} */}
                       </p>
                     </div>
                   </CardContent>

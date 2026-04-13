@@ -20,37 +20,8 @@ import api from "../../../api";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
 
-// Mock data (replace with your API data)
-const mockProfiles = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    age: 28,
-    gender: "male",
-    occupation: "Software Engineer",
-    education: "B.Tech",
-    city: "Delhi",
-    state: "Delhi",
-    income: "₹10 LPA",
-    height: "5'9\"",
-    isActive: true,
-    photos: ["https://randomuser.me/api/portraits/men/1.jpg"],
-  },
-  {
-    id: 2,
-    name: "Priya Mehta",
-    age: 25,
-    gender: "female",
-    occupation: "Doctor",
-    education: "MBBS",
-    city: "Mumbai",
-    state: "Maharashtra",
-    income: "₹12 LPA",
-    height: "5'5\"",
-    isActive: false,
-    photos: ["https://randomuser.me/api/portraits/women/2.jpg"],
-  },
-];
+
+
 
 export default function ProfilesPage() {
   const navigate = useNavigate();
@@ -369,7 +340,31 @@ const [loading_import, setloading_import] = useState(false);
     }
   };
 
+// view matches
+const [loadingProfileId, setLoadingProfileId] = useState(null);
+const [matches, setMatches] = useState([]);
+const [showMatches, setShowMatches] = useState(false);
 
+const handleViewMatches = async (id) => {
+  try {
+    setLoadingProfileId(id)
+    const res = await api.get(`api/user/getmatch-byprofile/${id}`);
+
+    console.log("Matches:", res.data);
+
+    // store in state
+    setMatches(res.data.matches);
+
+    // open modal or page
+    setShowMatches(true);
+
+  } catch (error) {
+    console.error("Error fetching matches", error);
+  }finally
+  {
+    setLoadingProfileId(null)
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -562,21 +557,49 @@ const [loading_import, setloading_import] = useState(false);
                     </span>
                   </div>
 
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <GraduationCap className="mr-2 h-4 w-4" />
-                      {profile?.EducationDetails?.HighestEducation || ""}
-                    </div>
-                    <div className="flex items-center">
-                      <Briefcase className="mr-2 h-4 w-4" />
-                      {profile?.EducationDetails?.Occupation || ""}
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="mr-2 h-4 w-4" />
-                      {profile?.ContactDetails?.City || ""},{" "}
-                      {profile?.ContactDetails?.State || ""}
-                    </div>
-                  </div>
+             <div className="flex justify-between items-start">
+  
+  {/* LEFT SIDE (existing details) */}
+  <div className="space-y-2 text-sm text-gray-600">
+    <div className="flex items-center">
+      <GraduationCap className="mr-2 h-4 w-4" />
+      {profile?.EducationDetails?.HighestEducation || ""}
+    </div>
+
+    <div className="flex items-center">
+      <Briefcase className="mr-2 h-4 w-4" />
+      {profile?.EducationDetails?.Occupation || ""}
+    </div>
+
+    <div className="flex items-center">
+      <MapPin className="mr-2 h-4 w-4" />
+      {profile?.ContactDetails?.City || ""},{" "}
+      {profile?.ContactDetails?.State || ""}
+    </div>
+  </div>
+
+{profile?.MatchCount > 0 && (
+  <div
+    onClick={() => handleViewMatches(profile._id)}
+    className="flex flex-col items-center bg-pink-50 border border-pink-200 px-3 py-2 rounded-xl shadow-sm cursor-pointer"
+  >
+    
+    {/* ICON / LOADER */}
+    {loadingProfileId === profile._id ? (
+      <div className="w-5 h-5 border-2 border-pink-500 border-t-transparent rounded-full animate-spin mb-1"></div>
+    ) : (
+      <Heart className="h-5 w-5 text-pink-500 mb-1" />
+    )}
+
+    <span className="text-lg font-semibold text-gray-800">
+      {profile.MatchCount}
+    </span>
+
+    <span className="text-xs text-gray-500">Matches</span>
+  </div>
+)}
+
+</div>
 
                   <div className="flex justify-between items-center mt-3 text-sm font-medium text-gray-900">
                     <span>
@@ -728,6 +751,161 @@ const [loading_import, setloading_import] = useState(false);
           </div>
         )}
       </div>
+
+{showMatches && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+
+    <div className="bg-white rounded-xl p-5 w-[95%] max-w-3xl max-h-[90vh] overflow-y-auto">
+
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Matched Profiles</h2>
+
+        <button
+          onClick={() => setShowMatches(false)}
+          className="text-gray-500 hover:text-black"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* EMPTY STATE */}
+      {matches.length === 0 ? (
+        <p className="text-center text-gray-500">No matches found</p>
+      ) : (
+        <div className="space-y-5">
+
+          {matches.map((item) => {
+            const p = item.profile;
+
+            return (
+              <div
+                key={item.matchId}
+                className="border rounded-xl p-4 shadow-sm hover:shadow-md transition"
+              >
+
+                {/* TOP SECTION WITH PROFILE PIC */}
+                <div className="flex items-center gap-3">
+
+                  {/* PROFILE IMAGE */}
+                  {p?.Upload?.ProfilePhoto?.[0] ? (
+                    <img
+                      src={p.Upload.ProfilePhoto[0]}
+                      alt="profile"
+                      className="w-14 h-14 rounded-full object-cover border-2 border-pink-200 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-full bg-pink-100 flex items-center justify-center font-semibold text-pink-600">
+                      {p?.PersonalDetails?.Name?.charAt(0) || "?"}
+                    </div>
+                  )}
+
+                  {/* NAME + DATE */}
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      {p?.PersonalDetails?.Name}
+                    </h3>
+
+                    <p className="text-xs text-gray-500">
+                      Matched on{" "}
+                      {new Date(item.matchedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* PERSONAL DETAILS */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Personal Details
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>Age: {p?.PersonalDetails?.Age}</div>
+                    <div>Gender: {p?.PersonalDetails?.Gender}</div>
+                    <div>Height: {p?.PersonalDetails?.Height}</div>
+                    <div>Weight: {p?.PersonalDetails?.Weight}</div>
+                    <div>Mother Tongue: {p?.PersonalDetails?.MotherTongue}</div>
+                    <div>Marital Status: {p?.PersonalDetails?.MaritalStatus}</div>
+                  </div>
+                </div>
+
+                {/* EDUCATION */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Education & Career
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>{p?.EducationDetails?.HighestEducation}</div>
+                    <div>{p?.EducationDetails?.Occupation}</div>
+                    <div>Income: {p?.EducationDetails?.PersonalIncome}</div>
+                    <div>Family Income: {p?.EducationDetails?.AnnualFamilyIncome}</div>
+                  </div>
+                </div>
+
+                {/* LOCATION */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Location
+                  </h4>
+
+                  <div className="text-sm text-gray-600">
+                    {p?.ContactDetails?.City}, {p?.ContactDetails?.State},{" "}
+                    {p?.ContactDetails?.Country}
+                  </div>
+                </div>
+
+                {/* RELIGION */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Religious Details
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>{p?.ReligiousDetails?.Religion}</div>
+                    <div>{p?.ReligiousDetails?.Caste}</div>
+                    <div>Community: {p?.ReligiousDetails?.Community}</div>
+                    <div>Gothram: {p?.ReligiousDetails?.Gothram}</div>
+                  </div>
+                </div>
+
+                {/* FAMILY */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Family Details
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>Father: {p?.FamilyDetails?.FatherOccupation}</div>
+                    <div>Mother: {p?.FamilyDetails?.MotherOccupation}</div>
+                    <div>Siblings: {p?.FamilyDetails?.NoOfSiblings}</div>
+                    <div>{p?.FamilyDetails?.FamilyType}</div>
+                  </div>
+                </div>
+
+                {/* PROPERTY */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    Property
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div>{p?.PropertyDetails?.PropertyType}</div>
+                    <div>{p?.PropertyDetails?.ResidentialType}</div>
+                    <div>{p?.PropertyDetails?.PropertySize}</div>
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+    </div>
+  </div>
+)}
 
       <Footer />
     </div>

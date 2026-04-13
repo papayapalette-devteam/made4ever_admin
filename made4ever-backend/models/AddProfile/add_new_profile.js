@@ -109,6 +109,7 @@ const PropertyDetailsSchema = new mongoose.Schema({
 const UserProfileSchema = new mongoose.Schema(
   {
     Bureau: { type: mongoose.Schema.Types.ObjectId, ref: "msp" },
+    MatchCount: { type: Number, default: 0 },
     PersonalDetails: { type: PersonalDetailsSchema, required: true },
     ReligiousDetails: { type: ReligiousDetailsSchema, required: true },
     FamilyDetails: { type: FamilyDetailsSchema, required: true },

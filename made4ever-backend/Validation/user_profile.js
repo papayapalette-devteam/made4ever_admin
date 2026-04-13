@@ -120,6 +120,7 @@ const propertyDetailsSchema = Joi.object({
 // ✅ Full User Profile Schema
 const userProfileSchema = Joi.object({
   Bureau: Joi.string().required(),
+  MatchCount: Joi.number().default(0),
   PersonalDetails: personalDetailsSchema.required(),
   ReligiousDetails: religiousDetailsSchema.required(),
   FamilyDetails: familyDetailsSchema.required(),

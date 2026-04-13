@@ -370,15 +370,26 @@ function MspVideo() {
               </div>
 
                 {Msp_Video.msp_video && (
-    <div style={{ marginTop: "15px" }}>
-      <video
-        width="100%"
-        height="auto"
-        controls
-        src={Msp_Video.msp_video}
-        style={{ borderRadius: "8px" }}
-      />
-    </div>
+<div
+  style={{
+    marginTop: "15px",
+    width: "100%",
+    maxWidth: "600px",
+    margin: "0 auto",
+  }}
+>
+  <video
+    controls
+    src={Msp_Video.msp_video}
+    style={{
+      width: "100%",
+      maxHeight: "300px", // 👈 limit height
+      borderRadius: "8px",
+      display: "block",
+      objectFit: "contain", // keeps full video visible
+    }}
+  />
+</div>
   )}
 
               <Button className="submit-button" onClick={add_msp_video}>

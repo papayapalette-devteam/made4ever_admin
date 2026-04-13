@@ -283,9 +283,6 @@ exports.ApprovedacceptMatch = async (req, res) => {
   try {
     const matchId = req.params.id;;
 
-
-    
-
     // ✅ Step 1: Find match
     const match = await AcceptProfile.findById(matchId)
       .populate("MaleProfile")
@@ -365,6 +362,17 @@ exports.ApprovedacceptMatch = async (req, res) => {
       ]);
     }
 
+    // ✅ Step 7: Increase match count in both profiles
+
+await Promise.all([
+  UserProfile.findByIdAndUpdate(match.MaleProfile._id, {
+    $inc: { MatchCount: 1 },
+  }),
+  UserProfile.findByIdAndUpdate(match.FemaleProfile._id, {
+    $inc: { MatchCount: 1 },
+  }),
+]);
+
     res.json({
       message: "Match accepted and credits deducted",
       match,
@@ -396,6 +404,52 @@ exports.rejectMatch = async (req, res) => {
     await match.save();
 
     res.json({ message: "Match rejected successfully", match });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.getMatchesByProfile = async (req, res) => {
+  try {
+    const profileId = req.params.id;
+
+    if (!profileId) {
+      return res.status(400).json({ message: "Profile ID is required" });
+    }
+
+    // ✅ Find all accepted matches where profile is male OR female
+    const matches = await AcceptProfile.find({
+      Status: "Accepted",
+      $or: [
+        { MaleProfile: profileId },
+        { FemaleProfile: profileId },
+      ],
+    })
+      .populate({
+        path: "MaleProfile",
+      })
+      .populate({
+        path: "FemaleProfile",
+      })
+      .sort({ updatedAt: -1 }); // latest first
+
+    // ✅ Optional: format response (return "other" profile only)
+    const formattedMatches = matches.map((match) => {
+      const isMale = match.MaleProfile?._id.toString() === profileId;
+
+      return {
+        matchId: match._id,
+        profile: isMale ? match.FemaleProfile : match.MaleProfile,
+        matchedAt: match.updatedAt,
+      };
+    });
+
+    res.status(200).json({
+      count: formattedMatches.length,
+      matches: formattedMatches,
+    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
