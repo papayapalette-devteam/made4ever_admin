@@ -79,51 +79,94 @@ const calculateMatchScore = (prefs, person) => {
 
 // ----------------- MAIN MATCHING FUNCTION -----------------
 
+const matchCache = new Map();
+
 const findMatches = async (req, res) => {
   try {
+    const id = req.query.uniqueId;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "uniqueId is required",
+      });
+    }
 
     const userPrefs = req.body.PartnerPrefrences;
-    const userGender = req.body.PartnerPrefrences?.Gender;
-    // const userGothra = req.body.PartnerPrefrences?.Gothra;
+    const userGender = userPrefs?.Gender;
 
-    if (!userGender)
-      return res.status(400).json({ success: false, message: "User gender missing" });
+    if (!userGender) {
+      return res.status(400).json({
+        success: false,
+        message: "User gender missing",
+      });
+    }
 
-    const oppositeGender = userGender === "Male" ? "Female" : "Male";
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-    // Fetch candidates of opposite gender
-    const candidates = await UserProfile.find({
-      "PersonalDetails.Gender": oppositeGender,
-      IsActive:true
-    })
-      .populate("Bureau")
-      .lean();
-      
+    // =========================
+    // CHECK CACHE FIRST
+    // =========================
+    let matches = matchCache.get(id);
 
-    // Loop through candidates
-    const matches = candidates.map((candidate) => {
- 
-      // One-way match (User → Candidate)
-      const userToCandidate = calculateMatchScore(userPrefs, candidate);
-    
-      return {
-        candidateId: candidate,
-        matchFromUserSide: userToCandidate,
-        matchPercentage:userToCandidate,
-      };
-    });
+    if (!matches) {
+      const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
-    // Sort by mutual match (highest first)
-    matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+      // Fetch candidates only once
+      const candidates = await UserProfile.find({
+        "PersonalDetails.Gender": oppositeGender,
+        IsActive: true,
+      })
+        .populate("Bureau")
+        .lean();
+
+      // Calculate scores
+      matches = candidates.map((candidate) => {
+        const score = Number(calculateMatchScore(userPrefs, candidate)) || 0;
+
+        return {
+          candidateId: candidate,
+          matchFromUserSide: score,
+          matchPercentage: score,
+        };
+      });
+
+      // Filter (>= 50%)
+      matches = matches.filter((m) => m.matchPercentage >= 50);
+
+      // Sort descending
+      matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+      // Store in cache using uniqueId
+      matchCache.set(id, matches);
+
+      // Optional: auto-expire cache after 30 min
+      setTimeout(() => matchCache.delete(id), 30 * 60 * 1000);
+    }
+
+    // =========================
+    // PAGINATION (FROM CACHE)
+    // =========================
+    const total = matches.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedMatches = matches.slice(startIndex, startIndex + limit);
 
     return res.status(200).json({
       success: true,
-      totalMatches: matches.length,
-      matches,
+      page,
+      limit,
+      totalMatches: total,
+      totalPages: Math.ceil(total / limit),
+      matches: paginatedMatches,
     });
+
   } catch (err) {
     console.error("❌ Matchmaking error:", err);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 

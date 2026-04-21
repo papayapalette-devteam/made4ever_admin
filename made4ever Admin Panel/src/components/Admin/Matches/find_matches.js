@@ -16,6 +16,7 @@ import {
 import Adminsidebar from "../adminsidebar";
 import Adminheader from "../adminheader";
 import MatchCard from "./matches_card";
+import Button from "../../../UI/button";
 
 export default function FindMatches() {
   const [step, setStep] = useState(1);
@@ -403,10 +404,10 @@ const [page, setPage] = useState(1);
 const [limit] = useState(10); // fixed or changeable
 const [totalPages, setTotalPages] = useState(1);
 
-  const find_matches = async () => {
-    try {
-
-          // 🔵 Show Loader
+const[uniqueId,setuniqueId]=useState("")
+const find_matches = async (page) => {
+  try {
+    // Loader
     Swal.fire({
       title: "Finding Matches...",
       text: "Please wait while we search best matches for you.",
@@ -417,48 +418,65 @@ const [totalPages, setTotalPages] = useState(1);
       },
     });
 
-      const resp = await api.post("api/user/find-matches", user_profile,
-        {
+    const resp = await api.post(
+      "api/user/find-matches",
+      user_profile,
+      {
         params: {
           page: page,
           limit: limit,
+          uniqueId: uniqueId,
         },
       }
-      );
-      setmatches(resp.data.matches)
-  
-      if (resp.status === 200) {
+    );
+
+    setmatches(resp.data.matches);
+    setTotalPages(resp.data.totalPages);
+    setPage(resp.data.page);
+
+    Swal.close();
+
+    if (resp.status === 200) {
+      // =========================
+      // PAGE 1 → FULL SUCCESS POPUP
+      // =========================
+      if (page === 1) {
         Swal.fire({
           icon: "success",
           title: "Matches Found!",
-          text:  `${resp.data.totalMatches} Matches Found successfully`,
-          showConfirmButton: true,
+          text: `${resp.data.totalMatches} Matches Found successfully`,
           confirmButtonText: "OK",
-          customClass: {
-            confirmButton: "swal-confirm-btn",
-          },
-        }).then(() => {
-          // Refresh the page after alert closes
-          // window.location.reload();
+        });
+      } 
+      // =========================
+      // PAGE 2+ → SMALL INFO TOAST
+      // =========================
+      else {
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "info",
+          title: `Page ${page} loaded`,
+          text: `${resp.data.matches.length} matches displayed`,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
         });
       }
-    } catch (error) {
-      console.log(error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text:
-          error.response?.data?.error ||
-          "Something went wrong! Please try again.",
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        customClass: {
-          confirmButton: "swal-confirm-btn",
-        },
-      });
     }
-  };
+  } catch (error) {
+    console.log(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text:
+        error.response?.data?.error ||
+        "Something went wrong! Please try again.",
+    });
+  }
+};
+
 
 
   
@@ -498,7 +516,7 @@ const [totalPages, setTotalPages] = useState(1);
 
                     <div>
                       <label className="block text-gray-700 font-medium mb-1">
-                        Gender
+                        Gender(your gender)
                       </label>
                       <select
                         className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
@@ -525,6 +543,21 @@ const [totalPages, setTotalPages] = useState(1);
                       
                       </select>
                     </div>
+
+                <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Enter a Unique Id
+                    </label>
+                    <input
+                      type="text"
+                      name="Name"
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      placeholder="123456"
+                      onChange={(e) =>
+                        setuniqueId(e.target.value)
+                      }
+                    />
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Preferred Age Range */}
@@ -1818,6 +1851,32 @@ const [totalPages, setTotalPages] = useState(1);
 <div className="w-full max-w-full px-2 sm:px-4 md:px-8 lg:px-16">
   <MatchCard matches={matches} />
 </div>
+
+                {totalPages > 1 && (
+  <div className="flex items-center justify-between mt-4 border-t pt-3">
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === 1}
+      onClick={() => find_matches(page - 1)}
+    >
+      Prev
+    </Button>
+
+    <span className="text-sm text-gray-600">
+      Page <b>{page}</b> of <b>{totalPages}</b>
+    </span>
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === totalPages}
+      onClick={() => find_matches(page + 1)}
+    >
+      Next
+    </Button>
+  </div>
+)}
 
 
 
