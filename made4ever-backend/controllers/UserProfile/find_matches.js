@@ -133,7 +133,7 @@ const findMatches = async (req, res) => {
       });
 
       // Filter (>= 50%)
-      matches = matches.filter((m) => m.matchPercentage >= 50);
+      matches = matches.filter((m) => m.matchPercentage >= 90);
 
       // Sort descending
       matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
