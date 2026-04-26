@@ -1057,8 +1057,8 @@ Copy this format and edit values before pasting.
               "Edu/Income",
               "Contact",
               "Partner Pref.",
-              "Uploads",
               "Property",
+              "Uploads"
             ].map((label, index) => {
               const num = index + 1;
               return (
@@ -4039,8 +4039,172 @@ Copy this format and edit values before pasting.
               </div>
             )}
 
-            {/*============================== STEP 7 - Upload Photos=============================== */}
+      {/* STEP 7 - Property Details */}
+
             {step === 7 && (
+              <div className="space-y-5">
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                  Property Details
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Property Type */}
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Property Type
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      name="PropertyType"
+                      onChange={(e) => {
+                        handleChange(
+                          "PropertyDetails",
+                          "PropertyType",
+                          e.target.value,
+                        );
+                      }}
+                      onClick={() => {
+                        if (All_Property_Type.length === 0)
+                          getall_property_type();
+                      }}
+                    >
+                      <option
+                        value={
+                          user_profile?.PropertyDetails?.PropertyType || ""
+                        }
+                      >
+                        {user_profile?.PropertyDetails?.PropertyType ||
+                          "Select Property Type"}
+                      </option>
+                      {select_loading === "property_type" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {All_Property_Type.map((item) => (
+                        <option
+                          key={item._id}
+                          value={item.lookup_value}
+                          data-id={item._id}
+                        >
+                          {item.lookup_value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Residential Type */}
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Residential Type
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      name="ResidentialType"
+                      onChange={(e) => {
+                        handleChange(
+                          "PropertyDetails",
+                          "ResidentialType",
+                          e.target.value,
+                        );
+                      }}
+                      onClick={() => {
+                        if (All_Residence_Type.length === 0)
+                          getall_residence_type();
+                      }}
+                    >
+                      <option
+                        value={
+                          user_profile?.PropertyDetails?.ResidentialType || ""
+                        }
+                      >
+                        {user_profile?.PropertyDetails?.ResidentialType ||
+                          "Select Residential Type"}
+                      </option>
+                      {select_loading === "residence_type" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {All_Residence_Type.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Property Size */}
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Property Size
+                    </label>
+                    <select
+                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
+                      name="PropertySize"
+                      onChange={(e) => {
+                        handleChange(
+                          "PropertyDetails",
+                          "PropertySize",
+                          e.target.value,
+                        );
+                      }}
+                      onClick={() => {
+                        if (All_Property_Size.length === 0)
+                          getall_property_size();
+                      }}
+                    >
+                      <option
+                        value={
+                          user_profile?.PropertyDetails?.PropertySize || ""
+                        }
+                      >
+                        {user_profile?.PropertyDetails?.PropertySize ||
+                          "Select Property Size"}
+                      </option>
+                      {select_loading === "property_size" && (
+                        <option disabled>Loading...</option>
+                      )}
+
+                      {/* Show fetched values */}
+                      {All_Property_Size.map((item) => (
+                        <option key={item._id} value={item.lookup_value}>
+                          {item.lookup_value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Property Description */}
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">
+                    Property Description
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Enter property details (location, size, value, etc.)"
+                    className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full resize-none"
+                    name="PropertyDescription"
+                    onChange={(e) =>
+                      handleChange(
+                        "PropertyDetails",
+                        "PropertyDescription",
+                        e.target.value,
+                      )
+                    }
+                    value={user_profile.PropertyDetails.PropertyDescription}
+                  ></textarea>
+                </div>
+
+
+
+
+              </div>
+            )}
+
+            {/*============================== STEP 8 - Upload Photos=============================== */}
+            {step === 8 && (
               <div className="space-y-5">
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   Upload Photos & Media
@@ -4239,169 +4403,8 @@ Copy this format and edit values before pasting.
                       ))}
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* STEP 8 - Property Details */}
-
-            {step === 8 && (
-              <div className="space-y-5">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                  Property Details
-                </h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Property Type */}
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1">
-                      Property Type
-                    </label>
-                    <select
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="PropertyType"
-                      onChange={(e) => {
-                        handleChange(
-                          "PropertyDetails",
-                          "PropertyType",
-                          e.target.value,
-                        );
-                      }}
-                      onClick={() => {
-                        if (All_Property_Type.length === 0)
-                          getall_property_type();
-                      }}
-                    >
-                      <option
-                        value={
-                          user_profile?.PropertyDetails?.PropertyType || ""
-                        }
-                      >
-                        {user_profile?.PropertyDetails?.PropertyType ||
-                          "Select Property Type"}
-                      </option>
-                      {select_loading === "property_type" && (
-                        <option disabled>Loading...</option>
-                      )}
-
-                      {/* Show fetched values */}
-                      {All_Property_Type.map((item) => (
-                        <option
-                          key={item._id}
-                          value={item.lookup_value}
-                          data-id={item._id}
-                        >
-                          {item.lookup_value}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Residential Type */}
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1">
-                      Residential Type
-                    </label>
-                    <select
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="ResidentialType"
-                      onChange={(e) => {
-                        handleChange(
-                          "PropertyDetails",
-                          "ResidentialType",
-                          e.target.value,
-                        );
-                      }}
-                      onClick={() => {
-                        if (All_Residence_Type.length === 0)
-                          getall_residence_type();
-                      }}
-                    >
-                      <option
-                        value={
-                          user_profile?.PropertyDetails?.ResidentialType || ""
-                        }
-                      >
-                        {user_profile?.PropertyDetails?.ResidentialType ||
-                          "Select Residential Type"}
-                      </option>
-                      {select_loading === "residence_type" && (
-                        <option disabled>Loading...</option>
-                      )}
-
-                      {/* Show fetched values */}
-                      {All_Residence_Type.map((item) => (
-                        <option key={item._id} value={item.lookup_value}>
-                          {item.lookup_value}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Property Size */}
-                  <div>
-                    <label className="block text-gray-700 font-medium mb-1">
-                      Property Size
-                    </label>
-                    <select
-                      className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full"
-                      name="PropertySize"
-                      onChange={(e) => {
-                        handleChange(
-                          "PropertyDetails",
-                          "PropertySize",
-                          e.target.value,
-                        );
-                      }}
-                      onClick={() => {
-                        if (All_Property_Size.length === 0)
-                          getall_property_size();
-                      }}
-                    >
-                      <option
-                        value={
-                          user_profile?.PropertyDetails?.PropertySize || ""
-                        }
-                      >
-                        {user_profile?.PropertyDetails?.PropertySize ||
-                          "Select Property Size"}
-                      </option>
-                      {select_loading === "property_size" && (
-                        <option disabled>Loading...</option>
-                      )}
-
-                      {/* Show fetched values */}
-                      {All_Property_Size.map((item) => (
-                        <option key={item._id} value={item.lookup_value}>
-                          {item.lookup_value}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Property Description */}
-                <div>
-                  <label className="block text-gray-700 font-medium mb-1">
-                    Property Description
-                  </label>
-                  <textarea
-                    rows="3"
-                    placeholder="Enter property details (location, size, value, etc.)"
-                    className="border rounded-lg p-3 focus:ring-2 focus:ring-red-500 w-full resize-none"
-                    name="PropertyDescription"
-                    onChange={(e) =>
-                      handleChange(
-                        "PropertyDetails",
-                        "PropertyDescription",
-                        e.target.value,
-                      )
-                    }
-                    value={user_profile.PropertyDetails.PropertyDescription}
-                  ></textarea>
-                </div>
-
-
-                {/* Terms & Conditions */}
+                                {/* Terms & Conditions */}
                 <div className="flex items-start gap-2 mt-4">
                   <input
                     type="checkbox"
@@ -4426,6 +4429,8 @@ Copy this format and edit values before pasting.
 
               </div>
             )}
+
+      
           </div>
 
           {/* Navigation Buttons */}

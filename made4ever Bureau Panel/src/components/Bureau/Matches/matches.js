@@ -10,6 +10,8 @@ import {
   Filter,
   Star,
   TrendingUp,
+  Clock,
+  XCircle
 } from "lucide-react";
 import api from "../../../api"; // ✅ your axios instance
 import Swal from "sweetalert2";
@@ -369,9 +371,27 @@ export default function MatchesPage() {
                             {match.FemaleProfile?.PersonalDetails?.Name ||
                               "Female"}
                           </p>
-                          <Badge className="bg-green-100 text-green-700">
-                            {match.Status}
-                          </Badge>
+                   <Badge
+  className={`flex items-center px-2 py-1 ${
+    selectedMatch.Status?.toLowerCase() === "accepted"
+      ? "bg-green-100 text-green-700"
+      : selectedMatch.Status?.toLowerCase() === "rejected"
+      ? "bg-red-100 text-red-700"
+      : selectedMatch.Status?.toLowerCase() === "pending"
+      ? "bg-orange-100 text-orange-700"
+      : "bg-gray-100 text-gray-700"
+  }`}
+>
+  {selectedMatch.Status?.toLowerCase() === "accepted" ? (
+    <CheckCircle className="h-4 w-4 mr-1" />
+  ) : selectedMatch.Status?.toLowerCase() === "rejected" ? (
+    <XCircle className="h-4 w-4 mr-1" />
+  ) : selectedMatch.Status?.toLowerCase() === "pending" ? (
+    <Clock className="h-4 w-4 mr-1" />
+  ) : null}
+  
+  {selectedMatch.Status}
+</Badge>
                         </div>
                       </div>
                     </div>
@@ -425,9 +445,27 @@ export default function MatchesPage() {
                 <CardHeader>
                   {/* Top Badge + Date */}
                   <div className="flex items-center justify-between">
-                    <Badge className="bg-green-100 text-green-700 flex items-center">
-                      <CheckCircle className="h-4 w-4 mr-1" /> {selectedMatch.Status}
-                    </Badge>
+        <Badge
+  className={`flex items-center px-2 py-1 ${
+    selectedMatch.Status?.toLowerCase() === "accepted"
+      ? "bg-green-100 text-green-700"
+      : selectedMatch.Status?.toLowerCase() === "rejected"
+      ? "bg-red-100 text-red-700"
+      : selectedMatch.Status?.toLowerCase() === "pending"
+      ? "bg-orange-100 text-orange-700"
+      : "bg-gray-100 text-gray-700"
+  }`}
+>
+  {selectedMatch.Status?.toLowerCase() === "accepted" ? (
+    <CheckCircle className="h-4 w-4 mr-1" />
+  ) : selectedMatch.Status?.toLowerCase() === "rejected" ? (
+    <XCircle className="h-4 w-4 mr-1" />
+  ) : selectedMatch.Status?.toLowerCase() === "pending" ? (
+    <Clock className="h-4 w-4 mr-1" />
+  ) : null}
+  
+  {selectedMatch.Status}
+</Badge>
                     <span className="text-sm text-gray-600">
                       Matched on{" "}
                       {new Date(selectedMatch.createdAt).toLocaleDateString()}

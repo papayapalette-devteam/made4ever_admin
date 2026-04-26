@@ -125,7 +125,7 @@ const navigate=useNavigate()
                   <div className="border-b pb-3 mb-2">
                     <p className="text-sm font-bold text-gray-800">{user?.name}</p>
                     <p className="text-xs text-gray-500">{user?.bureauName}</p>
-                    <p className="text-xs text-gray-500">{user?.email}</p>
+                    <p className="text-xs text-gray-500 whitespace-pre-wrap break-all">{user?.email}</p>
                   </div>
                   <ul className="text-sm text-gray-700 space-y-1">
                     <li>
