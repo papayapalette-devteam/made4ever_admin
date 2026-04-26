@@ -44,7 +44,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/Made4Ever New Logo (400 x 150 px) (3).png"
+              src="/made4ever-new-logo.png"
               alt="Made4Ever"
               width={150}
               height={60}

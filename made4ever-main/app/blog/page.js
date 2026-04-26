@@ -92,7 +92,7 @@ export default function BlogPage() {
   ) : (
     mockBlogPosts.map(post => (
       <div key={post.id} className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-        <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+        <img src={post.image} alt={post.title} className="w-full h-48 object-contain" />
         <div className="p-6">
           <h2 className="text-xl font-bold mb-2">{post.title}</h2>
           <p className="text-gray-600 mb-4">{post.excerpt}</p>
