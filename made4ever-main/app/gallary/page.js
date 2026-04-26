@@ -107,7 +107,7 @@ export default function Gallary() {
                     <img
                       src={item.msp_gallary}
                       alt="Gallery"
-                      className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-56 object-contain hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 ))}
