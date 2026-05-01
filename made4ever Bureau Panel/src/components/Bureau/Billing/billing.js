@@ -30,7 +30,7 @@ const mockPlans = [
   {
     id: "basic",
     name: "Basic",
-    price: 500,
+    price: 50,
     credits: 10,
     features: ["Access basic tools", "Email support", "Monthly updates"],
   },

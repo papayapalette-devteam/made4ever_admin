@@ -310,7 +310,7 @@ const getMatches = async (req, res) => {
       // FILTER + SORT ONCE
       // =========================
       matches = matches
-        .filter((m) => m.matchPercentage >= 50)
+        .filter((m) => m.matchPercentage >= 80)
         .sort((a, b) => b.matchPercentage - a.matchPercentage);
 
       // =========================

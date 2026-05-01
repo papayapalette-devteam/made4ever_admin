@@ -413,6 +413,7 @@ const acceptProfile = async () => {
                 profile?.ReligiousDetails?.Religion || "-";
               const caste = profile?.ReligiousDetails?.Caste || "-";
               const Bureau = profile?.Bureau?.name || "-";
+              const BureauContact = profile?.Bureau?.mobile_number || "-";
 
               return (
                 <Card key={idx} className="bg-gray-50">

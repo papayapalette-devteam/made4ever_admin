@@ -138,8 +138,11 @@ export default function MatchesPage() {
             <p>
               <b>Complexion:</b> {PersonalDetails?.Complexion || "--"}
             </p>
-            <p>
+            <p style={{display:selectedMatch.Status==="Accepted"?"flex":"none"}}>
               <b>Bureau:</b> {Bureau?.registered_business_name || "--"}
+            </p>
+               <p style={{display:selectedMatch.Status==="Accepted"?"flex":"none"}}>
+              <b>Bureau Contact No:</b> {Bureau?.mobile_number || "--"}
             </p>
           </div>
         </CardContent>
