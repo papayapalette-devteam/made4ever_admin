@@ -66,7 +66,8 @@ const StartPayment = async (req, res) => {
     });
 
     // CALLBACK URLs
-    const BASE_URL = getBaseUrl(req);
+    // const BASE_URL = getBaseUrl(req);
+    const BASE_URL = "https://api.made4ever.in";
     const surl = `${BASE_URL}/api/payu/status`; // success URL
     const furl = `${BASE_URL}/api/payu/status`; // failure URL
 
@@ -269,5 +270,50 @@ const remove_transaction = async (req, res) => {
 // };
 
 
+const getTransactionsByUserPaginated = async (req, res) => {
+  try {
+    const { user_id } = req.params;
 
-module.exports = { StartPayment, callback ,getAllTransaction,remove_transaction};
+    // Query params
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const status = req.query.status; // optional filter
+
+    const skip = (page - 1) * limit;
+
+    // Build filter
+    const filter = { user_id };
+    if (status) {
+      filter.status = status;
+    }
+
+    // Fetch data + total count
+    const [transactions, total] = await Promise.all([
+      Transaction.find(filter)
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Transaction.countDocuments(filter),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: transactions,
+    });
+  } catch (error) {
+    console.error("Pagination Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch transactions",
+    });
+  }
+};
+
+
+
+module.exports = { StartPayment, callback ,getAllTransaction,remove_transaction,getTransactionsByUserPaginated};

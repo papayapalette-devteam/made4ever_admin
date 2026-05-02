@@ -26,6 +26,10 @@ const BillingPage = lazy(() =>
   import("./components/Bureau/Billing/billing")
 );
 
+const AllTransactions = lazy(() =>
+  import("./components/Bureau/Billing/all_transaction")
+);
+
 const UserProfile = lazy(() =>
   import("./components/Bureau/Profiles/view_profile")
 );
@@ -71,6 +75,7 @@ function App() {
             <Route path="/terms-conditions" element={<TermsAndConditions />} />
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/billing" element={<BillingPage />} />
+            <Route path="/all-transactions" element={<AllTransactions />} />
           </Route>
 
         </Routes>

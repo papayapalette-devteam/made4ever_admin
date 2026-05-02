@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CreditCard,
   CheckCircle,
@@ -22,6 +22,7 @@ import Progress from "../../../UI/progress";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import api from '../../../api'
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -50,42 +51,56 @@ const mockPlans = [
   },
 ];
 
-const transactions = [
-  {
-    id: "1",
-    date: "2024-01-20",
-    description: "Premium Plan Purchase",
-    credits: 150,
-    amount: 7999,
-    status: "completed",
-  },
-  {
-    id: "2",
-    date: "2024-01-15",
-    description: "Basic Plan Purchase",
-    credits: 50,
-    amount: 2999,
-    status: "completed",
-  },
-  {
-    id: "3",
-    date: "2024-01-10",
-    description: "Enterprise Plan Purchase",
-    credits: 500,
-    amount: 19999,
-    status: "completed",
-  },
-];
+
 
 export default function BillingPage() {
 
 
   const user = JSON.parse(localStorage.getItem('user'));
 
-  console.log(user);
+  // console.log(user);
   
+  const navigate=useNavigate()
   
 
+  const [transactions, setTransactions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        if (!user?._id) return;
+
+        setLoading(true);
+
+        const response = await api.get(
+          `/api/payu/transactions/${user._id}`,
+          {
+            params: {
+              page,
+              limit,
+              status: "", // optional
+            },
+          }
+        );
+
+        setTransactions(response.data.data);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Fetch Transactions Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, [page, user]);
+
+
+  // console.log(transactions);
   
 
 
@@ -358,28 +373,59 @@ const handlePurchase = async () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {transactions.map((transaction) => (
-                    <div
-                      key={transaction.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                    >
-                      <div>
-                        <p className="text-sm font-medium">{transaction.description}</p>
-                        <p className="text-xs text-gray-600">{transaction.date}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">
-                          ₹{transaction.amount.toLocaleString()}
-                        </p>
-                        <Badge variant="secondary" className="text-xs">
-                          +{transaction.credits} credits
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Button variant="ghost" className="w-full mt-4">
+     <div className="space-y-4">
+  {transactions.slice(0, 3).map((transaction) => {
+    const payment = transaction.payment_response || {};
+
+    return (
+      <div
+        key={transaction._id}
+        className="p-4 bg-gray-50 rounded-lg space-y-2"
+      >
+        {/* Top Row */}
+        <div className="flex justify-between items-center">
+          <p className="text-sm font-semibold">
+            {transaction.plan_name}
+          </p>
+
+          <p className="text-sm font-medium text-green-600">
+            ₹{Number(transaction.amount).toLocaleString()}
+          </p>
+        </div>
+
+        {/* Credits */}
+        <p className="text-xs text-blue-600">
+          +{transaction.credits} credits
+        </p>
+
+        {/* Date */}
+        <p className="text-xs text-gray-500">
+          {new Date(transaction.created_at).toLocaleString()}
+        </p>
+
+        {/* Payment Details */}
+        <div className="flex justify-between text-xs text-gray-600">
+          <span>Mode: {payment.mode || "N/A"}</span>
+          <span>ID: {payment.mihpayid || transaction.txnid}</span>
+        </div>
+
+        {/* Status */}
+        <div>
+          <span
+            className={`text-xs px-2 py-1 rounded ${
+              transaction.status === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {transaction.status}
+          </span>
+        </div>
+      </div>
+    );
+  })}
+</div>
+                <Button variant="ghost" className="w-full mt-4" onClick={() => navigate("/all-transactions")}>
                   View All Transactions
                 </Button>
               </CardContent>
