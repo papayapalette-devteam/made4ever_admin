@@ -28,7 +28,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center">
               <Image
-                rc="/Made4Ever New Logo (400 x 150 px) (3).png"
+                src="/Made4Ever New Logo (400 x 150 px) (3).png"
                 alt="Made4Ever Logo"
                 width={200}
                 height={100}
