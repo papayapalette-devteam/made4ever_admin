@@ -31,22 +31,22 @@ const mockPlans = [
   {
     id: "basic",
     name: "Basic",
-    price: 1,
-    credits: 10,
+    price: 500,
+    credits: 50,
     features: ["Access basic tools", "Email support", "Monthly updates"],
   },
   {
     id: "premium",
     name: "Premium",
     price: 2000,
-    credits: 50,
+    credits: 250,
     features: ["Everything in Basic", "Priority support", "Advanced analytics"],
   },
   {
     id: "enterprise",
     name: "Enterprise",
     price: 3000,
-    credits: 100,
+    credits: 500,
     features: ["Dedicated account manager", "Custom integrations", "24/7 support"],
   },
 ];
@@ -282,7 +282,7 @@ const handlePurchase = async () => {
                           <span className="text-3xl font-bold">
                             ₹{plan.price.toLocaleString()}
                           </span>
-                          <span className="text-gray-600">/{plan.validity} days</span>
+                          {/* <span className="text-gray-600">/{plan.validity}</span> */}
                         </div>
                         <div className="text-sm text-gray-600 mt-1">
                           {plan.credits} Credits
