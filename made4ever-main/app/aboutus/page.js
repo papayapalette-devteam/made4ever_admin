@@ -79,13 +79,13 @@ export default function AboutPage() {
               Our Journey
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Made4Ever started its journey in the early 2000s with a mission to
+              Ashish Narang started its journey in the early 2003 with a mission to
               connect people through trusted matrimonial networks. Over the
               years, we observed the challenges faced by local bureaus in
               building reliable connections.
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              In 2016, we launched our digital platform to connect thousands of
+              In 2016, we launched Made4Ever our digital platform to connect thousands of
               marriage bureaus across India. Today, our network spans{" "}
               <strong>10 states</strong> and supports{" "}
               <strong>2,700+ members</strong>, transforming how people find
