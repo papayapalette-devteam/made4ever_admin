@@ -4,6 +4,7 @@ const blogValidationSchema = require("../../Validation/blog");
 const addBlog = async (req, res) => {
   try {
     // ✂️ Remove _id before Joi validation
+    // ✂️ Remove _id before Joi validation
     const { _id, ...payload } = req.body;
 
     // 🔍 Joi Validation (no _id inside)
