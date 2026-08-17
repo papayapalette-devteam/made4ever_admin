@@ -67,7 +67,8 @@ const StartPayment = async (req, res) => {
 
     // CALLBACK URLs
     // const BASE_URL = getBaseUrl(req);
-    const BASE_URL = "https://api.made4ever.in";
+    // const BASE_URL = "https://api.made4ever.in";
+    const BASE_URL = "https://made4ever-admin-0kf8.onrender.com";
     const surl = `${BASE_URL}/api/payu/status`; // success URL
     const furl = `${BASE_URL}/api/payu/status`; // failure URL
 
