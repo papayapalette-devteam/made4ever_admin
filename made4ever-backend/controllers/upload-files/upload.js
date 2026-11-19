@@ -83,7 +83,9 @@ const uploadToCloudinary = async (req, res) => {
     const fileArray = Array.isArray(files) ? files : [files];
 
     const uploadPromises = fileArray.map((file) => {
-      const originalName = path.parse(file.originalname).name.replace(/\s/g, "_");
+      const baseName = path.parse(file.originalname).name.replace(/\s+/g, "_");
+      const uniqueSuffix = `${Date.now()}_${Math.round(Math.random() * 1e4)}`;
+      const originalName = `${baseName}_${uniqueSuffix}`;
       
       // Detect type based on file mimetype
       let resourceType = "auto"; // default for all

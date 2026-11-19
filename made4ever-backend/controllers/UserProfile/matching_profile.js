@@ -267,9 +267,9 @@ const getMatches = async (req, res) => {
     const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
     // =========================
-    // CHECK CACHE FIRST
+    // CHECK CACHE FIRST (Fresh on page 1)
     // =========================
-    let matches = matchCache.get(userId);
+    let matches = page === 1 ? null : matchCache.get(userId);
 
     if (!matches) {
       // =========================
@@ -278,6 +278,7 @@ const getMatches = async (req, res) => {
       const candidates = await UserProfile.find({
         "PersonalDetails.Gender": oppositeGender,
         IsActive: true,
+        IsDeleted: { $ne: true },
         Bureau: { $ne: null },
       })
         .populate("Bureau")

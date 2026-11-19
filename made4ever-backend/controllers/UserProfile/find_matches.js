@@ -106,17 +106,18 @@ const findMatches = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
 
     // =========================
-    // CHECK CACHE FIRST
+    // CHECK CACHE FIRST (Fresh on page 1)
     // =========================
-    let matches = matchCache.get(id);
+    let matches = page === 1 ? null : matchCache.get(id);
 
     if (!matches) {
       const oppositeGender = userGender === "Male" ? "Female" : "Male";
 
-      // Fetch candidates only once
+      // Fetch candidates only once (skip recycle bin / deleted profiles)
       const candidates = await UserProfile.find({
         "PersonalDetails.Gender": oppositeGender,
         IsActive: true,
+        IsDeleted: { $ne: true },
       })
         .populate("Bureau")
         .lean();
